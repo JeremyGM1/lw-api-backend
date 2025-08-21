@@ -1,6 +1,12 @@
-﻿namespace Persistence;
+﻿using Microsoft.EntityFrameworkCore;
 
-public class Class1
+namespace Persistence
 {
+    public partial class DataContext : DbContext
+    {
+        public DataContext(DbContextOptions options) : base(options)
+        {
+        }
 
+    }
 }
