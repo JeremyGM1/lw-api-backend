@@ -68,3 +68,13 @@ Contributing is restricted to allowed members only. Please ensure you have permi
 ## License
 
 MIT
+
+## Entity Framework Tooling
+
+To manage database migrations and scaffolding, you need the Entity Framework Core CLI tool. Install it globally using the following command:
+
+```
+dotnet tool install --global dotnet-ef --version 9.0.8
+```
+
+This command installs the `dotnet-ef` tool, which allows you to run commands such as `dotnet ef migrations add`, `dotnet ef database update`, and more. These commands help you create and apply database migrations, inspect your data model, and manage your database schema directly
