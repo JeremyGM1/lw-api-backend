@@ -77,4 +77,16 @@ To manage database migrations and scaffolding, you need the Entity Framework Cor
 dotnet tool install --global dotnet-ef --version 9.0.8
 ```
 
-This command installs the `dotnet-ef` tool, which allows you to run commands such as `dotnet ef migrations add`, `dotnet ef database update`, and more. These commands help you create and apply database migrations, inspect your data model, and manage your database schema directly
+This command installs the `dotnet-ef` tool, which allows you to run commands such as `dotnet ef migrations add`, `dotnet ef database update`, and more. These commands help you create and apply database migrations, inspect your data model, and manage your database schema directly from the terminal.
+
+To create an initial migration, use the following command:
+
+```
+dotnet ef migrations add InitialCreate -p Persistence -s API
+```
+
+-   `InitialCreate` is the name of the migration.
+-   `-p Persistence` specifies the project containing your DbContext and entity configurations.
+-   `-s API` sets the startup project, which contains the application's entry point and configuration.
+
+This command generates migration files in the Persistence project, allowing you to track and apply schema changes
