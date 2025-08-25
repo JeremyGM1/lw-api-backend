@@ -3,9 +3,9 @@ namespace Domain
 {
     public class Audit
     {
-        public string CreatedBy { get; set; }
+        public required string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public string UpdatedBy { get; set; }
-        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+        public required string UpdatedBy { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }
