@@ -8,7 +8,7 @@ namespace Persistence.Configuration
     {
         public RoleConfig(EntityTypeBuilder<Role> entityBuilder)
         {
-            entityBuilder.ToTable("role");
+            entityBuilder.ToTable("role", schema: "application");
             entityBuilder.HasKey(x => x.Id);
             entityBuilder.Property(x => x.Name).HasMaxLength(20).IsRequired();
             entityBuilder.Property(x => x.Description).HasMaxLength(100);
