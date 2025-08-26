@@ -10,6 +10,9 @@ public class TokenValidator(IConfiguration configuration) : ITokenValidator
 {
     public bool ValidateToken(string token)
     {
+        //! TODO: Test token classes.
+        //TODO: TokenFormarValidator() Checks if token has a valid structure before validating its content.        
+
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]));
 
         var validationParameters = new TokenValidationParameters
