@@ -11,7 +11,7 @@ namespace Persistence.Configuration
             entityBuilder.ToTable("role", schema: "application");
             entityBuilder.HasKey(x => x.Id);
             entityBuilder.Property(x => x.Name).HasMaxLength(20).IsRequired();
-            entityBuilder.Property(x => x.Description).HasMaxLength(100);
+            entityBuilder.Property(x => x.Description).HasMaxLength(100).IsRequired();
             entityBuilder.Property(x => x.RoleCategoryId).HasMaxLength(50).IsRequired();
 
             entityBuilder.Property(x => x.CreatedBy).HasMaxLength(50).IsRequired();
