@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingService", "LoggingService\LoggingService.csproj", "{90B1154F-73D1-49B6-AAA1-58EE2F6F1D97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Core.Tests.Acceptance", "Tests\App.Core.Tests.Acceptance.csproj", "{5B856284-C225-4992-BCA5-18FBC72097BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Core.Tests.Acceptance", "App.Core.Tests.Acceptance\App.Core.Tests.Acceptance.csproj", "{5B856284-C225-4992-BCA5-18FBC72097BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Core.Tests.Unit", "App.Core.Tests.Unit\App.Core.Tests.Unit.csproj", "{8FAFE71B-E035-4AAD-BEF6-C2FD1DF588D9}"
 EndProject
