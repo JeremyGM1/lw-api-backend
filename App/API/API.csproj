@@ -20,4 +20,8 @@
     <ProjectReference Include="..\LoggingService\LoggingService.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="App.Core.Tests.Acceptance" />
+	</ItemGroup>
+
 </Project>

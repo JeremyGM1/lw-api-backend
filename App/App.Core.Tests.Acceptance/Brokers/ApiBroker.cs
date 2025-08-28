@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
+
 using RESTFulSense.Clients;
 
 namespace App.Core.Tests.Acceptance.Brokers
