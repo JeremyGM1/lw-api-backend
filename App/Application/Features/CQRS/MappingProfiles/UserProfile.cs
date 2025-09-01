@@ -1,4 +1,4 @@
-﻿using Application.Features.CQRS.Users.Dtos;
+﻿using Application.Features.CQRS.Dtos;
 using AutoMapper;
 using Domain;
 

@@ -1,4 +1,4 @@
-﻿using Application.Features.CQRS.Users.Dtos;
+﻿using Application.Features.CQRS.Dtos;
 using Application.Interfaces.Persistence;
 using AutoMapper;
 using MediatR;

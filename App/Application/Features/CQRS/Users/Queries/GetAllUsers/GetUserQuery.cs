@@ -1,4 +1,4 @@
-﻿using Application.Features.CQRS.Users.Dtos;
+﻿using Application.Features.CQRS.Dtos;
 using MediatR;
 
 namespace Application.Features.CQRS.Users.Queries.GetAllUsers;
