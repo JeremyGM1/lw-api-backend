@@ -1,5 +1,7 @@
-﻿namespace Domain;
-public class UserRole
+﻿using Domain.AccessControl;
+
+namespace Domain.AccessControl;
+public class UserRole : BaseEntity
 {
     public required string UserId { get; set; }
     public required string RoleId { get; set; }
