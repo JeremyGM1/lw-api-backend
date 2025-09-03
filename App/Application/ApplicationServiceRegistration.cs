@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-
 using Microsoft.Extensions.DependencyInjection;
-
 using Application.Features.CQRS.MappingProfiles;
 
 namespace Application;

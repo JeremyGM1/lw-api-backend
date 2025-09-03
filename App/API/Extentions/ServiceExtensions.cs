@@ -1,10 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-
-using Application.Interfaces.Persistence;
-using Persistence;
-using Persistence.Repositories;
-using Application.Interfaces.Logging;
+using Application;
 using LoggingService;
+using Persistence;
 
 namespace API.Extentions;
 
@@ -18,8 +15,15 @@ public static class ServiceExtensions
                 configuration.GetConnectionString("DefaultConnection")
                 );
         });
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+        services.AddApplicationServices();
+        services.AddLogginServices();
+        services.AddPersistenceServices(configuration);
+        services.AddCors(options =>
+        {
+            options.AddPolicy("all", builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+        });
     }
 }
