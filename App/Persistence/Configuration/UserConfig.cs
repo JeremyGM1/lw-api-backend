@@ -12,11 +12,16 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                Id           = Guid.Empty.ToString(),
+                Id           = "00000000-0000-0000-0000-000000000000",
                 FirstName    = "John",
                 LastName     = "Smith",
                 Email        = "John@gmail.com",
-                PasswordHash = ""
+                PasswordHash = "",
+
+                CreatedAt    = new DateTime(0001, 01, 01),
+                UpdatedAt    = new DateTime(0001, 01, 01),
+                CreatedBy    = "Seeder",
+                UpdatedBy    = "Seeder"
             }
         );
 

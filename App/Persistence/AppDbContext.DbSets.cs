@@ -10,7 +10,7 @@ public partial class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-        
+
         base.OnModelCreating(modelBuilder);
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
