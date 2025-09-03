@@ -1,5 +1,6 @@
-﻿using Application.Features.CQRS.Dtos;
-using MediatR;
+﻿using MediatR;
+
+using Application.Features.CQRS.Dtos;
 
 namespace Application.Features.CQRS.Users.Queries.GetAllUsers;
 

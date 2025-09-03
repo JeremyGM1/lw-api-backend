@@ -1,10 +1,16 @@
-﻿namespace Application.Interfaces.Persistence;
+﻿using Domain.AccessControl;
 
-public interface IGenericRepository<T> where T : class // TODO Change class for BaseEntity
+namespace Application.Interfaces.Persistence;
+
+public interface IGenericRepository<T> where T : BaseEntity
 {
-    Task<List<T>> GetAsync();
+    Task<IReadOnlyList<T>> GetAsync();
+
     Task<T> GetByIdAsync(string id);
-    Task<T> CreateAsync(T Entity);
-    Task<T> UpdateAsync(T Entity);
-    Task<T> DeleteAsync(T Entity);
+
+    Task CreateAsync(T Entity);
+
+    Task UpdateAsync(T Entity);
+
+    Task DeleteAsync(T Entity);
 }

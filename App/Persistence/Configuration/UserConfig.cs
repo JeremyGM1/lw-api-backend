@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.AccessControl;
 
 namespace Persistence.Configuration;
+
 public class UserConfig : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
@@ -29,6 +30,5 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.Property(x => x.CreatedAt).IsRequired();
         builder.Property(x => x.UpdatedBy).HasMaxLength(50).IsRequired();
         builder.Property(x => x.UpdatedAt).IsRequired();
-
     }
 }

@@ -1,18 +1,22 @@
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 
-namespace API.Extentions
+using Application.Interfaces.Persistence;
+using Persistence;
+using Persistence.Repositories;
+
+namespace API.Extentions;
+
+public static class ServiceExtensions
 {
-    public static class ServiceExtensions
+    public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+        services.AddDbContext<AppDbContext>(options =>
         {
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")
-                    );
-            });
-        }
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection")
+                );
+        });
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

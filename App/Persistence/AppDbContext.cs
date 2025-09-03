@@ -1,12 +1,10 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace Persistence
+namespace Persistence;
+
+public partial class AppDbContext : DbContext
 {
-    public partial class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions options) : base(options)
     {
-        public AppDbContext(DbContextOptions options) : base(options)
-        {
-        }
     }
 }
