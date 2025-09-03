@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Application.Interfaces.Persistence;
 using Persistence;
 using Persistence.Repositories;
+using Application.Interfaces.Logging;
+using LoggingService;
 
 namespace API.Extentions;
 
@@ -18,5 +20,6 @@ public static class ServiceExtensions
         });
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
     }
 }

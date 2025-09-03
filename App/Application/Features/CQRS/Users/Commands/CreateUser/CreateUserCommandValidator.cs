@@ -32,6 +32,6 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 
     private Task<bool> UserUnique(CreateUserCommand command, CancellationToken token)
     {
-        return _userRepository.IsUserUnique(command.FirstName);
+        return _userRepository.IsUserUnique(command.Id);
     }
 }
