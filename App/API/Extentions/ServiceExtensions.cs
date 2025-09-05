@@ -27,10 +27,7 @@ namespace API.Extentions
                 .AllowAnyMethod());
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" }));
         }
         public static void ApplyMigrations(this IApplicationBuilder app)
         {
