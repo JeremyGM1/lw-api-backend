@@ -1,6 +1,6 @@
 ﻿using Domain.AccessControl;
 
-namespace Application.Interfaces.Persistence;
+namespace Persistence.Interfaces;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
@@ -12,5 +12,5 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     Task UpdateAsync(T Entity);
 
-    Task DeleteAsync(T Entity);
+    Task DeleteAsync(T Entity);    
 }

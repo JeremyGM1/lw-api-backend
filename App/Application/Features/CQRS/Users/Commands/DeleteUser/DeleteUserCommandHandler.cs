@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
 using Application.Exceptions;
-using Application.Interfaces.Persistence;
 using Domain.AccessControl;
+using Persistence.Interfaces;
 
 namespace Application.Features.CQRS.Users.Commands.DeleteUser;
 
@@ -17,9 +17,7 @@ public class DeleteUserCommandHandler(IUserRepository userRepository) : IRequest
 
         // Validate that record exist
         if (userToDelete == null)
-        {
             throw new NotFoundException(nameof(User), request.Id);
-        }
 
         //Remove from database
         await _userRepository.DeleteAsync(userToDelete);

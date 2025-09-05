@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Persistence;
-using Domain.AccessControl;
+﻿using Domain.AccessControl;
 using Microsoft.EntityFrameworkCore;
+using Persistence.Interfaces;
 
 namespace Persistence.Repositories;
 
@@ -29,6 +29,7 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
     {
         return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(q => q.Id == id);
     }
+
 
     public async Task UpdateAsync(T entity)
     {

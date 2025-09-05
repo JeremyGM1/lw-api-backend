@@ -1,6 +1,7 @@
-using Microsoft.EntityFrameworkCore;
 using Application;
+using FluentAssertions.Common;
 using LoggingService;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace API.Extentions;
@@ -24,6 +25,11 @@ public static class ServiceExtensions
             .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod());
+        });
+
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" });
         });
     }
 }

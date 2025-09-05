@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.Persistence;
-using FluentValidation;
+﻿using FluentValidation;
+using Persistence.Interfaces;
 
 namespace Application.Features.CQRS.Users.Commands.CreateUser;
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
@@ -24,14 +24,12 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .EmailAddress().WithMessage("{PropertyName} must have a valid email address");
 
         RuleFor(p => p)
-            .MustAsync(UserUnique)
-            .WithMessage("User already exists");
+            .MustAsync(IsUserIdUnique).WithMessage("{PropertyName} already exist");
 
         this._userRepository = userRepository;
     }
-
-    private Task<bool> UserUnique(CreateUserCommand command, CancellationToken token)
+    private Task<bool> IsUserIdUnique(CreateUserCommand command, CancellationToken token)
     {
-        return _userRepository.IsUserUnique(command.Id);
+        return _userRepository.IsUnique(command.Id);
     }
 }

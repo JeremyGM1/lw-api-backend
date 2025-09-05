@@ -33,7 +33,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.CreatedBy).HasMaxLength(50).IsRequired();
         builder.Property(x => x.CreatedAt).IsRequired();
-        builder.Property(x => x.UpdatedBy).HasMaxLength(50).IsRequired();
-        builder.Property(x => x.UpdatedAt).IsRequired();
+        builder.Property(x => x.UpdatedBy).HasMaxLength(50);
+        builder.Property(x => x.UpdatedAt);
     }
 }
