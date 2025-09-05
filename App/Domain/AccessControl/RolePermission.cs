@@ -7,5 +7,3 @@ public class RolePermission : BaseEntity
     public virtual Role Role { get; set; } = null!;
     public virtual Permission Permission { get; set; } = null!;
 }
-
-
