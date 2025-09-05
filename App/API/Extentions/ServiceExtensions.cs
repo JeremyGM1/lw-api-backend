@@ -1,18 +1,29 @@
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace API.Extentions
+namespace API.Extentions;
+
+public static class ServiceExtensions
 {
-    public static class ServiceExtensions
+    public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+        services.AddDbContext<AppDbContext>(options =>
         {
-            services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(
+                configuration.GetConnectionString("DefaultConnection")
+                );
+            services.AddCors(options =>
             {
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection")
-                    );
+                options.AddPolicy("all", builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
             });
-        }
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" });
+            });
+        });
     }
 }
