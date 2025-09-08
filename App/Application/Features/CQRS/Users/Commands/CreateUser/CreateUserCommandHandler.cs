@@ -35,7 +35,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, strin
         var userToCreate = _mapper.Map<User>(request);
 
         userToCreate.CreatedAt = new DateTime();
-        userToCreate.CreatedBy = "Admin";
+        userToCreate.CreatedBy = "Admin";        
 
         await _userRepository.CreateAsync(userToCreate);
 

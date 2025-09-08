@@ -33,7 +33,12 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
 
     public async Task UpdateAsync(T entity)
     {
-        _context.Update(entity);
+        _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+    }
+    public async Task<string> GetCreatedBy(string id)
+    {
+        var user = await GetByIdAsync(id);
+        return user.CreatedBy;
     }
 }

@@ -1,11 +1,11 @@
-﻿using Application.Features.CQRS.Dtos;
+﻿using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using Application.Features.CQRS.Dtos;
 using Application.Features.CQRS.Users.Commands.CreateUser;
+using Application.Features.CQRS.Users.Commands.DeleteUser;
+using Application.Features.CQRS.Users.Commands.UpdateUser;
 using Application.Features.CQRS.Users.Queries.GetAllUsers;
 using Application.Features.CQRS.Users.Queries.GetUserById;
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Application.Features.CQRS.Users.Commands.UpdateUser;
-using Application.Features.CQRS.Users.Commands.DeleteUser;
 
 namespace API.Controllers;
 [Route("api/[controller]")]

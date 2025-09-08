@@ -16,7 +16,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
                 FirstName    = "John",
                 LastName     = "Smith",
                 Email        = "John@gmail.com",
-                PasswordHash = "",
 
                 CreatedAt    = new DateTime(0001, 01, 01),
                 UpdatedAt    = new DateTime(0001, 01, 01),
@@ -29,7 +28,6 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
         builder.Property(x => x.LastName).HasMaxLength(100).IsRequired();
         builder.Property(x => x.Email).IsRequired();
-        builder.Property(x => x.PasswordHash).IsRequired();
 
         builder.Property(x => x.CreatedBy).HasMaxLength(50).IsRequired();
         builder.Property(x => x.CreatedAt).IsRequired();
