@@ -23,22 +23,21 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
 
     public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
+        var userToUpdate = await _userRepository.GetByIdAsync(request.Id);
+
         var validator = new UpdateUserCommandValidator(_userRepository);
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-
-        if (validationResult.Errors.Count != 0)
+        try
         {
-            _logger.LogWarning("Validation errors in update request for {0} - {1}", nameof(User), request.Id);
-            throw new BadRequestException("Invalid User", validationResult);
+            _mapper.Map(request, userToUpdate);
+
+            await _userRepository.UpdateAsync(userToUpdate);
+
+        }catch(BadRequestException ex)
+        {
+            _logger.LogWarning("Validation errors in update request for {0} - {1}. Error Message: {2}", nameof(User), request.Id, ex.Message);
         }
-
-        var userToUpdate = await _userRepository.GetByIdAsync(request.Id);
-
-        _mapper.Map(request, userToUpdate);
-
-        await _userRepository.UpdateAsync(userToUpdate);
-
         return Unit.Value;
     }
 }
