@@ -29,7 +29,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, strin
         if (validationResult.Errors.Count != 0)
         {
             _logger.LogWarning("Validator error in create request for {0} - {1}", nameof(User), request.Id);
-            throw new BadRequestException($"Invalid User {validationResult}", validationResult);
+            throw new BadRequestException($"Invalid User. {validationResult}", validationResult);
         }
 
         var userToCreate = _mapper.Map<User>(request);
