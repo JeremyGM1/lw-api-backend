@@ -1,4 +1,4 @@
-using Domain.AccessControl;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
