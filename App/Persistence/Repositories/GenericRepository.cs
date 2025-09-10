@@ -1,44 +1,37 @@
-﻿using Domain.AccessControl;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Domain.Common;
 using Persistence.Interfaces;
 
 namespace Persistence.Repositories;
 
-public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<TEntity, TKey>(AppDbContext context) : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {
     protected readonly AppDbContext _context = context;
 
-    public async Task CreateAsync(T entity)
+    public async Task<IReadOnlyList<TEntity>> GetAsync()
+    {
+        return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
+    }
+    public async Task<TEntity> GetByIdAsync(TKey id)
+    {
+        return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(q => q.Id!.Equals(id));
+    }
+
+    public async Task CreateAsync(TEntity entity)
     {
         await _context.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(T entity)
+    public async Task DeleteAsync(TEntity entity)
     {
         _context.Remove(entity);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetAsync()
-    {
-        return await _context.Set<T>().AsNoTracking().ToListAsync();
-    }
-
-    public async Task<T> GetByIdAsync(string id)
-    {
-        return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(q => q.Id == id);
-    }
-
-
-    public async Task UpdateAsync(T entity)
+    public async Task UpdateAsync(TEntity entity)
     {
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-    }
-    public async Task<string> GetCreatedBy(string id)
-    {
-        var user = await GetByIdAsync(id);
-        return user.CreatedBy;
     }
 }

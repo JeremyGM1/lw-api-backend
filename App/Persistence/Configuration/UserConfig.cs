@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Entities;
 
-using Domain.AccessControl;
 
 namespace Persistence.Configuration;
 
@@ -16,6 +16,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
                 FirstName    = "John",
                 LastName     = "Smith",
                 Email        = "John@gmail.com",
+                Roles        = null,
 
                 CreatedAt    = new DateTime(0001, 01, 01),
                 UpdatedAt    = new DateTime(0001, 01, 01),

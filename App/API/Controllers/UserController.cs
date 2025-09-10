@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
-using Application.Features.CQRS.Dtos;
-using Application.Features.CQRS.Users.Commands.CreateUser;
-using Application.Features.CQRS.Users.Commands.DeleteUser;
-using Application.Features.CQRS.Users.Commands.UpdateUser;
-using Application.Features.CQRS.Users.Queries.GetAllUsers;
-using Application.Features.CQRS.Users.Queries.GetUserById;
+using Application.Features.Users.Commands.CreateUser;
+using Application.Features.Users.Commands.DeleteUser;
+using Application.Features.Users.Commands.UpdateUser;
+using Application.Features.Users.Queries.GetAllUsers;
+using Application.Features.Users.Queries.GetUserById;
+using Application.Features.Shared.Dtos.UserDtos;
 
 namespace API.Controllers;
 [Route("api/[controller]")]
@@ -49,8 +49,9 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
-    public async Task<ActionResult> Put(UpdateUserCommand user)
+    public async Task<ActionResult> Put(string id, [FromBody] UpdateUserCommand user)
     {
+        user.Id = id;
         await _mediator.Send(user);
         return NoContent();
     }

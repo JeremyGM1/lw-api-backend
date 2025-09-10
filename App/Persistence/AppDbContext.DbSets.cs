@@ -1,3 +1,4 @@
+using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,7 @@ public partial class AppDbContext : DbContext
     }
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in base.ChangeTracker.Entries<BaseEntity>()
+        foreach (var entry in base.ChangeTracker.Entries<BaseEntity<object>>()
             .Where(q => q.State == EntityState.Added || q.State == EntityState.Modified))
         {
             entry.Entity.UpdatedAt = DateTime.Now;
