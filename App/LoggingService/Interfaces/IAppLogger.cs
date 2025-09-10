@@ -1,4 +1,4 @@
-﻿namespace Application.Interfaces.Logging;
+﻿namespace LoggingService.Interfaces;
 public interface IAppLogger<T>
 {
     void LogInformation(string message, params object[] args);

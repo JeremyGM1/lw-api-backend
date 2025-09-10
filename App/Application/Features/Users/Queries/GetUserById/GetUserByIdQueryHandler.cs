@@ -1,10 +1,8 @@
-﻿using Application.Exceptions;
-using Application.Features.Users.Queries.GetUserById;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
 using MediatR;
-using Persistence.Interfaces;
+using Application.Exceptions;
 using Application.Features.Shared.Dtos.UserDtos;
+using Persistence.Interfaces;
 
 namespace Application.Features.Users.Queries.GetUserById;
 

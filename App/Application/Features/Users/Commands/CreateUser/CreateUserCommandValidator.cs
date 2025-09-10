@@ -2,6 +2,7 @@
 using Persistence.Interfaces;
 
 namespace Application.Features.Users.Commands.CreateUser;
+
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     private readonly IUserRepository _userRepository;

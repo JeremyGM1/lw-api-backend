@@ -2,9 +2,11 @@
 using Persistence.Interfaces;
 
 namespace Application.Features.Users.Queries.GetUserById;
+
 public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
 {
     private readonly IUserRepository _userRepository;
+
     public GetUserByIdQueryValidator(IUserRepository userRepository)
     {
         RuleFor(q => q.Id)
@@ -14,6 +16,7 @@ public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
 
         _userRepository = userRepository;
     }
+
     private async Task<bool> UserExist(string id, CancellationToken token)
     {
         var user = await _userRepository.GetByIdAsync(id);

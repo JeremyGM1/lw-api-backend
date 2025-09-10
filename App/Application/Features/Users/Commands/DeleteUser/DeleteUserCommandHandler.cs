@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Application.Exceptions;
-using Domain.Entities;
 using Persistence.Interfaces;
-using Application.Features.Users.Commands.DeleteUser;
 
 namespace Application.Features.Users.Commands.DeleteUser;
 
@@ -12,7 +10,6 @@ public class DeleteUserCommandHandler(IUserRepository userRepository) : IRequest
 
     public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-
         var validator = new DeleteUserCommandValidator(_userRepository);
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Application.Interfaces.Logging;
 using LoggingService.Repository;
+using LoggingService.Interfaces;
 
 namespace LoggingService;
 public static class LogginServiceRegistration

@@ -2,6 +2,7 @@
 using Persistence.Interfaces;
 
 namespace Application.Features.Users.Commands.DeleteUser;
+
 public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 {
     private readonly IUserRepository _userRepository;
@@ -15,6 +16,7 @@ public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
 
         _userRepository = userRepository;
     }
+
     private async Task<bool> UserExist(string id, CancellationToken token)
     {
         var user = await _userRepository.GetByIdAsync(id);

@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using Application.Exceptions;
-using Application.Interfaces.Logging;
 using Domain.Entities;
+using LoggingService.Interfaces;
 using Persistence.Interfaces;
-using Application.Features.Users.Commands.CreateUser;
 
 namespace Application.Features.Users.Commands.CreateUser;
 

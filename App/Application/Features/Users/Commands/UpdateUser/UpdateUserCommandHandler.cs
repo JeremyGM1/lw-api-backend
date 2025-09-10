@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using Application.Exceptions;
-using Application.Interfaces.Logging;
 using Domain.Entities;
+using LoggingService.Interfaces;
 using Persistence.Interfaces;
-using Application.Features.Users.Commands.UpdateUser;
 
 namespace Application.Features.Users.Commands.UpdateUser;
 
@@ -37,7 +36,6 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
         userToUpdate.CreatedBy = user.CreatedBy;
         userToUpdate.UpdatedAt = DateTime.Now;
         userToUpdate.UpdatedBy = "Admin";
-
 
         await _userRepository.UpdateAsync(userToUpdate);
 

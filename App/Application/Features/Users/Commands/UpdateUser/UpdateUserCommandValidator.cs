@@ -2,6 +2,7 @@
 using Persistence.Interfaces;
 
 namespace Application.Features.Users.Commands.UpdateUser;
+
 public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 {
     private readonly IUserRepository _userRepository;
@@ -28,6 +29,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
 
         _userRepository = userRepository;
     }
+
     private async Task<bool> UserExist(string id, CancellationToken token)
     {
         var user = await _userRepository.GetByIdAsync(id);

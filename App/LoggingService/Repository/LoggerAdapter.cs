@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-
-using Application.Interfaces.Logging;
+using LoggingService.Interfaces;
 
 namespace LoggingService.Repository;
 

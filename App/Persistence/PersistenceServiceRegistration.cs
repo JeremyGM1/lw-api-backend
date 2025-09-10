@@ -4,6 +4,7 @@ using Persistence.Repositories;
 using Persistence.Interfaces;
 
 namespace Persistence;
+
 public static class PersistenceServiceRegistration
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
