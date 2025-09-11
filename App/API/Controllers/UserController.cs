@@ -22,7 +22,7 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<List<UserDto>> Get()
     {
-        var users = await _mediator.Send(new GetUserQuery());
+        var users = await _mediator.Send(new GetUsersQuery());
         return users;
     }
 

@@ -11,7 +11,7 @@ public class UserRepository : GenericRepository<User, string>, IUserRepository
     {
     }
 
-    public async Task<User> GetUserWithId(string Id)
+    public async Task<User> GetUserById(string Id)
     {
         return await _context.Users.FindAsync(Id);
     }
