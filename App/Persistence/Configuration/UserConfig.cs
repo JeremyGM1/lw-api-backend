@@ -16,7 +16,7 @@ public class UserConfig : IEntityTypeConfiguration<User>
                 FirstName    = "John",
                 LastName     = "Smith",
                 Email        = "John@gmail.com",
-                Roles        = null,
+                UserRoles        = null,
 
                 CreatedAt    = new DateTime(0001, 01, 01),
                 UpdatedAt    = new DateTime(0001, 01, 01),

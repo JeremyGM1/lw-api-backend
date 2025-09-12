@@ -1,13 +1,13 @@
 ﻿using App.Core.Tests.Unit.Application.Mocks;
 using Application.Features.Shared.MappingProfiles;
 using AutoMapper;
+using Moq;
 using LoggingService.Interfaces;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Persistence.Interfaces;
 
-namespace App.Core.Tests.Unit.Application.Features.Shared;
-public abstract class UserHandlerTestBase<THandler>
+namespace App.Core.Tests.Unit.Application.Features.User;
+public class UserHandlerTestBase<THandler>
 {
     protected readonly Mock<IUserRepository> _mockRepo;
     protected readonly IMapper _mapper;

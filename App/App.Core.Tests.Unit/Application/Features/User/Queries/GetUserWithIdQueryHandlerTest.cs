@@ -1,24 +1,45 @@
-﻿using App.Core.Tests.Unit.Application.Features.Shared;
-using App.Core.Tests.Unit.Application.Mocks.DataFactory;
+﻿using App.Core.Tests.Unit.Application.Mocks;
 using Application.Features.Shared.Dtos.UserDtos;
+using Application.Features.Shared.MappingProfiles;
 using Application.Features.Users.Queries.GetUserById;
+using AutoMapper;
+using LoggingService.Interfaces;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Persistence.Interfaces;
 using Shouldly;
-using static App.Core.Tests.Unit.Application.Mocks.MockUserRepository;
 
 namespace App.Core.Tests.Unit.Application.Features.User.Queries;
-public class GetUserWithIdQueryHandlerTest : UserHandlerTestBase<GetUserByIdQueryHandler>
+public class GetUserWithIdQueryHandlerTest
 {
+    private readonly Mock<IUserRepository> _mockRepo;
+    private readonly IMapper _mapper;
+    private readonly Mock<IAppLogger<GetUserByIdQueryHandler>> _mockAppLogger;
+    private readonly ILoggerFactory loggerFactory;
+
+    public GetUserWithIdQueryHandlerTest()
+    {
+        _mockRepo = MockUserRepository.GetMockUsersRepository();
+        loggerFactory = new LoggerFactory();
+
+        var mapperConfig = new MapperConfiguration(cfg => cfg.AddProfile<UserProfile>(), loggerFactory);
+
+        _mapper = mapperConfig.CreateMapper();
+
+        _mockAppLogger = new Mock<IAppLogger<GetUserByIdQueryHandler>>();
+    }
+
     [Fact]
     public async Task GetUserWithIdTest()
     {
-        var user = TestDataFactory.CreateTestUser(
-            id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
-            firstName: "John",
-            lastName: "Doe",
-            email: "john.doe@company.com"
-        );
+        var user = new Domain.Entities.User
+        {
+            Id = "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+            FirstName = "John",
+            LastName = "Doe",
+            Email = "john.doe@company.com",
+            UserRoles = null
+        };
 
         var handler = new GetUserByIdQueryHandler(_mapper, _mockRepo.Object);
 
