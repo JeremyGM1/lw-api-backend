@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.Features.Identity.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Application.Interfaces.Identity
 {
     public interface IAuthService
     {
-        //Task<AuthResponse> Login(AuthRequest request);
-        //Task<RegistrationResponse> Register(RegistrationRequest request);
+        Task<AuthResponse> Login(AuthRequest request);
+        Task<RegistrationResponse> Register(RegistrationRequest request);
     }
 }
