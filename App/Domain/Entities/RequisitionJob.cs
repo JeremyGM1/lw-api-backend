@@ -3,6 +3,6 @@ public class RequisitionJob
 {
     public required string ReqId { get; set; }
     public required string JobDescriptionId { get; set; }
-    public Requisition Requisitions { get; set; } = null!;
-    public JobDescription JobDescriptions { get; set; } = null!;
+    public Requisition Requisition { get; set; } = null!;
+    public JobDescription JobDescription { get; set; } = null!;
 }
