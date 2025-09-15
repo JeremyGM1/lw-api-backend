@@ -9,6 +9,7 @@ public partial class AppDbContext : DbContext
     public required DbSet<Role> Roles { get; set; }
     public required DbSet<User> Users { get; set; }
     public required DbSet<UserRole> UserRole { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -30,6 +31,7 @@ public partial class AppDbContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         foreach (var entry in base.ChangeTracker.Entries<BaseEntity<object>>()
