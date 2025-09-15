@@ -1,8 +1,10 @@
 using Application;
 using FluentAssertions.Common;
 using LoggingService;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Threading.RateLimiting;
 
 namespace API.Extentions;
 
@@ -31,5 +33,23 @@ public static class ServiceExtensions
         {
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" });
         });
+    }
+
+    public static IServiceCollection AddRateLimitingPolicies(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("LoginPolicy", opt =>
+            {
+                
+                opt.PermitLimit = 5;                      
+                opt.Window = TimeSpan.FromMinutes(1);
+                opt.QueueLimit = 0;            
+                opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+            });
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+        });
+
+        return services;
     }
 }

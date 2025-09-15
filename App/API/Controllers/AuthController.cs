@@ -2,6 +2,7 @@
 using Application.Interfaces.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace API.Controllers
 {
@@ -17,6 +18,7 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
+        [EnableRateLimiting("LoginPolicy")]
         public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
         {
             return Ok(await _authenticationService.Login(request));

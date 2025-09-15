@@ -70,7 +70,7 @@ namespace Identity.Services
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "Admin");
+                await _userManager.AddToRoleAsync(user, "Administrator");
                 return new RegistrationResponse() { UserId = user.Id };
             }
             else
