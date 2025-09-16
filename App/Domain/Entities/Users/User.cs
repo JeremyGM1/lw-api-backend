@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 
-namespace Domain.Entities;
+namespace Domain.Entities.Users;
 
 public class User : BaseEntity<string>
 {

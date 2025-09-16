@@ -1,6 +1,6 @@
 ﻿using Moq;
-using Domain.Entities;
 using Persistence.Interfaces;
+using Domain.Entities.Users;
 
 namespace App.Core.Tests.Unit.Application.Mocks;
 

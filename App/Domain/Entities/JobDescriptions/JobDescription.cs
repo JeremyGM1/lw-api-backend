@@ -1,6 +1,9 @@
 ﻿using Domain.Common;
+using Domain.Entities.Candidates;
+using Domain.Entities.JobDescriptions;
+using Domain.Entities.Requisitions;
 
-namespace Domain.Entities;
+namespace Domain.Entities.JobDescriptions;
 public class JobDescription : BaseEntity<int>
 {
     public override required int Id { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Entities.JobDescriptions;
+
+namespace Domain.Entities.Candidates;
 public class JobCandidate
 {
     public int JobDescriptionId { get; set; }

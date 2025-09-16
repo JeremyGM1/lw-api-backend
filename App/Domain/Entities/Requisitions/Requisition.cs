@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 
-namespace Domain.Entities;
+namespace Domain.Entities.Requisitions;
 public class Requisition : BaseEntity<string>
 {
     public override required string Id { get; set; } //ReqCode
