@@ -32,16 +32,16 @@ namespace Persistence.Migrations
                 name: "JobDescriptions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<int>(type: "int", nullable: false),
-                    PostingUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KeyResponsabilities = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    InternalNotes = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PostingUrl = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    KeyResponsabilities = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    InternalNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -55,25 +55,24 @@ namespace Persistence.Migrations
                 name: "Requisitions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Headcount = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    WorkType = table.Column<int>(type: "int", nullable: false),
-                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HiringManager = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Owner = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompensationBandMin = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CompensationBandMax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CompensationBandCurrency = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompensationBandInterval = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Id = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Headcount = table.Column<int>(type: "int", maxLength: 255, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    WorkType = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Department = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    HiringManager = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CompensationBandMin = table.Column<decimal>(type: "decimal(20,4)", precision: 20, scale: 4, nullable: false),
+                    CompensationBandMax = table.Column<decimal>(type: "decimal(20,4)", precision: 20, scale: 4, nullable: false),
+                    CompensationBandCurrency = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CompensationBandInterval = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     BackfillName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Hardware = table.Column<int>(type: "int", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Hardware = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -164,7 +163,7 @@ namespace Persistence.Migrations
                 name: "RequisitionJobs",
                 columns: table => new
                 {
-                    ReqId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReqId = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     JobDescriptionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -236,12 +235,42 @@ namespace Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "Email", "FirstName", "LastName", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { "00000000-0000-0000-0000-000000000000", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Seeder", "John@gmail.com", "John", "Smith", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Seeder" });
+                values: new object[] { "00000000-0000-0000-0000-000000000000", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "System", "John@gmail.com", "John", "Smith", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "System" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobCandidates_CandidateId",
                 table: "JobCandidates",
                 column: "CandidateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_ApprovalDate",
+                table: "JobDescriptions",
+                column: "ApprovalDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_CreatedAt",
+                table: "JobDescriptions",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_CreatedBy",
+                table: "JobDescriptions",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_Status",
+                table: "JobDescriptions",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_Status_CreatedAt",
+                table: "JobDescriptions",
+                columns: new[] { "Status", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobDescriptions_Title",
+                table: "JobDescriptions",
+                column: "Title");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobSkills_SkillId",
@@ -252,6 +281,41 @@ namespace Persistence.Migrations
                 name: "IX_RequisitionJobs_JobDescriptionId",
                 table: "RequisitionJobs",
                 column: "JobDescriptionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_CreatedAt",
+                table: "Requisitions",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_CreatedBy",
+                table: "Requisitions",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_HiringManager",
+                table: "Requisitions",
+                column: "HiringManager");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_Id",
+                table: "Requisitions",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_Status",
+                table: "Requisitions",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_Status_CreatedAt",
+                table: "Requisitions",
+                columns: new[] { "Status", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_WorkType",
+                table: "Requisitions",
+                column: "WorkType");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",
