@@ -1,6 +1,5 @@
 ﻿using Domain.Common;
 using Domain.Entities.Candidates;
-using Domain.Entities.JobDescriptions;
 using Domain.Entities.Requisitions;
 
 namespace Domain.Entities.JobDescriptions;

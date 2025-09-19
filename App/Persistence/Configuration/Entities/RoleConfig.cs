@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 
-namespace Persistence.Configuration;
+namespace Persistence.Configuration.Entities;
 
 public class RoleConfig
 {

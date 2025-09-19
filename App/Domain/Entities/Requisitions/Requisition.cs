@@ -3,7 +3,6 @@
 namespace Domain.Entities.Requisitions;
 public class Requisition : BaseEntity<string>
 {
-    public override required string Id { get; set; } //ReqCode
     public required string Name { get; set; }
     public int Headcount { get; set; }
     public required RequisitionStatus Status { get; set; }
@@ -19,9 +18,9 @@ public class Requisition : BaseEntity<string>
     public string? Description { get; set; }
     public string? BackfillName { get; set; }
     public RequisitionHardware Hardware { get; set; }
-    public DateTime CreationDate { get; set; }
+    //public DateTime CreationDate { get; set; }
     public DateTime? ApprovalDate { get; set; }
-    public ICollection<RequisitionJob>? LinkedPostingList { get; set; }
+    public ICollection<RequisitionJob>? LinkedPostingList { get; set; } = [];
 }
 public enum RequisitionStatus
 {

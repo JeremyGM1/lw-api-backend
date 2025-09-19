@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 
 
-namespace Persistence.Configuration;
+namespace Persistence.Configuration.Entities;
 
 public class UserConfig : IEntityTypeConfiguration<User>
 {
@@ -20,8 +20,8 @@ public class UserConfig : IEntityTypeConfiguration<User>
 
                 CreatedAt    = new DateTime(0001, 01, 01),
                 UpdatedAt    = new DateTime(0001, 01, 01),
-                CreatedBy    = "Seeder",
-                UpdatedBy    = "Seeder"
+                CreatedBy    = "System",
+                UpdatedBy    = "System"
             }
         );
 
