@@ -5,9 +5,9 @@ public class Requisition : BaseEntity<string>
 {
     public required string Name { get; set; }
     public int Headcount { get; set; }
-    public required RequisitionStatus Status { get; set; }
+    public required RequisitionStatus Status { get; set; } //Cancelled, Closed, Completed, Open;
     public required string Location { get; set; }
-    public required RequisitionWorkType WorkType { get; set; }
+    public required RequisitionWorkType WorkType { get; set; } //Contractor,FullTime,Internship,PartTime,    
     public required string Department { get; set; }
     public required string HiringManager { get; set; }
     public required string Owner { get; set; }
@@ -17,28 +17,7 @@ public class Requisition : BaseEntity<string>
     public required string CompensationBandInterval { get; set; }
     public string? Description { get; set; }
     public string? BackfillName { get; set; }
-    public RequisitionHardware Hardware { get; set; }
-    //public DateTime CreationDate { get; set; }
+    public required RequisitionHardware Hardware { get; set; } //Dell,Mac
     public DateTime? ApprovalDate { get; set; }
     public ICollection<RequisitionJob>? LinkedPostingList { get; set; } = [];
-}
-public enum RequisitionStatus
-{
-    Cancelled,
-    Closed,
-    Completed,
-    OnHold,
-    Open,
-}
-public enum RequisitionWorkType
-{
-    Contractor,
-    FullTime,
-    Internship,
-    PartTime,
-}
-public enum RequisitionHardware
-{
-    Dell,
-    Mac
 }

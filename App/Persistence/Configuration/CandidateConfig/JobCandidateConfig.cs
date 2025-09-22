@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Configuration.Relationships;
+namespace Persistence.Configuration.Candidates;
 public class JobCandidateConfig : IEntityTypeConfiguration<JobCandidate>
 {
     public void Configure(EntityTypeBuilder<JobCandidate> builder)

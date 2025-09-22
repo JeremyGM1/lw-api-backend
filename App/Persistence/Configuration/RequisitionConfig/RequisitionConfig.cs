@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Requisitions;
 
-namespace Persistence.Configuration.Entities;
+namespace Persistence.Configuration.RequisitionConfig;
 public class RequisitionConfig : IEntityTypeConfiguration<Requisition>
 {
     public void Configure(EntityTypeBuilder<Requisition> builder)

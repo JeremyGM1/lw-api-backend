@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 
 
-namespace Persistence.Configuration.Entities;
+namespace Persistence.Configuration.UserConfig;
 
 public class UserConfig : IEntityTypeConfiguration<User>
 {

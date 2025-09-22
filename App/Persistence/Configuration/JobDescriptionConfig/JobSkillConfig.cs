@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.JobDescriptions;
 
-namespace Persistence.Configuration.Relationships;
+namespace Persistence.Configuration.JobDescriptionConfig;
 public class JobSkillConfig : IEntityTypeConfiguration<JobSkill>
 {
     public void Configure(EntityTypeBuilder<JobSkill> builder)
