@@ -8,6 +8,7 @@ using Application.Exceptions;
 using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
 using Identity.Models;
+using FluentValidation;
 
 namespace Identity.Services
 {
@@ -96,7 +97,23 @@ namespace Identity.Services
             if (!string.IsNullOrEmpty(request.LastName))
                 user.LastName = request.LastName;
 
-            await _userManager.UpdateAsync(user);
+            if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
+            {
+                var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(",", result.Errors.Select(e => e.Description));
+                    throw new ValidationException($"Password change failed. {errors}");
+                }
+            }
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
+                throw new ValidationException($"User update failed: {errors}");
+            }
 
             return new UpdateResponse() { UserId = user.Id };
         }
