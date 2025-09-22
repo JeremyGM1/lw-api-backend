@@ -7,8 +7,12 @@ public class JobDescription : BaseEntity<int>
 {
     public override required int Id { get; set; }
     public required string Title { get; set; }
-    public required JobDescriptionStatus Status { get; set; } //Open,Closed,OnHold
-    public required JobDescriptionLocation Location { get; set; } //OnSite,Hybrid,Remote    
+
+    public int StatusId { get; set; }
+    public int LocationId { get; set; }
+
+    public JobDescriptionStatus Status { get; set; } = null!; //Open,Closed,OnHold
+    public JobDescriptionLocation Location { get; set; } = null!; //OnSite,Hybrid,Remote    
     public required string PostingUrl { get; set; }
     public required string KeyResponsabilities { get; set; }
     //public required Skill RequiredSkills { get; set; }

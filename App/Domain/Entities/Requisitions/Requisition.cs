@@ -4,10 +4,15 @@ namespace Domain.Entities.Requisitions;
 public class Requisition : BaseEntity<string>
 {
     public required string Name { get; set; }
+
+    public int StatusId{ get; set; }
+    public int WorkTypeId { get; set; }
+    public int HardwareId { get; set; }
+
     public int Headcount { get; set; }
-    public required RequisitionStatus Status { get; set; } //Cancelled, Closed, Completed, Open;
+    public required RequisitionStatus Status { get; set; }
     public required string Location { get; set; }
-    public required RequisitionWorkType WorkType { get; set; } //Contractor,FullTime,Internship,PartTime,    
+    public required RequisitionWorkType WorkType { get; set; }
     public required string Department { get; set; }
     public required string HiringManager { get; set; }
     public required string Owner { get; set; }
