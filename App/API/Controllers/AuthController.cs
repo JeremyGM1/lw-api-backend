@@ -1,5 +1,7 @@
 ﻿using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
+using Identity.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -31,6 +33,12 @@ namespace API.Controllers
         public async Task<ActionResult<UpdateResponse>> Update(UpdateRequest request)
         {
             return Ok(await _authenticationService.Update(request));
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _authenticationService.DeleteUserAsync(id);
+            return NoContent();
         }
     }
 }

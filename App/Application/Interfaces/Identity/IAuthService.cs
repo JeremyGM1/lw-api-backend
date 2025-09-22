@@ -7,5 +7,6 @@ namespace Application.Interfaces.Identity
         Task<AuthResponse> Login(AuthRequest request);
         Task<RegistrationResponse> Register(RegistrationRequest request);
         Task<UpdateResponse> Update(UpdateRequest request);
+        Task<bool> DeleteUserAsync(string userId);
     }
 }

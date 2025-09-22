@@ -1,4 +1,5 @@
-﻿using Application.Features.Identity.Models;
+﻿using Application.Exceptions;
+using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,10 +15,11 @@ namespace Identity.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserService(UserManager<ApplicationUser> user)
+        public UserService(UserManager<ApplicationUser> userManager)
         {
-            
+            _userManager = userManager;
         }
+
         public Task<UserDto> GetEmployee(string userId)
         {
             throw new NotImplementedException();
