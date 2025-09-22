@@ -1,18 +1,13 @@
-﻿using Application.Exceptions;
-using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
-using Identity.Models;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using Application.Exceptions;
+using Application.Features.Identity.Models;
+using Application.Interfaces.Identity;
+using Identity.Models;
 
 namespace Identity.Services
 {
@@ -30,6 +25,7 @@ namespace Identity.Services
             _jwtSettings = jwtSettings.Value;
             _signInManager = signInManager;
         }
+
         public async Task<AuthResponse> Login(AuthRequest request)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
@@ -37,7 +33,7 @@ namespace Identity.Services
             {
                 throw new NotFoundException($"User with {request.Email} not found.", request.Email);
             }
-            var result = await _signInManager.CheckPasswordSignInAsync(user,request.Password,false);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
             if (result.Succeeded == false)
             {
@@ -47,23 +43,23 @@ namespace Identity.Services
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
 
             var response = new AuthResponse
-            { 
-                Id= user.Id,
+            {
+                Id = user.Id,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Email = user.Email
-                
             };
 
             return response;
         }
+
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
             var user = new ApplicationUser
-            { 
+            {
                 Email = request.Email,
                 UserName = request.Email,
                 FirstName = request.FirstName,
-                LastName= request.LastName,
+                LastName = request.LastName,
                 EmailConfirmed = true
             };
 
@@ -78,10 +74,31 @@ namespace Identity.Services
                 StringBuilder str = new StringBuilder();
                 foreach (var err in result.Errors)
                 {
-                    str.AppendFormat("•{0}\n",err.Description);
+                    str.AppendFormat("•{0}\n", err.Description);
                 }
                 throw new BadRequestException($"{str}");
             }
+        }
+
+        public async Task<UpdateResponse> Update(UpdateRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(request.Id) ?? throw new NotFoundException($"User with {request.Id} not found.", request.Id);
+
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                user.Email = request.Email;
+                user.UserName = request.Email;
+            }
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+                user.FirstName = request.FirstName;
+
+            if (!string.IsNullOrEmpty(request.LastName))
+                user.LastName = request.LastName;
+
+            await _userManager.UpdateAsync(user);
+
+            return new UpdateResponse() { UserId = user.Id };
         }
 
         private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)

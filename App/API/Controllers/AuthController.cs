@@ -1,6 +1,5 @@
 ﻿using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -27,6 +26,11 @@ namespace API.Controllers
         public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
         {
             return Ok(await _authenticationService.Register(request));
+        }
+        [HttpPut("Update")]
+        public async Task<ActionResult<UpdateResponse>> Update(UpdateRequest request)
+        {
+            return Ok(await _authenticationService.Update(request));
         }
     }
 }
