@@ -12,6 +12,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
 
+// **Swagger with JWT**
+builder.Services.AddSwaggerWithJwt();
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();

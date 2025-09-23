@@ -9,8 +9,10 @@ namespace Application.Interfaces.Identity
 {
     public interface IUserService
     {
-        Task<List<UserDto>> GetEmployees();
-        Task<UserDto> GetEmployee(string userId);
-        
+        Task<RegistrationResponse> Register(RegistrationRequest request);
+        Task<UpdateResponse> Update(UpdateRequest request);
+        Task<bool> DeleteUserAsync(string userId);
+        Task<UserProfileResponse> GetCurrentUserProfileAsync(string userId);
+
     }
 }

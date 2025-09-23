@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Identity.Models
 {
-    public class UserDto
+    public class UserProfileResponse
     {
         public string Id { get; set; }
         public string Email { get; set; }

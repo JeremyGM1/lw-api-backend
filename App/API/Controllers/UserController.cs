@@ -4,67 +4,54 @@ using Application.Features.CQRS.Users.Commands.DeleteUser;
 using Application.Features.CQRS.Users.Commands.UpdateUser;
 using Application.Features.CQRS.Users.Queries.GetAllUsers;
 using Application.Features.CQRS.Users.Queries.GetUserById;
+using Application.Features.Identity.Models;
+using Application.Interfaces.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IUserService _userService;
 
-    public UserController(IMediator mediator)
+    public UserController(IUserService userService)
     {
-        _mediator = mediator;
+        _userService = userService;
     }
-    // GET: api/<UserController>
-    [HttpGet]
-    public async Task<List<UserDto>> Get()
+    [HttpPost("register")]
+    public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
-        var users = await _mediator.Send(new GetUserQuery());
-        return users;
+        return Ok(await _userService.Register(request));
     }
-
-    // GET api/<UserController>/5
-    [HttpGet("{id}")]
-    public async Task<UserDto> Get(string id)
+    [HttpPut("Update")]
+    public async Task<ActionResult<UpdateResponse>> Update(UpdateRequest request)
     {
-        var user = await _mediator.Send(new GetUserByIdQuery(id));
-        return user;
+        return Ok(await _userService.Update(request));
     }
-
-    // POST api/<UserController>
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Post(CreateUserCommand user)
-    {
-        var response = await _mediator.Send(user);
-        return CreatedAtAction(nameof(Get), new { id = response });
-    }
-
-    // PUT api/<UserController>/5
-    [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
-    public async Task<ActionResult> Put(UpdateUserCommand user)
-    {
-        await _mediator.Send(user);
-        return NoContent();
-    }
-
-    // DELETE api/<UserController>/5
     [HttpDelete("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesDefaultResponseType]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
-        var command = new DeleteUserCommand { Id = id };
-        await _mediator.Send(command);
+        await _userService.DeleteUserAsync(id);
         return NoContent();
+    }
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> GetMyProfile()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var profile = await _userService.GetCurrentUserProfileAsync(userId);
+
+        if (profile == null)
+            return NotFound();
+
+        return Ok(profile);
     }
 }
