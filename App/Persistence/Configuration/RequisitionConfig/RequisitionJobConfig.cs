@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Requisitions;
 
 namespace Persistence.Configuration.RequisitionConfig;
+
 public class RequisitionJobConfig : IEntityTypeConfiguration<RequisitionJob>
 {
     public void Configure(EntityTypeBuilder<RequisitionJob> builder)

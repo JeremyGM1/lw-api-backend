@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 
 namespace Persistence.Configuration.UserConfig;
+
 public class UserRoleConfig : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)

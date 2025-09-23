@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using Domain.Entities.JobDescriptions;
 
 namespace Persistence.Configuration.JobDescriptionConfig;
+
 public class JobDescriptionStatusConfig : IEntityTypeConfiguration<JobDescriptionStatus>
 {
     public void Configure(EntityTypeBuilder<JobDescriptionStatus> builder)
@@ -11,9 +12,9 @@ public class JobDescriptionStatusConfig : IEntityTypeConfiguration<JobDescriptio
         builder.Property(s => s.Status);
 
         builder.HasData(
-            new JobDescriptionStatus { Id = 1, Status = "Open"},
-            new JobDescriptionStatus { Id = 2, Status = "Closed"},
-            new JobDescriptionStatus { Id = 3, Status = "On-Hold"}
+            new JobDescriptionStatus { Id = 1, Status = "Open" },
+            new JobDescriptionStatus { Id = 2, Status = "Closed" },
+            new JobDescriptionStatus { Id = 3, Status = "On-Hold" }
         );
     }
 }

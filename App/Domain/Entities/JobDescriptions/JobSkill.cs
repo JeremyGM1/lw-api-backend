@@ -1,4 +1,5 @@
 ﻿namespace Domain.Entities.JobDescriptions;
+
 public class JobSkill
 {
     public int JobId { get; set; }
@@ -7,6 +8,7 @@ public class JobSkill
     public virtual Skill Skill { get; set; } = null!;
     public JobSkillType JobSkillType { get; set; }
 }
+
 public enum JobSkillType
 {
     Required,

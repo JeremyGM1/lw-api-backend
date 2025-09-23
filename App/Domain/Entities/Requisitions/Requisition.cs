@@ -1,11 +1,12 @@
 ﻿using Domain.Common;
 
 namespace Domain.Entities.Requisitions;
+
 public class Requisition : BaseEntity<string>
 {
     public required string Name { get; set; }
 
-    public int StatusId{ get; set; }
+    public int StatusId { get; set; }
     public int WorkTypeId { get; set; }
     public int HardwareId { get; set; }
 

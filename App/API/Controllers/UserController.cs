@@ -8,6 +8,7 @@ using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Shared.Dtos.UserDtos;
 
 namespace API.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase
@@ -18,6 +19,7 @@ public class UserController : ControllerBase
     {
         _mediator = mediator;
     }
+
     // GET: api/<UserController>
     [HttpGet]
     public async Task<List<UserDto>> Get()

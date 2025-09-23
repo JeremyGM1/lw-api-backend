@@ -1,4 +1,5 @@
 ﻿namespace Domain.Entities.JobDescriptions;
+
 public class JobDescriptionLocation
 {
     public int Id { get; set; }

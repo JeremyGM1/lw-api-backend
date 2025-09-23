@@ -1,6 +1,7 @@
 ﻿using Domain.Entities.JobDescriptions;
 
 namespace Domain.Entities.Requisitions;
+
 public class RequisitionJob
 {
     public required string ReqId { get; set; }

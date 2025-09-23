@@ -1,8 +1,9 @@
-﻿using Domain.Entities.Candidates;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Entities.Candidates;
 
 namespace Persistence.Configuration.Candidates;
+
 public class JobCandidateConfig : IEntityTypeConfiguration<JobCandidate>
 {
     public void Configure(EntityTypeBuilder<JobCandidate> builder)

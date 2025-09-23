@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.JobDescriptions;
 
 namespace Persistence.Configuration.JobDescriptionConfig;
+
 public class JobDescriptionConfig : IEntityTypeConfiguration<JobDescription>
 {
     public void Configure(EntityTypeBuilder<JobDescription> builder)

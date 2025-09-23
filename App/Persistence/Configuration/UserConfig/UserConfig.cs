@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Users;
 
-
 namespace Persistence.Configuration.UserConfig;
 
 public class UserConfig : IEntityTypeConfiguration<User>
@@ -12,20 +11,20 @@ public class UserConfig : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                Id           = "00000000-0000-0000-0000-000000000000",
-                FirstName    = "John",
-                LastName     = "Smith",
-                Email        = "John@gmail.com",
-                UserRoles        = null,
+                Id        = "00000000-0000-0000-0000-000000000000",
+                FirstName = "John",
+                LastName  = "Smith",
+                Email     = "John@gmail.com",
+                UserRoles = null,
 
-                CreatedAt    = new DateTime(0001, 01, 01),
-                UpdatedAt    = new DateTime(0001, 01, 01),
-                CreatedBy    = "System",
-                UpdatedBy    = "System"
+                CreatedAt = new DateTime(0001, 01, 01),
+                UpdatedAt = new DateTime(0001, 01, 01),
+                CreatedBy = "System",
+                UpdatedBy = "System"
             }
         );
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x   => x.Id);
         builder.Property(x => x.FirstName).HasMaxLength(70).IsRequired();
         builder.Property(x => x.LastName).HasMaxLength(100).IsRequired();
         builder.Property(x => x.Email).IsRequired();

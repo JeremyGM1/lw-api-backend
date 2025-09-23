@@ -7,17 +7,19 @@ namespace API.Middleware;
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
+
     public ExceptionMiddleware(RequestDelegate next)
     {
         _next = next;
     }
+
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
         {
             await _next(httpContext);
-
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             await HandleExceptionAsync(httpContext, ex);
         }
@@ -41,6 +43,7 @@ public class ExceptionMiddleware
                     Errors = badRequestException.ValidationErrors,
                 };
                 break;
+
             case NotFoundException notFound:
                 statusCode = HttpStatusCode.NotFound;
                 problem = new CustomProblemDetails
@@ -51,6 +54,7 @@ public class ExceptionMiddleware
                     Detail = notFound.InnerException?.Message,
                 };
                 break;
+
             default:
                 problem = new CustomProblemDetails
                 {

@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Requisitions;
 
 namespace Persistence.Configuration.RequisitionConfig;
+
 public class RequisitionConfig : IEntityTypeConfiguration<Requisition>
 {
     public void Configure(EntityTypeBuilder<Requisition> builder)
     {
-        builder.HasKey(r   => r.Id);
+        builder.HasKey(r => r.Id);
 
         builder.HasOne(r => r.Status)
             .WithMany(s => s.Requisitions)
