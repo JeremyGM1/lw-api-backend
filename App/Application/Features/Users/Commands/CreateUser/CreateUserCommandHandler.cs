@@ -28,6 +28,7 @@ public class CreateUserCommandHandler(IMapper mapper, IUserRepository userReposi
         userToCreate.CreatedBy = "Admin";
 
         await _userRepository.CreateAsync(userToCreate);
+        _logger.LogInformation("User created successfully", userToCreate.Id, userToCreate.CreatedBy, userToCreate.CreatedAt);
 
         return Unit.Value;
     }
