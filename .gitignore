@@ -412,7 +412,10 @@ nunit-*.xml
 # Configuration files
 appsettings.json
 appsettings.*.json
-/App/.vs/App
+.vs/
+App/.vs/
+App/.vs/*
+vin/
+obj/
 *.user
-/.vs
 /App/API/appsettings.json
