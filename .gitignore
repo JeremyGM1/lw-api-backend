@@ -415,7 +415,7 @@ appsettings.*.json
 .vs/
 App/.vs/
 App/.vs/*
-vin/
+bin/
 obj/
 *.user
 /App/API/appsettings.json
