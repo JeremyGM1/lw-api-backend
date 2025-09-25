@@ -19,6 +19,8 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseCors("all");
+
 app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
@@ -33,8 +35,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseCors("all");
 
 app.UseAuthentication();
 
