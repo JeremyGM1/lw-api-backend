@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.AccessControl.Permission", b =>
+            modelBuilder.Entity("Domain.Entities.Candidates.Candidate", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -34,12 +34,208 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Candidates.JobCandidate", b =>
+                {
+                    b.Property<int>("JobDescriptionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CandidateId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("JobDescriptionId", "CandidateId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.ToTable("JobCandidates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("ApprovalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("InternalNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("KeyResponsabilities")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostingUrl")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprovalDate");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("Title");
+
+                    b.HasIndex("StatusId", "CreatedAt");
+
+                    b.ToTable("JobDescriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobDescriptionLocation");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Location = "On-Site"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Location = "Hybrid"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Location = "Remote"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JobDescriptionStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Status = "Open"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Status = "Closed"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Status = "On-Hold"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
+                {
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobSkillType")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("JobSkills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -49,18 +245,244 @@ namespace Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ApprovalDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BackfillName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompensationBandCurrency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("CompensationBandInterval")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal>("CompensationBandMax")
+                        .HasPrecision(20, 4)
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<decimal>("CompensationBandMin")
+                        .HasPrecision(20, 4)
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("HardwareId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Headcount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HiringManager")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Owner")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("HardwareId");
+
+                    b.HasIndex("HiringManager");
+
+                    b.HasIndex("StatusId");
+
+                    b.HasIndex("WorkTypeId");
+
+                    b.HasIndex("StatusId", "CreatedAt");
+
+                    b.ToTable("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionHardware", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Hardware")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission");
+                    b.ToTable("RequisitionHardware");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Hardware = "Dell"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Hardware = "Mac"
+                        });
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.RolePermission", b =>
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ReqId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("JobDescriptionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReqId", "JobDescriptionId");
+
+                    b.HasIndex("JobDescriptionId");
+
+                    b.ToTable("RequisitionJobs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionStatus");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Status = "Cancelled"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Status = "Closed"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Status = "Completed"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Status = "Open"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionWorkType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("WorkType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionWorkType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            WorkType = "Contractor"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            WorkType = "FullTime"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            WorkType = "Internship"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            WorkType = "PartTime"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -69,34 +491,25 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PermissionId")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RolePermission");
+                    b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.User", b =>
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -118,23 +531,15 @@ namespace Persistence.Migrations
                         .HasMaxLength(70)
                         .HasColumnType("nvarchar(70)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -147,123 +552,142 @@ namespace Persistence.Migrations
                         {
                             Id = "00000000-0000-0000-0000-000000000000",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedBy = "Seeder",
+                            CreatedBy = "System",
                             Email = "John@gmail.com",
                             FirstName = "John",
-                            IsActive = true,
                             LastName = "Smith",
-                            PasswordHash = "",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedBy = "Seeder"
+                            UpdatedBy = "System"
                         });
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.UserRole", b =>
+            modelBuilder.Entity("Domain.Entities.Users.UserRole", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("Role", b =>
+            modelBuilder.Entity("Domain.Entities.Candidates.JobCandidate", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleCategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("Domain.AccessControl.RolePermission", b =>
-                {
-                    b.HasOne("Domain.AccessControl.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
+                    b.HasOne("Domain.Entities.Candidates.Candidate", "Candidate")
+                        .WithMany("JobCandidates")
+                        .HasForeignKey("CandidateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Role", "Role")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId")
+                    b.HasOne("Domain.Entities.JobDescriptions.JobDescription", "JobDescription")
+                        .WithMany("LinkedCandidatesList")
+                        .HasForeignKey("JobDescriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Permission");
+                    b.Navigation("Candidate");
 
-                    b.Navigation("Role");
+                    b.Navigation("JobDescription");
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.UserRole", b =>
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescription", b =>
                 {
-                    b.HasOne("Role", "Role")
+                    b.HasOne("Domain.Entities.JobDescriptions.JobDescriptionLocation", "Location")
+                        .WithMany("JobDescriptions")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.JobDescriptions.JobDescriptionStatus", "Status")
+                        .WithMany("JobDescriptions")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
+                {
+                    b.HasOne("Domain.Entities.JobDescriptions.JobDescription", "JobDescription")
+                        .WithMany("JobSkills")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.JobDescriptions.Skill", "Skill")
+                        .WithMany("JobSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobDescription");
+
+                    b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
+                {
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionHardware", "Hardware")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("HardwareId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionStatus", "Status")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionWorkType", "WorkType")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("WorkTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Hardware");
+
+                    b.Navigation("Status");
+
+                    b.Navigation("WorkType");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
+                {
+                    b.HasOne("Domain.Entities.JobDescriptions.JobDescription", "JobDescription")
+                        .WithMany("LinkedPostingList")
+                        .HasForeignKey("JobDescriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
+                        .WithMany("LinkedPostingList")
+                        .HasForeignKey("ReqId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobDescription");
+
+                    b.Navigation("Requisition");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.UserRole", b =>
+                {
+                    b.HasOne("Domain.Entities.Users.Role", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.AccessControl.User", "User")
+                    b.HasOne("Domain.Entities.Users.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -274,20 +698,62 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.Permission", b =>
+            modelBuilder.Entity("Domain.Entities.Candidates.Candidate", b =>
                 {
-                    b.Navigation("RolePermissions");
+                    b.Navigation("JobCandidates");
                 });
 
-            modelBuilder.Entity("Domain.AccessControl.User", b =>
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescription", b =>
+                {
+                    b.Navigation("JobSkills");
+
+                    b.Navigation("LinkedCandidatesList");
+
+                    b.Navigation("LinkedPostingList");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionLocation", b =>
+                {
+                    b.Navigation("JobDescriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionStatus", b =>
+                {
+                    b.Navigation("JobDescriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.Skill", b =>
+                {
+                    b.Navigation("JobSkills");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
+                {
+                    b.Navigation("LinkedPostingList");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionHardware", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionStatus", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionWorkType", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.Role", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Role", b =>
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
-                    b.Navigation("RolePermissions");
-
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

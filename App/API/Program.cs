@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.AppServiceExtensions(builder.Configuration);
 builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
@@ -27,10 +28,7 @@ app.UseRateLimiter();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Intership_backend v1");
-    });
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Intership_backend v1"));
     app.MapOpenApi();
 }
 

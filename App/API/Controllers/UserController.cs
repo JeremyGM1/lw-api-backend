@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace API.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class UserController : ControllerBase

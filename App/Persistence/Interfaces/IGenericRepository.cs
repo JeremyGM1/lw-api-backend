@@ -1,16 +1,16 @@
-﻿using Domain.AccessControl;
+﻿using Domain.Common;
 
 namespace Persistence.Interfaces;
 
-public interface IGenericRepository<T> where T : BaseEntity
+public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {
-    Task<IReadOnlyList<T>> GetAsync();
+    Task<IReadOnlyList<TEntity>> GetAsync();
 
-    Task<T> GetByIdAsync(string id);
+    Task<TEntity> GetByIdAsync(TKey id);
 
-    Task CreateAsync(T Entity);
+    Task CreateAsync(TEntity Entity);
 
-    Task UpdateAsync(T Entity);
+    Task UpdateAsync(TEntity Entity);
 
-    Task DeleteAsync(T Entity);    
+    Task DeleteAsync(TEntity Entity);
 }
