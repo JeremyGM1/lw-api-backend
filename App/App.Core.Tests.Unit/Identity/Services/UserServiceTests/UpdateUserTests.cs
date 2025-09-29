@@ -1,11 +1,12 @@
-﻿using FluentValidation;
+﻿using Application.Exceptions;
+using Application.Features.Identity.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
-using Application.Exceptions;
-using Application.Features.Identity.Models;
+using Xunit;
 using Identity.Models;
 using Identity.Services;
 
@@ -122,6 +123,8 @@ public class UpdateUserTests
 
         var exception = await Should.ThrowAsync<ValidationException>(() => _userService.Update(request));
         exception.Message.ShouldContain("Current Password is incorrect");
+
+        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Never);
     }
 
     [Fact]
@@ -136,6 +139,7 @@ public class UpdateUserTests
         var user = CreateTestUser(request.Id);
         var originalFirstName = user.FirstName;
         var originalLastName = user.LastName;
+        var originalPassword = user.PasswordHash;
 
         _mockUserManager
             .Setup(u => u.FindByIdAsync(request.Id))
@@ -145,12 +149,114 @@ public class UpdateUserTests
             .Setup(u => u.UpdateAsync(user))
             .ReturnsAsync(IdentityResult.Success);
 
-        var result = await _userService.Update(request);
+        await _userService.Update(request);
 
         user.Email.ShouldBe(request.Email);
         user.UserName.ShouldBe(request.Email);
         user.FirstName.ShouldBe(originalFirstName);
         user.LastName.ShouldBe(originalLastName);
-        _mockUserManager.Verify(u => u.ChangePasswordAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        user.PasswordHash.ShouldBe(originalPassword);
+
+        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task Update_OnlyFirstNameProvided_OnlyUpdatesFirstName()
+    {
+        var request = new UpdateRequest
+        {
+            Id = "test-user-id",
+            FirstName = "New-FirstName"
+        };
+
+        var user = CreateTestUser(request.Id);
+        var origiralEmail = user.Email;
+        var origiralLastName = user.LastName;
+        var originalPassword = user.PasswordHash;
+
+        _mockUserManager
+            .Setup(u => u.FindByIdAsync(request.Id))
+            .ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(u => u.UpdateAsync(user))
+            .ReturnsAsync(IdentityResult.Success);
+
+        await _userService.Update(request);
+
+        user.FirstName.ShouldBe(request.FirstName);
+        user.Email.ShouldBe(origiralEmail);
+        user.UserName.ShouldBe(origiralEmail);
+        user.LastName.ShouldBe(origiralLastName);
+        user.PasswordHash.ShouldBe(originalPassword);
+
+        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task Update_OnlyLastNameProvided_OnlyUpdatesLastName()
+    {
+        var request = new UpdateRequest
+        {
+            Id = "test-user-id",
+            LastName = "New-LastName"
+        };
+
+        var user = CreateTestUser(request.Id);
+        var origiralEmail = user.Email;
+        var originalFirstName = user.FirstName;
+        var originalPassword = user.PasswordHash;
+
+        _mockUserManager
+            .Setup(u => u.FindByIdAsync(request.Id))
+            .ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(u => u.UpdateAsync(user))
+            .ReturnsAsync(IdentityResult.Success);
+
+        await _userService.Update(request);
+
+        user.LastName.ShouldBe(request.LastName);
+        user.Email.ShouldBe(origiralEmail);
+        user.UserName.ShouldBe(origiralEmail);
+        user.FirstName.ShouldBe(originalFirstName);
+        user.PasswordHash.ShouldBe(originalPassword);
+
+        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task Update_ProvidesValidCurrentPasswordAndNewPassword_UpdatesPassword()
+    {
+        var request = CreateUpdateRequest();
+
+        var user = CreateTestUser(request.Id);
+
+        _mockUserManager
+            .Setup(u => u.FindByIdAsync(request.Id))
+            .ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
+            .ReturnsAsync(IdentityResult.Success);
+
+        _mockUserManager
+            .Setup(u => u.UpdateAsync(user))
+            .ReturnsAsync(IdentityResult.Success);
+
+        var result = await _userService.Update(request);
+
+        result.ShouldNotBeNull();
+        result.UserId.ShouldBe(request.Id);
+
+        _mockUserManager.Verify(u => u.ChangePasswordAsync(
+            It.Is<ApplicationUser>(u => u.Id == user.Id),
+            request.CurrentPassword!,
+            request.NewPassword!),
+            Times.Once
+        );
+
+        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
     }
 }

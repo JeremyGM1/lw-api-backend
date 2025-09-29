@@ -33,6 +33,15 @@ namespace Identity.Services
                 EmailConfirmed = true
             };
 
+            //if (string.IsNullOrWhiteSpace(request.FirstName))
+            //    throw new BadRequestException("The FirstName field is required");
+            //if (string.IsNullOrWhiteSpace(request.LastName))
+            //    throw new BadRequestException("The LastName field is required");
+            //if (string.IsNullOrWhiteSpace(request.Email))
+            //    throw new BadRequestException("The Email field is required");
+            //if (string.IsNullOrWhiteSpace(request.Password))
+            //    throw new BadRequestException("The Password field is required");
+
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {

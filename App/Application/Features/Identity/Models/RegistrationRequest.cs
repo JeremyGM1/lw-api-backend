@@ -9,15 +9,17 @@ namespace Application.Features.Identity.Models
 {
     public class RegistrationRequest
     {
-        [Required]
+        [Required(ErrorMessage = "The FirstName field is required")]
         public string FirstName { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "The LastName field is required")]
         public string LastName { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "The Email field is required")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "The Password field is required")]
         [MinLength(6)]
         public string Password { get; set; }
     }
