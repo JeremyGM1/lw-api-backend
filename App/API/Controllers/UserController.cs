@@ -1,9 +1,9 @@
-﻿using Application.Features.CQRS.Dtos;
-using Application.Features.CQRS.Users.Commands.CreateUser;
-using Application.Features.CQRS.Users.Commands.DeleteUser;
-using Application.Features.CQRS.Users.Commands.UpdateUser;
-using Application.Features.CQRS.Users.Queries.GetAllUsers;
-using Application.Features.CQRS.Users.Queries.GetUserById;
+﻿using Application.Features.Shared.Dtos;
+using Application.Features.Users.Commands.CreateUser;
+using Application.Features.Users.Commands.DeleteUser;
+using Application.Features.Users.Commands.UpdateUser;
+using Application.Features.Users.Queries.GetAllUsers;
+using Application.Features.Users.Queries.GetUserById;
 using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
 using MediatR;
