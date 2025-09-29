@@ -13,7 +13,7 @@ public class GenericRepository<TEntity, TKey>(AppDbContext context) : IGenericRe
         return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
     }
 
-    public async Task<TEntity> GetByIdAsync(TKey id)
+    public async Task<TEntity?> GetByIdAsync(TKey id)
     {
         return await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(q => q.Id!.Equals(id));
     }

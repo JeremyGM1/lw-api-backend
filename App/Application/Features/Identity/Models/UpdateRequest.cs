@@ -1,4 +1,5 @@
 ﻿namespace Application.Features.Identity.Models;
+
 public class UpdateRequest
 {
     public string Id { get; set; } = null!;

@@ -126,6 +126,7 @@ public class RegisterUserTests
     [Fact]
     public async Task Register_FirstNameMissing_ThrowBadRequestException()
     {
+        var user = CreateTestUser();
         var request = new RegistrationRequest
         {
             LastName = "Doe",

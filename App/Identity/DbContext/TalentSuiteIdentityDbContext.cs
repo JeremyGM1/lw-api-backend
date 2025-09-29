@@ -1,11 +1,6 @@
-﻿using Identity.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Identity.Models;
 
 namespace Identity.DbContext
 {
@@ -14,7 +9,6 @@ namespace Identity.DbContext
         public TalentSuiteIdentityDbContext(
             DbContextOptions<TalentSuiteIdentityDbContext> options) : base(options)
         {
-            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

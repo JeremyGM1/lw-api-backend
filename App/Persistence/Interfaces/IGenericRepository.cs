@@ -6,7 +6,7 @@ public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TK
 {
     Task<IReadOnlyList<TEntity>> GetAsync();
 
-    Task<TEntity> GetByIdAsync(TKey id);
+    Task<TEntity?> GetByIdAsync(TKey id);
 
     Task CreateAsync(TEntity Entity);
 

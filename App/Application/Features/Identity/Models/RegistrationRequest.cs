@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Features.Identity.Models
+namespace Application.Features.Identity.Models;
+
+public class RegistrationRequest
 {
-    public class RegistrationRequest
-    {
-        [Required(ErrorMessage = "The FirstName field is required")]
-        public string FirstName { get; set; }
+    public required string FirstName { get; set; }
 
-        [Required(ErrorMessage = "The LastName field is required")]
-        public string LastName { get; set; }
+    public required string LastName { get; set; }
 
-        [Required(ErrorMessage = "The Email field is required")]
-        [EmailAddress]
-        public string Email { get; set; }
+    [EmailAddress]
+    public required string Email { get; set; }
 
-        [Required(ErrorMessage = "The Password field is required")]
-        [MinLength(6)]
-        public string Password { get; set; }
-    }
+    [MinLength(6)]
+    public required string Password { get; set; }
 }

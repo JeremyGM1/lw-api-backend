@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Application.Features.Identity.Models;
 
-namespace Application.Features.Identity.Models
+public class JwtSettings
 {
-    public class JwtSettings
-    {
-        public string Key { get; set; }
-        public string Issuer { get; set; }
-        public string Audience { get; set; }
-        public double DurationInMinutes { get; set; }
-    }
+    public string Key { get; set; } = string.Empty;
+    public string Issuer { get; set; } = string.Empty;
+    public string Audience { get; set; } = string.Empty;
+    public double DurationInMinutes { get; set; }
 }
