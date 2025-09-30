@@ -1,11 +1,10 @@
+using System.Threading.RateLimiting;
 using Application;
-using FluentAssertions.Common;
 using LoggingService;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
-using System.Threading.RateLimiting;
 
 namespace API.Extentions;
 
@@ -42,10 +41,9 @@ public static class ServiceExtensions
         {
             options.AddFixedWindowLimiter("LoginPolicy", opt =>
             {
-                
-                opt.PermitLimit = 5;                      
+                opt.PermitLimit = 5;
                 opt.Window = TimeSpan.FromMinutes(1);
-                opt.QueueLimit = 0;            
+                opt.QueueLimit = 0;
                 opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
             });
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;

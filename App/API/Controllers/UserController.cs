@@ -1,15 +1,8 @@
-﻿using Application.Features.Shared.Dtos;
-using Application.Features.Users.Commands.CreateUser;
-using Application.Features.Users.Commands.DeleteUser;
-using Application.Features.Users.Commands.UpdateUser;
-using Application.Features.Users.Queries.GetAllUsers;
-using Application.Features.Users.Queries.GetUserById;
+﻿using System.Security.Claims;
 using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -23,22 +16,26 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
+
     [HttpPost("register")]
     public async Task<ActionResult<RegistrationResponse>> Register(RegistrationRequest request)
     {
         return Ok(await _userService.Register(request));
     }
+
     [HttpPut("Update")]
     public async Task<ActionResult<UpdateResponse>> Update(UpdateRequest request)
     {
         return Ok(await _userService.Update(request));
     }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(string id)
     {
         await _userService.DeleteUserAsync(id);
         return NoContent();
     }
+
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetMyProfile()

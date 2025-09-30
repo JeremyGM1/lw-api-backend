@@ -1,10 +1,9 @@
-﻿using API.Middleware.Models;
+﻿using System.Net;
+using API.Middleware.Models;
 using Application.Exceptions;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Net;
 
-namespace API.Middleware
-{
+namespace API.Middleware;
+
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
@@ -22,7 +21,7 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-                await HandleExceptionAsync(httpContext,ex);
+            await HandleExceptionAsync(httpContext, ex);
         }
     }
 
@@ -41,18 +40,18 @@ public class ExceptionMiddleware
                     Status = (int)statusCode,
                     Detail = badRequestException.InnerException?.Message,
                     Type = nameof(badRequestException),
-                        Errors = badRequestException.ValidationErrors
+                    Errors = badRequestException.ValidationErrors
                 };
                 break;
-                case NotFoundException NotFound:
+
+            case NotFoundException NotFound:
                 statusCode = HttpStatusCode.NotFound;
                 problem = new CustomProblemDetails
                 {
-                        Title = NotFound.Message,
+                    Title = NotFound.Message,
                     Status = (int)statusCode,
-                        Detail = NotFound.InnerException?.Message,
-                        Type = nameof(NotFound),
-                        
+                    Detail = NotFound.InnerException?.Message,
+                    Type = nameof(NotFound),
                 };
                 break;
 
@@ -61,16 +60,13 @@ public class ExceptionMiddleware
                 {
                     Title = ex.Message,
                     Status = (int)statusCode,
-                        Detail = ex.StackTrace,
+                    Detail = ex.StackTrace,
                     Type = nameof(HttpStatusCode.InternalServerError),
-
                 };
                 break;
         }
 
         httpContext.Response.StatusCode = (int)statusCode;
         await httpContext.Response.WriteAsJsonAsync(problem);
-
-        }
     }
 }

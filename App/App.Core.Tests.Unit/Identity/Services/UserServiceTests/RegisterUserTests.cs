@@ -129,6 +129,7 @@ public class RegisterUserTests
         var user = CreateTestUser();
         var request = new RegistrationRequest
         {
+            FirstName = null!,
             LastName = "Doe",
             Email = "test@email.com",
             Password = "P@ssw0rd",
@@ -146,6 +147,7 @@ public class RegisterUserTests
         var request = new RegistrationRequest
         {
             FirstName = "John",
+            LastName = null!,
             Email = "test@email.com",
             Password = "P@ssw0rd",
         };
@@ -163,6 +165,7 @@ public class RegisterUserTests
         {
             FirstName = "John",
             LastName = "Doe",
+            Email = null!,
             Password = "P@ssw0rd",
         };
 
@@ -179,7 +182,8 @@ public class RegisterUserTests
         {
             FirstName = "John",
             LastName = "Doe",
-            Email = "test@email.com"
+            Email = "test@email.com",
+            Password = null!,
         };
 
         var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request));

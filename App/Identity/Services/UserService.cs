@@ -124,7 +124,7 @@ public class UserService : IUserService
 
     private static void ValidateRequiredField(string value, string fieldName)
     {
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrEmpty(value))
             throw new BadRequestException($"The {fieldName} field is required");
     }
 }
