@@ -17,7 +17,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="RESTFulSense" Version="3.2.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.8.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
