@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Persistence.Interfaces;
+﻿using Application.Interfaces;
+using FluentValidation;
 
 namespace Application.Features.Users.Commands.UpdateUser;
 

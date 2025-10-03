@@ -2,7 +2,7 @@
 using MediatR;
 using Application.Features.Shared.Dtos.UserDtos;
 using LoggingService.Interfaces;
-using Persistence.Interfaces;
+using Application.Interfaces;
 
 namespace Application.Features.Users.Queries.GetAllUsers;
 

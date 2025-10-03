@@ -1,5 +1,9 @@
-﻿namespace Application.Features.Shared.Dtos.RequisitionDtos;
-public class CreateRequisitionDto
+﻿using Domain.Entities.Requisitions;
+using MediatR;
+
+namespace Application.Features.Requisitions.Commands.CreateRequisition;
+
+public class CreateRequisitionCommand : IRequest<Unit>
 {
     public required string Id { get; set; }
     public required string Name { get; set; }

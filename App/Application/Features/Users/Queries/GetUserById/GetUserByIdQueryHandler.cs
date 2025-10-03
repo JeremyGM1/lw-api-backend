@@ -2,7 +2,7 @@
 using MediatR;
 using Application.Exceptions;
 using Application.Features.Shared.Dtos.UserDtos;
-using Persistence.Interfaces;
+using Application.Interfaces;
 
 namespace Application.Features.Users.Queries.GetUserById;
 

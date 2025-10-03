@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Application.Exceptions;
-using Persistence.Interfaces;
+using Application.Interfaces;
 
 namespace Application.Features.Users.Commands.DeleteUser;
 
