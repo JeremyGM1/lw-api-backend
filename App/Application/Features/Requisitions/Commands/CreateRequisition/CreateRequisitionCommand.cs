@@ -1,5 +1,4 @@
-﻿using Domain.Entities.Requisitions;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 

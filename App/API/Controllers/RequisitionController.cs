@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Requisitions.Commands.CreateRequisition;
+using Application.Features.Requisitions.Commands.DeleteRequisition;
+using Application.Features.Requisitions.Queries.GetRequisitionById;
+using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Shared.Dtos.RequisitionDtos;
-using Application.Features.Requisitions.Queries;
 
 namespace API.Controllers;
 
@@ -13,9 +15,15 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     private readonly IMediator _mediator = mediator;
 
     [HttpGet]
-    public async Task<ActionResult<List<GetRequisitionDto>>> Get()
+    public async Task<List<GetRequisitionDto>> Get()
     {
         return await _mediator.Send(new GetRequisitionsQuery());
+    }
+
+    [HttpGet("{Id}")]
+    public async Task<GetRequisitionDto> GetById(string Id)
+    {
+        return await _mediator.Send(new GetRequisitionByIdQuery(Id));
     }
 
     [HttpPost]
@@ -23,6 +31,14 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     {
         var response = await _mediator.Send(requisition);
         return CreatedAtAction(nameof(Get), new { id = response }, response);
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<ActionResult> Delete(string id)
+    {
+        var command = new DeleteRequisitionCommand { Id = id };
+        await _mediator.Send(command);
+        return NoContent();
     }
 
 }

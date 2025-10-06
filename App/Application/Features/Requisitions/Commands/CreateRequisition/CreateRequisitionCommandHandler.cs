@@ -1,8 +1,7 @@
-﻿using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
+﻿using AutoMapper;
 using MediatR;
+using Application.Interfaces;
+using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository) : IRequestHandler<CreateRequisitionCommand, Unit>
