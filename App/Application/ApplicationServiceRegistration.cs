@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Features.Shared.MappingProfiles;
+using Application.Features.Common.MappingProfiles;
 
 namespace Application;
 

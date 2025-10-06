@@ -2,9 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
+using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Shared.Dtos.RequisitionDtos;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Controllers;
 
@@ -33,6 +36,15 @@ public class RequisitionController(IMediator mediator) : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = response }, response);
     }
 
+    [HttpPut("{Id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Update(string Id, [FromBody] UpdateRequisitionCommand requisition)
+    {
+        requisition.Id = Id;
+        await _mediator.Send(requisition);
+        return NoContent();
+    }
     [HttpDelete("{Id}")]
     public async Task<ActionResult> Delete(string id)
     {

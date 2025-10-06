@@ -4,7 +4,7 @@ using Application.Features.Users.Commands.UpdateUser;
 using Application.Features.Shared.Dtos.UserDtos;
 using Domain.Entities.Users;
 
-namespace Application.Features.Shared.MappingProfiles;
+namespace Application.Features.Common.MappingProfiles;
 
 public class UserProfile : Profile
 {

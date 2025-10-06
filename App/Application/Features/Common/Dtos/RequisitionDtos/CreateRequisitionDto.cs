@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Features.Shared.Dtos.RequisitionDtos;
+namespace Application.Features.Common.Dtos.RequisitionDtos;
 
 public class CreateRequisitionDto
 {
@@ -54,7 +54,7 @@ public class CreateRequisitionDto
 
     [Required]
     [StringLength(3, MinimumLength = 3)] // ISO 4217
-    [RegularExpression(@"^[A-Z]{3}$", ErrorMessage = "Currency must be 3-letter ISO code")]
+    [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Currency must be 3-letter ISO code")]
     public required string CompensationBandCurrency { get; set; }
 
     [Required]

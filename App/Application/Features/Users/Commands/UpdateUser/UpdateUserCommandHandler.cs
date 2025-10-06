@@ -23,7 +23,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Unit>
     public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.Id);
-        Console.WriteLine(request.Id);
+
         var validator = new UpdateUserCommandValidator(_userRepository);
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
