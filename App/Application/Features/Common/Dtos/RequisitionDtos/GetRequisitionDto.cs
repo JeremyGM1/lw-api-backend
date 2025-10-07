@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Features.Shared.Dtos.RequisitionDtos;
+namespace Application.Features.Common.Dtos.RequisitionDtos;
+
 public class GetRequisitionDto
 {
     [StringLength(6, MinimumLength = 6)]
@@ -34,9 +35,11 @@ public class GetRequisitionDto
     public string Owner { get; set; } = null!;
 
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMin { get; set; }
 
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMax { get; set; }
 
     [StringLength(3, MinimumLength = 3)] // ISO 4217

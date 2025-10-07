@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
-using Application.Exceptions;
 
 namespace API.Controllers;
 

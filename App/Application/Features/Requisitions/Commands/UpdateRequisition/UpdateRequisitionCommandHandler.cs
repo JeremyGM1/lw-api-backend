@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
+
 public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;

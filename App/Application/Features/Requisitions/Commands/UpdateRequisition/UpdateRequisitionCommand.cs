@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Domain.Entities.Requisitions;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
@@ -48,10 +47,12 @@ public class UpdateRequisitionCommand : IRequest<Unit>
 
     [Required]
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMin { get; set; }
 
     [Required]
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMax { get; set; }
 
     [Required]

@@ -46,16 +46,18 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public required string Owner { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMin { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMax { get; set; }
 
     [Required]
     [StringLength(3, MinimumLength = 3)]
-    [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Currency must be 3-letter ISO code")]
+    [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Currency must be 3 Uppercase letters ISO code")]
     public required string CompensationBandCurrency { get; set; }
 
     [Required]

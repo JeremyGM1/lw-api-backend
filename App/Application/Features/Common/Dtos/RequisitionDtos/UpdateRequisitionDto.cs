@@ -46,10 +46,12 @@ public class UpdateRequisitionDto
 
     [Required]
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMin { get; set; }
 
     [Required]
     [Range(0, double.MaxValue)]
+    [DataType(DataType.Currency)]
     public decimal CompensationBandMax { get; set; }
 
     [Required]

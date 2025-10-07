@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Features.Common.MappingProfiles;
+using FluentValidation;
+using Application.Features.Requisitions.Commands.CreateRequisition;
 
 namespace Application;
 
@@ -11,6 +13,7 @@ public static class ApplicationServiceRegistration
         services.AddAutoMapper(_ => { }, typeof(UserProfile));
         services.AddAutoMapper(_ => { }, typeof(RequisitionProfile));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }

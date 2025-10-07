@@ -1,13 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Common.Dtos.RequisitionDtos;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
-using Application.Features.Shared.Dtos.RequisitionDtos;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Controllers;
 
@@ -45,6 +43,7 @@ public class RequisitionController(IMediator mediator) : ControllerBase
         await _mediator.Send(requisition);
         return NoContent();
     }
+
     [HttpDelete("{Id}")]
     public async Task<ActionResult> Delete(string id)
     {
@@ -52,5 +51,4 @@ public class RequisitionController(IMediator mediator) : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
-
 }
