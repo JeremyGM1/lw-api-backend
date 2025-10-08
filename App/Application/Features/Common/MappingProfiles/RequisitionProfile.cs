@@ -4,6 +4,7 @@ using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Domain.Entities.Requisitions;
+using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
 
 namespace Application.Features.Common.MappingProfiles;
 
@@ -20,6 +21,9 @@ public class RequisitionProfile : Profile
         CreateMap<UpdateRequisitionCommand, Requisition>();
         CreateMap<UpdateRequisitionDto, UpdateRequisitionCommand>();
         CreateMap<DeleteRequisitionCommand, Requisition>();
-        //CreateMap<UpdateRequisitionCommand, Requisition>();
+
+        CreateMap<RequisitionStatus, GetReqStatusesDto>();
+        CreateMap<RequisitionWorkType, GetReqWorkTypeDto>();
+        CreateMap<RequisitionHardware, GetReqHardwareDto>();
     }
 }

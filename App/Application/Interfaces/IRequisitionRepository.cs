@@ -1,5 +1,4 @@
 ﻿using Domain.Entities.Requisitions;
-using Domain.Entities.Users;
 
 namespace Application.Interfaces;
 

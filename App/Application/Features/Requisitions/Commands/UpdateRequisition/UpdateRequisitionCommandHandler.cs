@@ -20,17 +20,21 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        // TODO: Validate if foreign key exist
 
         if (validationResult.Errors.Count != 0)
         {
             throw new BadRequestException("Invalid requisition update", validationResult);
         }
 
+        // TODO: Validate if foreign key exist
+
         var user = _httpContext.HttpContext?.User;
         var userEmail = user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value ?? "System";
 
         var requisition = await _reqRepository.GetByIdAsync(request.Id!);
+
+        if (requisition == null)
+            throw new NotFoundException(nameof(requisition), request.Id!);
 
         var reqToUpdate = _mapper.Map<Requisition>(request);
 

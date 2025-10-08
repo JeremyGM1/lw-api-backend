@@ -20,7 +20,7 @@ public static class ServiceExtensions
         });
         services.AddApplicationServices();
         services.AddLogginServices();
-        services.AddPersistenceServices(configuration);
+        services.AddPersistenceServices();
         services.AddCors(options =>
         {
             options.AddPolicy("all", builder => builder

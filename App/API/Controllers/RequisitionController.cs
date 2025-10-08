@@ -6,6 +6,10 @@ using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
+using Application.Features.Requisitions.Queries.GetStatuses;
+using Application.Features.Requisitions.Queries.GetWorkTypes;
+using Application.Features.Requisitions.Queries.GetHardware;
+using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
 
 namespace API.Controllers;
 
@@ -45,10 +49,26 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{Id}")]
-    public async Task<ActionResult> Delete(string id)
+    public async Task<ActionResult> Delete(string Id)
     {
-        var command = new DeleteRequisitionCommand { Id = id };
+        var command = new DeleteRequisitionCommand { Id = Id };
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpGet("statuses")]
+    public async Task<List<GetReqStatusesDto>> GetStatuses()
+    {
+        return await _mediator.Send(new GetReqStatusesQuery());
+    }
+    [HttpGet("workType")]
+    public async Task<List<GetReqWorkTypeDto>> GetWorkType()
+    {
+        return await _mediator.Send(new GetReqWorkTypeQuery());
+    }
+    [HttpGet("hardware")]
+    public async Task<List<GetReqHardwareDto>> GetHardware()
+    {
+        return await _mediator.Send(new GetReqHardwareQuery());
     }
 }

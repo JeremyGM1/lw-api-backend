@@ -12,7 +12,6 @@ public class DeleteRequisitionCommandValidator : AbstractValidator<DeleteRequisi
         RuleFor(r => r.Id)
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
-            .MinimumLength(6)
             .MaximumLength(6);
 
         _reqRepository = reqRepository;
