@@ -2,13 +2,15 @@
 using MediatR;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Features.Common.HandlerHelpers;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator) : IRequestHandler<DeleteRequisitionCommand, Unit>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, CommonHelpers handlerHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<DeleteRequisitionCommand> _validator = validator;
+    private readonly CommonHelpers _handlerHelpers = handlerHelpers;
 
     //private readonly IAppLogger<DeleteRequisitionCommand> _logger = logger;
     public async Task<Unit> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
@@ -21,10 +23,9 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
             throw new BadRequestException("Invalid requisition", validationResult);
         }
 
-        if (requisition == null)
-            throw new NotFoundException(nameof(requisition), request.Id);
+        _handlerHelpers.ValidateEntityExist(requisition, request.Id);
 
-        await _reqRepository.DeleteAsync(requisition);
+        await _reqRepository.DeleteAsync(requisition!);
 
         return Unit.Value;
     }

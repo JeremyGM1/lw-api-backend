@@ -1,15 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
 using Application.Features.Common.Dtos.RequisitionDtos;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
+using Application.Features.Requisitions.Queries.GetHardware;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
-using Application.Features.Requisitions.Queries.GetHardware;
-using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
 
 namespace API.Controllers;
 
@@ -61,11 +61,13 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     {
         return await _mediator.Send(new GetReqStatusesQuery());
     }
+
     [HttpGet("workType")]
     public async Task<List<GetReqWorkTypeDto>> GetWorkType()
     {
         return await _mediator.Send(new GetReqWorkTypeQuery());
     }
+
     [HttpGet("hardware")]
     public async Task<List<GetReqHardwareDto>> GetHardware()
     {

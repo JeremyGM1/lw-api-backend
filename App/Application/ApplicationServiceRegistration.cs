@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Application.Features.Common.MappingProfiles;
 using FluentValidation;
+using Application.Features.Common.HandlerHelpers;
 
 namespace Application;
 
@@ -13,6 +14,7 @@ public static class ApplicationServiceRegistration
         services.AddAutoMapper(_ => { }, typeof(RequisitionProfile));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<CommonHelpers>();
 
         return services;
     }

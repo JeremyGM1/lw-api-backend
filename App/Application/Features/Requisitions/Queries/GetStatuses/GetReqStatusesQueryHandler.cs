@@ -1,11 +1,10 @@
-﻿using System.Runtime.CompilerServices;
-using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
-using Application.Interfaces;
-using Application.Interfaces.Lookup;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
+using Application.Interfaces.Lookup;
 
 namespace Application.Features.Requisitions.Queries.GetStatuses;
+
 public class GetReqStatusesQueryHandler(IMapper mapper, IReqStatusRepository reqStatusRepository) : IRequestHandler<GetReqStatusesQuery, List<GetReqStatusesDto>>
 {
     private readonly IMapper _mapper = mapper;

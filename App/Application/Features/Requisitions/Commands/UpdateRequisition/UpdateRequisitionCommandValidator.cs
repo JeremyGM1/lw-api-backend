@@ -1,5 +1,5 @@
-﻿using Application.Features.Common.Validators;
-using FluentValidation;
+﻿using FluentValidation;
+using Application.Features.Common.Validators;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
 
