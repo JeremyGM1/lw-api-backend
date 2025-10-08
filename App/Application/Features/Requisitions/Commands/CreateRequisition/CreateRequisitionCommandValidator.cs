@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Application.Features.Common.Validators;
 using Application.Interfaces;
+using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
@@ -12,15 +13,23 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
     {
         RuleFor(r => r.Id)
             .NotNull().WithMessage("{PropertyName} is required")
-            .NotEmpty();
+            .NotEmpty()
+            .MinimumLength(6)
+            .MaximumLength(6);
 
         RuleFor(r => r.Name).RequiredString();
 
-        RuleFor(r => r.StatusId).RequiredForeignKey();
+        RuleFor(r => r.StatusId)
+            .MustAsync(StatusExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
-        RuleFor(r => r.WorkTypeId).RequiredForeignKey();
+        RuleFor(r => r.WorkTypeId)
+            .MustAsync(WorkTypeExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
-        RuleFor(r => r.HardwareId).RequiredForeignKey();
+        RuleFor(r => r.HardwareId)
+            .MustAsync(HardwareExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
         RuleFor(r => r.Headcount).RequiredForeignKey();
 
@@ -36,19 +45,13 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
             .InclusiveBetween(0, int.MaxValue);
-        _reqRepository = reqRepository;
 
         RuleFor(r => r.CompensationBandMax)
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
             .InclusiveBetween(0, int.MaxValue);
-        _reqRepository = reqRepository;
 
-        RuleFor(r => r.CompensationBandCurrency)
-            .NotNull().WithMessage("{PropertyName} is required")
-            .NotEmpty()
-            .MinimumLength(3)
-            .MaximumLength(3);
+        RuleFor(r => r.CompensationBandCurrency).RequiredString(3);
 
         RuleFor(r => r.CompensationBandInterval).RequiredString(10);
 
@@ -57,5 +60,13 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
 
         RuleFor(r => r.BackfillName)
             .MaximumLength(100);
+
+        _reqRepository = reqRepository;
     }
+
+    private async Task<bool> StatusExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionStatus>(id);
+
+    private async Task<bool> WorkTypeExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionWorkType>(id);
+
+    private async Task<bool> HardwareExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionHardware>(id);
 }

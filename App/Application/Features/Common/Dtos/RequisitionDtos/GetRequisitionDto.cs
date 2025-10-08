@@ -13,11 +13,17 @@ public class GetRequisitionDto
     [Range(1, int.MaxValue)]
     public int StatusId { get; set; }
 
+    public string StatusName { get; set; } = null!;
+
     [Range(1, int.MaxValue)]
     public int WorkTypeId { get; set; }
 
+    public string WorkTypeName { get; set; } = null!;
+
     [Range(1, int.MaxValue)]
     public int HardwareId { get; set; }
+
+    public string HardwareName { get; set; } = null!;
 
     [Range(1, int.MaxValue)]
     public int Headcount { get; set; }

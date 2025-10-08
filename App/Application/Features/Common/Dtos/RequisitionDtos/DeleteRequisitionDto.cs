@@ -6,5 +6,5 @@ public class DeleteRequisitionDto
 {
     [Required]
     [StringLength(6, MinimumLength = 6)]
-    public string Id { get; set; } = null!;
+    public required string Id { get; set; }
 }

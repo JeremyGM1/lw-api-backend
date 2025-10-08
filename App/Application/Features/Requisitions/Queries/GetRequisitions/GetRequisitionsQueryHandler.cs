@@ -14,7 +14,7 @@ public class GetRequisitionsQueryHandler(IMapper mapper, IRequisitionRepository 
 
     public async Task<List<GetRequisitionDto>> Handle(GetRequisitionsQuery request, CancellationToken cancellationToken)
     {
-        var requisitions = await _reqRepository.GetAsync();
+        var requisitions = await _reqRepository.GetRequisitions();
 
         var data = _mapper.Map<List<GetRequisitionDto>>(requisitions);
 

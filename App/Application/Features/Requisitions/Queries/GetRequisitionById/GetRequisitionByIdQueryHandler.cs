@@ -12,7 +12,7 @@ public class GetRequisitionByIdQueryHandler(IMapper mapper, IRequisitionReposito
 
     public async Task<GetRequisitionDto> Handle(GetRequisitionByIdQuery request, CancellationToken cancellationToken)
     {
-        var requisition = await _reqRepository.GetByIdAsync(request.Id);
+        var requisition = await _reqRepository.GetRequisitionById(request.Id);
 
         return _mapper.Map<GetRequisitionDto>(requisition);
     }

@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
+﻿using MediatR;
+using Application.Features.Common.Dtos.RequisitionDtos;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommand : IRequest<Unit>
-{
-    [Required]
-    [StringLength(6, MinimumLength = 6)]
-    public string Id { get; set; } = null!;
-}
+public class DeleteRequisitionCommand : DeleteRequisitionDto, IRequest<Unit>;

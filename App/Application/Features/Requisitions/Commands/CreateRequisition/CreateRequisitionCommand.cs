@@ -56,7 +56,7 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public decimal CompensationBandMax { get; set; }
 
     [Required]
-    [StringLength(3, MinimumLength = 3)]
+    [StringLength(3, MinimumLength = 3)] // ISO 4217
     [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Currency must be 3 Uppercase letters ISO code")]
     public required string CompensationBandCurrency { get; set; }
 
