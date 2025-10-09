@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Application.Features.Common.Validators;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Application.Common.Validators;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 

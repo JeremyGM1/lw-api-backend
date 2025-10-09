@@ -4,7 +4,7 @@ using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
 
-namespace Application.Features.Common.Helpers;
+namespace Application.Common.Helpers;
 
 public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitionRepository reqRepository) : ICommonHelpers
 {
