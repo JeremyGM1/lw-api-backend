@@ -13,4 +13,6 @@ public class RegistrationRequest
 
     [MinLength(6)]
     public required string Password { get; set; }
+    
+    public string Role { get; set; } = string.Empty;
 }

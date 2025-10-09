@@ -1,5 +1,4 @@
-using API.extensions;
-using API.Extentions;
+using API.Extensions;
 using API.Middleware;
 using Identity;
 
@@ -13,9 +12,9 @@ builder.Services.AppServiceExtensions(builder.Configuration);
 builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
-
+builder.Services.AddCorsPolicies(builder.Configuration);
 // **Swagger with JWT**
-builder.Services.AddSwaggerWithJwt();
+builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
 
@@ -40,5 +39,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.SeedIdentityAsync();
 
 app.Run();

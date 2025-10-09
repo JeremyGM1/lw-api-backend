@@ -8,4 +8,5 @@ public class UpdateRequest
     public string? LastName { get; set; }
     public string? CurrentPassword { get; set; }
     public string? NewPassword { get; set; }
+    public string? Role { get; set; }
 }

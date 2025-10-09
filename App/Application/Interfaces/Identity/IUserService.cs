@@ -4,11 +4,13 @@ namespace Application.Interfaces.Identity;
 
 public interface IUserService
 {
-    Task<RegistrationResponse> Register(RegistrationRequest request);
+    Task<RegistrationResponse> Register(RegistrationRequest request,string requestingUserId);
 
-    Task<UpdateResponse> Update(UpdateRequest request);
+    Task<UpdateResponse> Update(UpdateRequest request, string requestingUserId);
 
-    Task<bool> DeleteUserAsync(string userId);
+    Task<bool> DeleteUserAsync(string userId, string requestingUserId);
 
     Task<UserProfileResponse> GetCurrentUserProfileAsync(string userId);
+
+    Task<IEnumerable<UserProfileResponse>> GetAllUsersByRoleAsync(string requestingUserId);
 }

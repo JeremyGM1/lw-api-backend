@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Migrations
 {
     [DbContext(typeof(TalentSuiteIdentityDbContext))]
-    [Migration("20250912154225_initialIdentityMigration")]
-    partial class initialIdentityMigration
+    [Migration("20251008172240_InitialIdentityMigration")]
+    partial class InitialIdentityMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,26 +96,6 @@ namespace Identity.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "11111111-1111-1111-1111-111111111111",
-                            Email = "superadmin@localhost.com",
-                            EmailConfirmed = true,
-                            FirstName = "System",
-                            LastName = "Super Administartor",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "SUPERADMIN@LOCALHOST.COM",
-                            NormalizedUserName = "SUPERADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHTpnpv+i+I9mS6v4xd7q29DJEIU+H6DotE2xDvuqwll7wgpxdyjaI69QsYVga3qcw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "22222222-2222-2222-2222-222222222222",
-                            TwoFactorEnabled = false,
-                            UserName = "superadmin@localhost.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -143,38 +123,6 @@ namespace Identity.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "cac43a6e-f7bb-4448-baaf-1add431ccbbf",
-                            Name = "Super Administrator",
-                            NormalizedName = "SUPER ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "5d2f8b9c-8f61-4a40-94b8-6b27b5b7e0d3",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = "1a7e92c4-2e0c-4f18-9f77-4e3f6a937cb1",
-                            Name = "Technical Account",
-                            NormalizedName = "TECHNICAL ACCOUNT"
-                        },
-                        new
-                        {
-                            Id = "9b832f7a-47f0-42c4-b6c8-92b3c28b0d8d",
-                            Name = "Regular User",
-                            NormalizedName = "REGULAR USER"
-                        },
-                        new
-                        {
-                            Id = "d4e61e14-8d1a-4a77-8c63-23e4d41b566a",
-                            Name = "Viewer",
-                            NormalizedName = "VIEWER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -262,13 +210,6 @@ namespace Identity.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "8e445865-a24d-4543-a6c6-9443d048cdb9",
-                            RoleId = "cac43a6e-f7bb-4448-baaf-1add431ccbbf"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
