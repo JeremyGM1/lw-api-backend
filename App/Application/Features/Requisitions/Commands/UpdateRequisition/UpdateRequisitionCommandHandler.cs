@@ -2,18 +2,17 @@
 using FluentValidation;
 using MediatR;
 using Application.Exceptions;
-using Application.Features.Common.HandlerHelpers;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, CommonHelpers handlerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers handlerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<UpdateRequisitionCommand> _validator = validator;
-    private readonly CommonHelpers _handlerHelpers = handlerHelpers;
+    private readonly ICommonHelpers _handlerHelpers = handlerHelpers;
 
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -25,7 +24,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             throw new BadRequestException("Invalid requisition update", validationResult);
         }
 
-        _handlerHelpers.ValidateForeignKeys(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _handlerHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
         _handlerHelpers.ValidateEntityExist(requisition, request.Id!);
 

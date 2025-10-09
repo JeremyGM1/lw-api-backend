@@ -4,9 +4,9 @@ using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
 
-namespace Application.Features.Common.HandlerHelpers;
+namespace Application.Features.Common.Helpers;
 
-public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitionRepository reqRepository)
+public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitionRepository reqRepository) : ICommonHelpers
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
@@ -23,7 +23,7 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             throw new NotFoundException(typeof(T).Name, id);
     }
 
-    public async void ValidateForeignKeys(int statusId, int workTypeId, int hardwareId)
+    public async void ValidateForeighKey(int statusId, int workTypeId, int hardwareId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
         var workTypestatusExist = await _reqRepository.ForeignKeyExist<RequisitionWorkType>(workTypeId);

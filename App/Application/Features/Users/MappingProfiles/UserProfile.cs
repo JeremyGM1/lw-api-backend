@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Application.Features.Shared.Dtos.UserDtos;
 using Application.Features.Users.Commands.CreateUser;
 using Application.Features.Users.Commands.UpdateUser;
 using Domain.Entities.Users;
+using Application.Features.Users.Dtos;
 
-namespace Application.Features.Common.MappingProfiles;
+namespace Application.Features.Users.MappingProfiles;
 
 public class UserProfile : Profile
 {

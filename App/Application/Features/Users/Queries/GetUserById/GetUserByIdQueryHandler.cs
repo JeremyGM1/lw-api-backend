@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Application.Exceptions;
-using Application.Features.Shared.Dtos.UserDtos;
 using Application.Interfaces;
+using Application.Features.Users.Dtos;
 
 namespace Application.Features.Users.Queries.GetUserById;
 

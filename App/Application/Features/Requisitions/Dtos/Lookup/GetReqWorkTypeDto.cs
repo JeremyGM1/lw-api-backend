@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Features.Common.Dtos.RequisitionDtos.Lookup;
+namespace Application.Features.Requisitions.Dtos.Lookup;
 
 public class GetReqWorkTypeDto
 {

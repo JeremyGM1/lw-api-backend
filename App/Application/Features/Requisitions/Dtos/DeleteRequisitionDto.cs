@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Features.Common.Dtos.RequisitionDtos;
+namespace Application.Features.Requisitions.Dtos;
 
 public class DeleteRequisitionDto
 {

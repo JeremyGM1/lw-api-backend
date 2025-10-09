@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
+using Application.Features.Requisitions.Dtos.Lookup;
 
 namespace Application.Features.Requisitions.Queries.GetWorkTypes;
 

@@ -4,16 +4,15 @@ using MediatR;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Application.Features.Common.HandlerHelpers;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, CommonHelpers handlerHelpers) : IRequestHandler<CreateRequisitionCommand, Unit>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers handlerHelpers) : IRequestHandler<CreateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<CreateRequisitionCommand> _validator = validator;
-    private readonly CommonHelpers _handlerHelpers = handlerHelpers;
+    private readonly ICommonHelpers _handlerHelpers = handlerHelpers;
     //private readonly IAppLogger<CreateRequisitionCommandHandler> _logger = logger;
 
     public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
@@ -25,7 +24,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             throw new BadRequestException("Invalid requisition", validationResult);
         }
 
-        _handlerHelpers.ValidateForeignKeys(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _handlerHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
         var userEmail = _handlerHelpers.GetCurrentUserFromToken();
 

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Application.Features.Common.Dtos.RequisitionDtos;
+using Application.Features.Requisitions.Dtos;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 

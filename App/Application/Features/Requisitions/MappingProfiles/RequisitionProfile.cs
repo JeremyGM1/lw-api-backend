@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Application.Features.Common.Dtos.RequisitionDtos.Lookup;
-using Application.Features.Common.Dtos.RequisitionDtos;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Domain.Entities.Requisitions;
+using Application.Features.Requisitions.Dtos;
+using Application.Features.Requisitions.Dtos.Lookup;
 
-namespace Application.Features.Common.MappingProfiles;
+namespace Application.Features.Requisitions.MappingProfiles;
 
 public class RequisitionProfile : Profile
 {

@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Shared.Dtos.UserDtos;
+﻿namespace Application.Features.Users.Dtos;
 
 public class UserDto
 {

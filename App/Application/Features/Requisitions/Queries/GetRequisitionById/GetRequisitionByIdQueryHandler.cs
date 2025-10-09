@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Application.Features.Common.Dtos.RequisitionDtos;
 using Application.Interfaces;
+using Application.Features.Requisitions.Dtos;
 
 namespace Application.Features.Requisitions.Queries.GetRequisitionById;
 
