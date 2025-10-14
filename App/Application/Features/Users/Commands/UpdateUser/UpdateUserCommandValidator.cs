@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Persistence.Interfaces;
+﻿using Application.Interfaces;
+using FluentValidation;
 
 namespace Application.Features.Users.Commands.UpdateUser;
 
@@ -25,7 +25,7 @@ public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
             .EmailAddress().WithMessage("{PropertyName} must have a valid email address");
 
         RuleFor(p => p.Id)
-            .MustAsync(UserExist).WithMessage("{PropertyName} does not exist.");
+            .MustAsync(UserExist!).WithMessage("{PropertyName} does not exist.");
 
         _userRepository = userRepository;
     }

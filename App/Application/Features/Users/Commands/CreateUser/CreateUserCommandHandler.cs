@@ -3,7 +3,7 @@ using MediatR;
 using Application.Exceptions;
 using Domain.Entities.Users;
 using LoggingService.Interfaces;
-using Persistence.Interfaces;
+using Application.Interfaces;
 
 namespace Application.Features.Users.Commands.CreateUser;
 

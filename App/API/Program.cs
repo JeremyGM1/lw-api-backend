@@ -1,17 +1,18 @@
 using API.Extensions;
 using API.Middleware;
 using Identity;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.ConfigureDbContext(builder.Configuration);
-builder.Services.AppServiceExtensions(builder.Configuration);
+builder.Services.AppServiceExtensions();
 builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
+
+builder.Services.AddSwaggerWithJwt();
 builder.Services.AddCorsPolicies(builder.Configuration);
 // **Swagger with JWT**
 builder.Services.AddSwaggerConfiguration();
@@ -24,12 +25,13 @@ app.UseCors("all");
 
 app.UseRateLimiter();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Intership_backend v1"));
-    app.MapOpenApi();
+    app.UseReDoc(opt => opt.SpecUrl("/swagger/v1/swagger.json"));
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

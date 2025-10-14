@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 
-namespace Persistence.Interfaces;
+namespace Application.Interfaces;
 
 public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {

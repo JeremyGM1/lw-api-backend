@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Application.Features.Shared.Dtos.UserDtos;
+using Application.Features.Users.Dtos;
 
 namespace Application.Features.Users.Queries.GetAllUsers;
 

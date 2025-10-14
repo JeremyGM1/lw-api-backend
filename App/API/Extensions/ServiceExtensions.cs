@@ -10,11 +10,11 @@ namespace API.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void AppServiceExtensions(this IServiceCollection services, IConfiguration configuration)
+    public static void AppServiceExtensions(this IServiceCollection services)
     {
         services.AddApplicationServices();
         services.AddLogginServices();
-        services.AddPersistenceServices(configuration);
+        services.AddPersistenceServices();
     }
 
     public static void AddCorsPolicies(this IServiceCollection services, IConfiguration configuration)

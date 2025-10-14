@@ -1,6 +1,10 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Features.Shared.MappingProfiles;
+using FluentValidation;
+using Application.Features.Users.MappingProfiles;
+using Application.Interfaces;
+using Application.Features.Requisitions.MappingProfiles;
+using Application.Common.Helpers;
 
 namespace Application;
 
@@ -9,7 +13,10 @@ public static class ApplicationServiceRegistration
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(_ => { }, typeof(UserProfile));
+        services.AddAutoMapper(_ => { }, typeof(RequisitionProfile));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<ICommonHelpers, CommonHelpers>();
 
         return services;
     }

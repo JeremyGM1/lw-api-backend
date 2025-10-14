@@ -1,6 +1,7 @@
-﻿using MediatR;
-using Application.Exceptions;
-using Persistence.Interfaces;
+﻿using Application.Exceptions;
+using Application.Interfaces;
+using Domain.Entities.Requisitions;
+using MediatR;
 
 namespace Application.Features.Users.Commands.DeleteUser;
 
@@ -17,6 +18,9 @@ public class DeleteUserCommandHandler(IUserRepository userRepository) : IRequest
             throw new BadRequestException("Invalid User", validationResult);
 
         var userToDelete = await _userRepository.GetByIdAsync(request.Id);
+
+        if (userToDelete == null)
+            throw new NotFoundException(nameof(userToDelete), request.Id);
 
         await _userRepository.DeleteAsync(userToDelete);
 

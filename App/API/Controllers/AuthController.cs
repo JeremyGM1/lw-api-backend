@@ -19,6 +19,8 @@ public class AuthController : ControllerBase
 
     [HttpPost("login")]
     [EnableRateLimiting("LoginPolicy")]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AuthResponse>> Login(AuthRequest request)
     {
         return Ok(await _authenticationService.Login(request));
