@@ -12,7 +12,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
 
-builder.Services.AddSwaggerWithJwt();
 builder.Services.AddCorsPolicies(builder.Configuration);
 // **Swagger with JWT**
 builder.Services.AddSwaggerConfiguration();
