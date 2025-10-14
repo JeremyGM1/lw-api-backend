@@ -72,10 +72,13 @@ public class CreateRequisitionCommandHandlerTests
     [Fact]
     public async Task Validator_ExistingId_ReturnsValidationError()
     {
-        var command = TestData.CreateRequisitionCommand();
-        var requisition = TestData.CreateRequisition(command);
+        var requisition = TestData.CreateRequisitionCommand();
+        var mockRequisition = TestData.CreateRequisition(requisition);
         var validationResult = new ValidationResult();
 
+        _mockValidator
+            .Setup(v => v.ValidateAsync(requisition, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
 
     }
     //public Task ValidationThrowsException
