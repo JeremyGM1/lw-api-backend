@@ -80,6 +80,8 @@ public class CreateRequisitionCommandHandlerTests
             .Setup(v => v.ValidateAsync(requisition, It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationResult);
 
+        _mockCommonHelpers
+            .Setup(ch => ch.ValidateForeighKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
     }
     //public Task ValidationThrowsException
     //public Task ValidateForeignKeys
