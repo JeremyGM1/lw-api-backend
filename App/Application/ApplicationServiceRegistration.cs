@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using Application.Features.Users.MappingProfiles;
-using Application.Interfaces;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Common.Helpers;
 

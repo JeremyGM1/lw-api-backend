@@ -43,9 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Entities\" />
-    <Folder Include="Features\Requisition\CommandsTests\" />
-    <Folder Include="Features\Requisition\QueriesTests\" />
+    <Folder Include="Features\Requisitions\Queries\" />
   </ItemGroup>
 
 </Project>

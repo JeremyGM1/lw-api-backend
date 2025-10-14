@@ -1,18 +1,19 @@
-﻿using AutoMapper;
-using FluentValidation;
-using MediatR;
+﻿using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities.Requisitions;
+using FluentValidation;
+using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers handlerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<UpdateRequisitionCommand> _validator = validator;
-    private readonly ICommonHelpers _handlerHelpers = handlerHelpers;
+    private readonly ICommonHelpers _commonHelpers = commonHelpers;
 
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -24,11 +25,11 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             throw new BadRequestException("Invalid requisition update", validationResult);
         }
 
-        _handlerHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
-        _handlerHelpers.ValidateEntityExist(requisition, request.Id!);
+        _commonHelpers.ValidateIfEntityExist(requisition, request.Id!);
 
-        var userEmail = _handlerHelpers.GetCurrentUserFromToken();
+        var userEmail = _commonHelpers.GetCurrentUserFromToken();
 
         var reqToUpdate = _mapper.Map<Requisition>(request);
 

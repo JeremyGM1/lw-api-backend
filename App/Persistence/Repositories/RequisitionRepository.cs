@@ -29,4 +29,10 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.Hardware)
             .ToListAsync();
     }
+
+    public async Task<bool> RequisitionExists(string id)
+    {
+        return await _context.Requisitions
+            .AnyAsync(r => r.Id == id);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Application.Exceptions;
 using Application.Interfaces;
@@ -17,7 +18,15 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         return user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value ?? "System";
     }
 
-    public void ValidateEntityExist<T>(T entity, string id)
+    public void ThrowIfValidationFails(ValidationResult validationResult)
+    {
+        if (validationResult.Errors.Count != 0)
+        {
+            throw new BadRequestException("Invalid requisition", validationResult);
+        }
+    }
+
+    public void ValidateIfEntityExist<T>(T entity, string id)
     {
         if (entity == null)
             throw new NotFoundException(typeof(T).Name, id);

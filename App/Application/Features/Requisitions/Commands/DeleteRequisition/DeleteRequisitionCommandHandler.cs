@@ -1,7 +1,8 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
+using FluentValidation;
+using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
@@ -22,7 +23,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
             throw new BadRequestException("Invalid requisition", validationResult);
         }
 
-        _handlerHelpers.ValidateEntityExist(requisition, request.Id);
+        _handlerHelpers.ValidateIfEntityExist(requisition, request.Id);
 
         await _reqRepository.DeleteAsync(requisition!);
 
