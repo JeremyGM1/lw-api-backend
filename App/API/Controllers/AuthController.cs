@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
-using Application.Features.Identity.Models;
+﻿using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
+using Identity.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace API.Controllers;
 
@@ -22,5 +23,11 @@ public class AuthController : ControllerBase
     {
         return Ok(await _authenticationService.Login(request));
     }
-    
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> Refresh(TokenRefreshRequest request)
+    {
+        var result = await _authenticationService.RefreshTokenAsync(request);
+        return Ok(result);
+    }
 }
