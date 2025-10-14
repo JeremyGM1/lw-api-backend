@@ -1,8 +1,7 @@
+using Identity;
 using API.extensions;
 using API.Extentions;
 using API.Middleware;
-using Identity;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +28,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Intership_backend v1"));
     app.UseReDoc(opt => opt.SpecUrl("/swagger/v1/swagger.json"));
-    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
