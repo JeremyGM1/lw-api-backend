@@ -15,7 +15,12 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
     public string GetCurrentUserFromToken()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value ?? "System";
+        var email = user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+            throw new UnauthorizedAccessException("User not authenticated");
+
+        return email;
     }
 
     public void ThrowIfValidationFails(ValidationResult validationResult)
@@ -32,7 +37,7 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             throw new NotFoundException(typeof(T).Name, id);
     }
 
-    public async void ValidateForeighKey(int statusId, int workTypeId, int hardwareId)
+    public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
         var workTypestatusExist = await _reqRepository.ForeignKeyExist<RequisitionWorkType>(workTypeId);

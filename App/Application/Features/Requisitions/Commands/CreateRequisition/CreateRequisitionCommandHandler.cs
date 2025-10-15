@@ -19,9 +19,9 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
 
-        _commonHelpers .ThrowIfValidationFails(validationResult);
+        _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        _commonHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
         var userEmail = _commonHelpers.GetCurrentUserFromToken();
 

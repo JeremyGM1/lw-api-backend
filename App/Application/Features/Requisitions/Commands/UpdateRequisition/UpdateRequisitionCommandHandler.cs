@@ -25,7 +25,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             throw new BadRequestException("Invalid requisition update", validationResult);
         }
 
-        _commonHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
         _commonHelpers.ValidateIfEntityExist(requisition, request.Id!);
 

@@ -1,15 +1,18 @@
-﻿using AutoMapper;
-using FluentValidation.Results;
-using FluentValidation;
-using Moq;
-using Application.Common.Helpers;
+﻿using Application.Common.Helpers;
+using Application.Exceptions;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities.Requisitions;
+using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Moq;
 using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands;
+
 public class CreateRequisitionCommandHandlerTests
 {
     private readonly Mock<IMapper> _mockMapper;
@@ -35,32 +38,32 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldCreateRequisition_WhenDataIsValid()
+    public async Task Handle_ValidRequest_RegistersRequisition()
     {
-        var requisition = TestData.CreateRequisitionCommand();
-        var mockRequisition = TestData.CreateRequisition(requisition);
+        var command = TestData.CreateRequisitionCommand();
+        var mockRequisition = TestData.CreateRequisition(command);
         var validationResult = new ValidationResult();
 
         _mockValidator
-            .Setup(v => v.ValidateAsync(requisition, It.IsAny<CancellationToken>()))
+            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeighKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
+            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
         _mockCommonHelpers
             .Setup(ch => ch.GetCurrentUserFromToken())
             .Returns("TestUser@email.com");
 
         _mockMapper
-            .Setup(m => m.Map<Requisition>(requisition))
+            .Setup(m => m.Map<Requisition>(command))
             .Returns(mockRequisition);
 
         _mockReqRepository
             .Setup(r => r.CreateAsync(mockRequisition))
             .Returns(Task.CompletedTask);
 
-        var result = await _handler.Handle(requisition, CancellationToken.None);
+        var result = await _handler.Handle(command, CancellationToken.None);
 
         result.ShouldBe(MediatR.Unit.Value);
         _mockReqRepository
@@ -70,20 +73,107 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Validator_ExistingId_ReturnsValidationError()
+    public async Task Handle_AuditFieldsSetCorrectly_TasKIsSuccess()
     {
-        var requisition = TestData.CreateRequisitionCommand();
-        var mockRequisition = TestData.CreateRequisition(requisition);
+        var command = TestData.CreateRequisitionCommand();
+        var mockRequisition = TestData.CreateRequisition(command);
         var validationResult = new ValidationResult();
+        Requisition capturedRequisition = null!;
 
         _mockValidator
-            .Setup(v => v.ValidateAsync(requisition, It.IsAny<CancellationToken>()))
+            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeighKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
+            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
+
+        _mockCommonHelpers
+            .Setup(ch => ch.GetCurrentUserFromToken())
+            .Returns("TestUser@email.com");
+
+        _mockMapper
+            .Setup(m => m.Map<Requisition>(command))
+            .Returns(mockRequisition);
+
+        _mockReqRepository
+            .Setup(r => r.CreateAsync(mockRequisition))
+            .Callback<Requisition>((req) => capturedRequisition = req)
+            .Returns(Task.CompletedTask);
+
+        await _handler.Handle(command, CancellationToken.None);
+
+        capturedRequisition.ShouldNotBeNull();
+        capturedRequisition.CreatedAt.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        capturedRequisition.CreatedBy.ShouldBe("TestUser@email.com");
     }
-    //public Task ValidationThrowsException
-    //public Task ValidateForeignKeys
-    //public Task ValidateAuditFields
+
+    [Fact]
+    public async Task Handle_ValidationFailed_ThrowsBadRequestException()
+    {
+        var command = TestData.CreateRequisitionCommand();
+        var mockRequisition = TestData.CreateRequisition(command);
+        var validationResult = new ValidationResult(
+        [
+            new ValidationFailure("Invalid requisition", "Error message")
+        ]);
+
+        _mockValidator
+            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validationResult);
+
+        _mockCommonHelpers
+            .Setup(h => h.ThrowIfValidationFails(validationResult))
+            .Callback<ValidationResult>(vr =>
+            {
+                if (vr.Errors.Count != 0)
+                    throw new BadRequestException("Invalid requisition", vr);
+            });
+
+        var exception = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(command, CancellationToken.None));
+
+        exception.ShouldBeOfType<BadRequestException>();
+        exception.Message.ShouldBe("Invalid requisition");
+
+        _mockReqRepository
+            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_InvalidForeignKey_ThrowsForeignKeyNotFoundException()
+    {
+        var command = TestData.CreateRequisitionCommand();
+
+        _mockCommonHelpers
+            .Setup(h => h.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Throws(new ForeignKeyNotFoundException("Invalid foreign key"));
+
+        var exception = await Should.ThrowAsync<ForeignKeyNotFoundException>(() => _handler.Handle(command, CancellationToken.None));
+
+        exception.ShouldBeOfType<ForeignKeyNotFoundException>();
+        exception.Message.ShouldBe("Invalid foreign key");
+
+        _mockReqRepository
+            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task Handle_UserNotAuthenticated_ThrowsUnauthorizedAccessException()
+    {
+        var command = TestData.CreateRequisitionCommand();
+
+        _mockCommonHelpers
+            .Setup(h => h.GetCurrentUserFromToken())
+            .Throws(new UnauthorizedAccessException("User not authenticated"));
+
+        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));
+
+        exception.ShouldBeOfType<UnauthorizedAccessException>();
+        exception.Message.ShouldBe("User not authenticated");
+
+        _mockReqRepository
+            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
+            Times.Never);
+    }
 }

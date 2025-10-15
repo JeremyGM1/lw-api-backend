@@ -10,5 +10,5 @@ public interface ICommonHelpers
 
     void ValidateIfEntityExist<T>(T entity, string id);
 
-    void ValidateForeighKey(int statusId, int workTypeId, int hardwareId);
+    void ValidateForeignKey(int statusId, int workTypeId, int hardwareId);
 }

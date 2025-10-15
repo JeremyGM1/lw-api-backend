@@ -4,14 +4,9 @@ using Application.Exceptions;
 
 namespace API.Middleware;
 
-public class ExceptionMiddleware
+public class ExceptionMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public ExceptionMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+    private readonly RequestDelegate _next = next;
 
     public async Task InvokeAsync(HttpContext httpContext)
     {
@@ -25,22 +20,22 @@ public class ExceptionMiddleware
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+    private static async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
     {
         HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
         CustomProblemDetails problem;
 
         switch (ex)
         {
-            case BadRequestException badRequestException:
+            case BadRequestException BadRequestException:
                 statusCode = HttpStatusCode.BadRequest;
                 problem = new CustomProblemDetails
                 {
-                    Title = badRequestException.Message,
+                    Title = BadRequestException.Message,
                     Status = (int)statusCode,
-                    Detail = badRequestException.InnerException?.Message,
-                    Type = nameof(badRequestException),
-                    Errors = badRequestException.ValidationErrors
+                    Detail = BadRequestException.InnerException?.Message,
+                    Type = nameof(BadRequestException),
+                    Errors = BadRequestException.ValidationErrors
                 };
                 break;
 
@@ -52,6 +47,29 @@ public class ExceptionMiddleware
                     Status = (int)statusCode,
                     Detail = NotFound.InnerException?.Message,
                     Type = nameof(NotFound),
+                };
+                break;
+
+            case UnauthorizedAccessException UnauthorizedAccessException:
+                statusCode = HttpStatusCode.Unauthorized;
+                problem = new CustomProblemDetails
+                {
+                    Title = UnauthorizedAccessException.Message,
+                    Status = (int)statusCode,
+                    Detail = UnauthorizedAccessException.InnerException?.Message,
+                    Type = nameof(UnauthorizedAccessException)
+                };
+                break;
+
+            case ForeignKeyNotFoundException ForeignKeyNotFoundException:
+                statusCode = HttpStatusCode.NotFound;
+                problem = new CustomProblemDetails
+                {
+                    Title = ForeignKeyNotFoundException.Message,
+                    Status = (int)statusCode,
+                    Detail = ForeignKeyNotFoundException.InnerException?.Message,
+                    Type = nameof(ForeignKeyNotFoundException),
+                    Errors = ForeignKeyNotFoundException.ValidationErrors
                 };
                 break;
 

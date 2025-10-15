@@ -1,7 +1,7 @@
-﻿using FluentValidation;
+﻿using Application.Common.Validators;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Application.Common.Validators;
+using FluentValidation;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
@@ -62,7 +62,7 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
             .MaximumLength(100);
 
         RuleFor(r => r.Id)
-            .MustAsync(EntityNotExist).WithMessage("Requisition with {PropertyName} already exist.");
+            .MustAsync(EntityNotExist).WithMessage("Requisition with this {PropertyName} already exist.");
 
         _reqRepository = reqRepository;
     }
