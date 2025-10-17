@@ -1,17 +1,17 @@
-﻿using Application.Common.Helpers;
-using Application.Exceptions;
-using Application.Features.Requisitions.Commands.CreateRequisition;
-using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities.Requisitions;
+﻿using AutoMapper;
 using FluentAssertions;
-using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Shouldly;
+using Application.Common.Helpers;
+using Application.Exceptions;
+using Application.Features.Requisitions.Commands.CreateRequisition;
+using Application.Interfaces;
+using Domain.Entities.Requisitions;
 
-namespace App.Core.Tests.Unit.Features.Requisitions.Commands;
+namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
 public class CreateRequisitionCommandHandlerTests
 {
@@ -38,7 +38,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidRequest_RegistersRequisition()
+    public async Task Handle_WhenRequestIsValid_ShouldRegisterRequisition()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
@@ -73,7 +73,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_AuditFieldsSetCorrectly_TasKIsSuccess()
+    public async Task Handle_WhenAuditFieldsAreSetCorrectly_ShouldSucceed()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
@@ -108,7 +108,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ValidationFailed_ThrowsBadRequestException()
+    public async Task Handle_WhenValidationFails_ShouldThrowBadRequestException()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
@@ -140,7 +140,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_InvalidForeignKey_ThrowsForeignKeyNotFoundException()
+    public async Task Handle_WhenForeignKeyIsInvalid_ShouldThrowForeignKeyNotFoundException()
     {
         var command = TestData.CreateRequisitionCommand();
 
@@ -159,7 +159,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_UserNotAuthenticated_ThrowsUnauthorizedAccessException()
+    public async Task Handle_WhenUserIsNotAuthenticated_ShouldThrowsUnauthorizedAccessException()
     {
         var command = TestData.CreateRequisitionCommand();
 

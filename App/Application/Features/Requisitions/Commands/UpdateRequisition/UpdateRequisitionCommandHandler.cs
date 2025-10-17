@@ -1,10 +1,10 @@
-﻿using Application.Common.Helpers;
-using Application.Exceptions;
-using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities.Requisitions;
+﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Application.Common.Helpers;
+using Application.Interfaces;
+using Domain.Entities.Requisitions;
+using Application.Exceptions;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -18,19 +18,15 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        var requisition = await _reqRepository.GetByIdAsync(request.Id!);
+        _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        if (validationResult.Errors.Count != 0)
-        {
-            throw new BadRequestException("Invalid requisition update", validationResult);
-        }
+        var requisition = await _reqRepository.GetByIdAsync(request.Id!);
+        if (requisition == null)
+            throw new BadRequestException(nameof(requisition));
 
         _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
-        _commonHelpers.ValidateIfEntityExist(requisition, request.Id!);
-
         var userEmail = _commonHelpers.GetCurrentUserFromToken();
-
         var reqToUpdate = _mapper.Map<Requisition>(request);
 
         reqToUpdate.CreatedAt = requisition!.CreatedAt;

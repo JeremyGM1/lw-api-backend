@@ -31,7 +31,7 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
             .MustAsync(HardwareExist).WithMessage("{PropertyName} does not exist")
             .RequiredForeignKey();
 
-        RuleFor(r => r.Headcount).RequiredForeignKey();
+        RuleFor(r => r.Headcount).RequiredInt();
 
         RuleFor(r => r.Location).RequiredString();
 

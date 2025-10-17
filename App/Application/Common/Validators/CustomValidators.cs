@@ -33,4 +33,13 @@ public static class CustomValidators
             .NotEmpty()
             .InclusiveBetween(1, maxValue);
     }
+    public static IRuleBuilderOptions<T, int> RequiredInt<T>(
+        this IRuleBuilder<T, int> ruleBuilder,
+        int maxValue = int.MaxValue)
+    {
+        return ruleBuilder
+            .NotNull().WithMessage("{PropertyName} is required")
+            .NotEmpty()
+            .InclusiveBetween(0, maxValue);
+    }
 }

@@ -6,24 +6,21 @@ using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers handlerHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<DeleteRequisitionCommand> _validator = validator;
-    private readonly ICommonHelpers _handlerHelpers = handlerHelpers;
-
+    private readonly ICommonHelpers _commonHelpers = commonHelpers;
     //private readonly IAppLogger<DeleteRequisitionCommand> _logger = logger;
+
     public async Task<Unit> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
     {
-        var requisition = await _reqRepository.GetRequisitionById(request.Id);
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        if (validationResult.Errors.Count != 0)
-        {
-            throw new BadRequestException("Invalid requisition", validationResult);
-        }
-
-        _handlerHelpers.ValidateIfEntityExist(requisition, request.Id);
+        var requisition = await _reqRepository.GetRequisitionById(request.Id);
+        if (requisition == null)
+            throw new NotFoundException(nameof(requisition), request.Id);
 
         await _reqRepository.DeleteAsync(requisition!);
 

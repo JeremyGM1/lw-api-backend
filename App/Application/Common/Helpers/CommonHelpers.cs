@@ -31,12 +31,6 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         }
     }
 
-    public void ValidateIfEntityExist<T>(T entity, string id)
-    {
-        if (entity == null)
-            throw new NotFoundException(typeof(T).Name, id);
-    }
-
     public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
@@ -47,8 +41,8 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         {
             var errors = new Dictionary<string, string[]>();
             if (!statusExist) errors.Add("StatusId", ["Status not found"]);
-            if (!workTypestatusExist) errors.Add("StatusId", ["Status not found"]);
-            if (!hardwareExist) errors.Add("StatusId", ["Status not found"]);
+            if (!workTypestatusExist) errors.Add("WorkTypeId", ["WorkType not found"]);
+            if (!hardwareExist) errors.Add("HardwareId", ["hardware not found"]);
 
             throw new ForeignKeyNotFoundException("Invalid foreign key", errors);
         }

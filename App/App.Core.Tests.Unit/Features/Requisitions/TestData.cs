@@ -1,11 +1,11 @@
-﻿using Application.Features.Requisitions.Commands.CreateRequisition;
+﻿using Moq;
+using Application.Features.Requisitions.Commands.CreateRequisition;
 using Domain.Entities.Requisitions;
-using Moq;
 
 namespace App.Core.Tests.Unit.Features.Requisitions;
 public static class TestData
 {
-    public static Requisition CreateRequisition(CreateRequisitionCommand command = null)
+    public static Requisition CreateRequisition(CreateRequisitionCommand command = null!)
     {
         command ??= CreateRequisitionCommand();
         return new Requisition()
@@ -29,9 +29,6 @@ public static class TestData
             Status = Mock.Of<RequisitionStatus>(s => s.Id == command.StatusId),
             WorkType = Mock.Of<RequisitionWorkType>(s => s.Id == command.WorkTypeId),
             Hardware = Mock.Of<RequisitionHardware>(s => s.Id == command.HardwareId),
-            //Status = new RequisitionStatus { Id = 1, Status = "Open" },
-            //WorkType = new RequisitionWorkType { Id = 1, WorkType = "FullTime" },
-            //Hardware = new RequisitionHardware { Id = 1, Hardware = "Dell" },
         };
     }
     public static CreateRequisitionCommand CreateRequisitionCommand() => new()
