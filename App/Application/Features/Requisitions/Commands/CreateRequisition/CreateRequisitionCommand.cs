@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Application.Common.Configs;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
@@ -14,19 +15,19 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public required string Name { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int StatusId { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int WorkTypeId { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int HardwareId { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int Headcount { get; set; }
 
     [Required]
@@ -46,12 +47,12 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public required string Owner { get; set; }
 
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0, (double)ValidationDefaultValues.CompensationBandMaxValue)]
     [DataType(DataType.Currency)]
     public decimal CompensationBandMin { get; set; }
 
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0, (double)ValidationDefaultValues.CompensationBandMaxValue)]
     [DataType(DataType.Currency)]
     public decimal CompensationBandMax { get; set; }
 

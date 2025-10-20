@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Application.Common.Configs;
+using FluentValidation;
 
 namespace Application.Common.Validators;
 
@@ -26,7 +27,7 @@ public static class CustomValidators
 
     public static IRuleBuilderOptions<T, int> RequiredForeignKey<T>(
         this IRuleBuilder<T, int> ruleBuilder,
-        int maxValue = int.MaxValue)
+        int maxValue = ValidationDefaultValues.IntMaxValue)
     {
         return ruleBuilder
             .NotNull().WithMessage("{PropertyName} is required")
@@ -35,7 +36,7 @@ public static class CustomValidators
     }
     public static IRuleBuilderOptions<T, int> RequiredInt<T>(
         this IRuleBuilder<T, int> ruleBuilder,
-        int maxValue = int.MaxValue)
+        int maxValue = ValidationDefaultValues.IntMaxValue)
     {
         return ruleBuilder
             .NotNull().WithMessage("{PropertyName} is required")

@@ -20,21 +20,21 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        var requisition = await _reqRepository.GetByIdAsync(request.Id!);
+        var requisition = await _reqRepository.GetRequisitionById(request.Id!);
         if (requisition == null)
-            throw new BadRequestException(nameof(requisition));
+            throw new NotFoundException(nameof(requisition), request.Id!);
 
         _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
         var userEmail = _commonHelpers.GetCurrentUserFromToken();
-        var reqToUpdate = _mapper.Map<Requisition>(request);
+        _mapper.Map(request, requisition);
 
-        reqToUpdate.CreatedAt = requisition!.CreatedAt;
-        reqToUpdate.CreatedBy = requisition!.CreatedBy;
-        reqToUpdate.UpdatedAt = DateTime.UtcNow;
-        reqToUpdate.UpdatedBy = userEmail;
+        requisition.CreatedAt = requisition!.CreatedAt;
+        requisition.CreatedBy = requisition!.CreatedBy;
+        requisition.UpdatedAt = DateTime.UtcNow;
+        requisition.UpdatedBy = userEmail;
 
-        await _reqRepository.UpdateAsync(reqToUpdate);
+        await _reqRepository.UpdateAsync(requisition);
 
         return Unit.Value;
     }

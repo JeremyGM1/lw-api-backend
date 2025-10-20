@@ -1,8 +1,8 @@
-﻿using Application.Features.Requisitions.Commands.CreateRequisition;
+﻿using Moq;
+using Shouldly;
+using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Moq;
-using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 

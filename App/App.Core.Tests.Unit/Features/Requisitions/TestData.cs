@@ -1,8 +1,10 @@
 ﻿using Moq;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Domain.Entities.Requisitions;
+using Application.Features.Requisitions.Commands.UpdateRequisition;
 
 namespace App.Core.Tests.Unit.Features.Requisitions;
+
 public static class TestData
 {
     public static Requisition CreateRequisition(CreateRequisitionCommand command = null!)
@@ -31,6 +33,7 @@ public static class TestData
             Hardware = Mock.Of<RequisitionHardware>(s => s.Id == command.HardwareId),
         };
     }
+
     public static CreateRequisitionCommand CreateRequisitionCommand() => new()
     {
         Id = "600900",
@@ -49,5 +52,25 @@ public static class TestData
         CompensationBandInterval = "Annual",
         Description = "Requisition for a senior Engineer",
         BackfillName = "Alice Smith"
+    };
+
+    public static UpdateRequisitionCommand UpdateRequisitionCommand() => new()
+    {
+        Id = "600900",
+        Name = "QA III",
+        StatusId = 2,
+        WorkTypeId = 2,
+        HardwareId = 2,
+        Headcount = 10,
+        Location = "Philippines",
+        Department = "Engineering",
+        HiringManager = "Adrian",
+        Owner = "Camilo",
+        CompensationBandMin = 9000000,
+        CompensationBandMax = 15000000,
+        CompensationBandCurrency = "COP",
+        CompensationBandInterval = "Weekly",
+        Description = "No experience needed",
+        BackfillName = "John Doe"
     };
 }
