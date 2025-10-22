@@ -1,5 +1,5 @@
-﻿using FluentValidation.Results;
-using FluentValidation;
+﻿using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using Shouldly;
 using Application.Common.Helpers;

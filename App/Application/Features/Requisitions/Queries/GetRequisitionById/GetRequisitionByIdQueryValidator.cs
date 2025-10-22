@@ -21,5 +21,6 @@ public class GetRequisitionByIdQueryValidator : AbstractValidator<GetRequisition
 
         _reqRepository = reqRepository;
     }
+
     private async Task<bool> EntityExist(string id, CancellationToken cancellationToken) => await _reqRepository.RequisitionExists(id);
 }

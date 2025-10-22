@@ -2,9 +2,8 @@
 using FluentValidation;
 using MediatR;
 using Application.Common.Helpers;
-using Application.Interfaces;
-using Domain.Entities.Requisitions;
 using Application.Exceptions;
+using Application.Interfaces;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 

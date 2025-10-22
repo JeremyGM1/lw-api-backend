@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
+using Application.Common.Configs;
+using Application.Common.Validators;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Application.Common.Validators;
-using Application.Common.Configs;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 

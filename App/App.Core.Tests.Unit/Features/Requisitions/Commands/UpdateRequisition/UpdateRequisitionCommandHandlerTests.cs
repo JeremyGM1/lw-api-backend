@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using FluentValidation.Results;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;

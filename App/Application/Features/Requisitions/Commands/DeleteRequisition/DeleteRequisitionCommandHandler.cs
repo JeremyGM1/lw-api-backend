@@ -1,8 +1,8 @@
-﻿using Application.Common.Helpers;
+﻿using FluentValidation;
+using MediatR;
+using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
-using FluentValidation;
-using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 

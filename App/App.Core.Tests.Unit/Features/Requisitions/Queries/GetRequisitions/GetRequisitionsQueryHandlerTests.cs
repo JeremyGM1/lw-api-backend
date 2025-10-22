@@ -1,13 +1,11 @@
-﻿using Application.Features.Requisitions.Dtos;
-using Application.Features.Requisitions.Queries.GetRequisitionById;
-using Application.Features.Requisitions.Queries.GetRequisitions;
-using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities.Requisitions;
-using FluentAssertions;
-using LoggingService.Interfaces;
+﻿using AutoMapper;
 using Moq;
 using Shouldly;
+using Application.Features.Requisitions.Dtos;
+using Application.Features.Requisitions.Queries.GetRequisitions;
+using Application.Interfaces;
+using Domain.Entities.Requisitions;
+using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitions;
 

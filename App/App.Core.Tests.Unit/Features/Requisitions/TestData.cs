@@ -1,8 +1,7 @@
 ﻿using Moq;
 using Application.Features.Requisitions.Commands.CreateRequisition;
-using Domain.Entities.Requisitions;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Application.Features.Requisitions.Queries.GetRequisitionById;
+using Domain.Entities.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions;
 

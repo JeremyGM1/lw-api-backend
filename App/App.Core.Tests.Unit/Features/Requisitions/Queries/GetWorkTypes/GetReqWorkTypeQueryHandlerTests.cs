@@ -1,14 +1,14 @@
-﻿using Application.Features.Requisitions.MappingProfiles;
-using Application.Features.Requisitions.Queries.GetStatuses;
-using Application.Features.Requisitions.Queries.GetWorkTypes;
-using Application.Interfaces.Lookup;
-using AutoMapper;
-using Domain.Entities.Requisitions;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
+using Application.Features.Requisitions.MappingProfiles;
+using Application.Features.Requisitions.Queries.GetWorkTypes;
+using Application.Interfaces.Lookup;
+using Domain.Entities.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetWorkTypes;
+
 public class GetReqWorkTypeQueryHandlerTests
 {
     private readonly IMapper _mapper;

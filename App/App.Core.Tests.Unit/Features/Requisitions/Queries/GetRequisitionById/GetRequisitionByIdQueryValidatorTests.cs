@@ -3,7 +3,6 @@ using Shouldly;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Interfaces;
-using Application.Exceptions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 

@@ -2,9 +2,9 @@
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Domain.Entities.Requisitions;
-using Application.Features.Requisitions.Dtos;
 using Application.Features.Requisitions.Dtos.Lookup;
+using Application.Features.Requisitions.Dtos;
+using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.MappingProfiles;
 

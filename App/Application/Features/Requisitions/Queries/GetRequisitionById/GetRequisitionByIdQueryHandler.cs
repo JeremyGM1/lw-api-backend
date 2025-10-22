@@ -1,10 +1,10 @@
-﻿using Application.Common.Helpers;
+﻿using AutoMapper;
+using FluentValidation;
+using MediatR;
+using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Dtos;
 using Application.Interfaces;
-using AutoMapper;
-using FluentValidation;
-using MediatR;
 
 namespace Application.Features.Requisitions.Queries.GetRequisitionById;
 

@@ -1,9 +1,9 @@
-﻿using Application.Common.Configs;
+﻿using Moq;
+using Shouldly;
+using Application.Common.Configs;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Moq;
-using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 

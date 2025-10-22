@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Application.Features.Requisitions.Dtos;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
