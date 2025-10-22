@@ -4,33 +4,45 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<CreateRequisitionCommand, Unit>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILogger<CreateRequisitionCommandHandler> logger) : IRequestHandler<CreateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<CreateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    //private readonly IAppLogger<CreateRequisitionCommandHandler> _logger = logger;
+    private readonly ILogger<CreateRequisitionCommandHandler> _logger = logger;
 
     public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        _commonHelpers.ThrowIfValidationFails(validationResult);
+        _logger.LogInformation("Creating requisition {RequisitionId}", request.Id);
 
-        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        try
+        {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        var userEmail = _commonHelpers.GetCurrentUserFromToken();
+            _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
-        var reqToCreate = _mapper.Map<Requisition>(request);
+            var userEmail = _commonHelpers.GetCurrentUserFromToken();
 
-        reqToCreate.CreatedAt = DateTime.UtcNow;
-        reqToCreate.CreatedBy = userEmail;
+            var reqToCreate = _mapper.Map<Requisition>(request);
 
-        await _reqRepository.CreateAsync(reqToCreate);
+            reqToCreate.CreatedAt = DateTime.UtcNow;
+            reqToCreate.CreatedBy = userEmail;
 
-        return Unit.Value;
+            await _reqRepository.CreateAsync(reqToCreate);
+
+            _logger.LogInformation("Requisition {Requisitionid} created successfully", request.Id);
+            return Unit.Value;
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex, "Failed to create requisition {RequisitionId}", request.Id);
+            throw;
+        }
     }
 }
