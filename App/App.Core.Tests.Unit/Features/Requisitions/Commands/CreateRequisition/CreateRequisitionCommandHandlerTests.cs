@@ -10,6 +10,7 @@ using Application.Exceptions;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Microsoft.Extensions.Logging;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -20,6 +21,7 @@ public class CreateRequisitionCommandHandlerTests
     private readonly Mock<IValidator<CreateRequisitionCommand>> _mockValidator;
     private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
+    private readonly Mock<ILogger<CreateRequisitionCommandHandler>> _mockLogger;
     private readonly CreateRequisitionCommandHandler _handler;
 
     public CreateRequisitionCommandHandlerTests()
@@ -29,11 +31,13 @@ public class CreateRequisitionCommandHandlerTests
         _mockValidator = new Mock<IValidator<CreateRequisitionCommand>>();
         _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
+        _mockLogger = new Mock<ILogger<CreateRequisitionCommandHandler>>();
         _handler = new CreateRequisitionCommandHandler(
             _mockMapper.Object,
             _mockReqRepository.Object,
             _mockValidator.Object,
-            _mockCommonHelpers.Object
+            _mockCommonHelpers.Object,
+            _mockLogger.Object
         );
     }
 
