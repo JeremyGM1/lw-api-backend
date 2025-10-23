@@ -16,7 +16,6 @@ public static class ApplicationServiceRegistration
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<ICommonHelpers, CommonHelpers>();
-        services.AddScoped<ILoggerHelpers, LoggerHelpers>();
 
         return services;
     }

@@ -1,17 +1,19 @@
-﻿using FluentValidation;
-using MediatR;
-using Application.Common.Helpers;
+﻿using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
+using FluentValidation;
+using LoggingService.Interfaces;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<DeleteRequisitionCommand, Unit>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<DeleteRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
+    private readonly IRequisitionLogService _logger = logger;
 
     public async Task<Unit> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -28,7 +30,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
             if (requisition == null)
                 throw new NotFoundException(nameof(requisition), request.Id);
 
-            await _loggerHelpers.LogRequisitionAsync(requisition.Id, "Delete", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(requisition.Id, "Delete", userEmail, ipAddress, userAgent, "Success");
 
             await _reqRepository.DeleteAsync(requisition!);
 
@@ -36,7 +38,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         }
         catch (Exception ex)
         {
-            await _loggerHelpers.LogRequisitionAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message);
             throw;
         }
     }

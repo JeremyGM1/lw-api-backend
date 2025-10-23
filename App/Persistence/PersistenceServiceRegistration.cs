@@ -19,6 +19,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IReqStatusRepository, ReqStatusRepository>();
         services.AddScoped<IReqWorkTypeRepository, ReqWorkTypeRepository>();
         services.AddScoped<IReqHardwareRepository, ReqHardwareRepository>();
+        services.AddScoped<IGenericLogService, GenericLogService>();
         services.AddScoped<IRequisitionLogService, RequisitionLogService>();
         return services;
     }

@@ -1,19 +1,20 @@
-﻿using AutoMapper;
-using FluentValidation;
-using MediatR;
-using Application.Common.Helpers;
+﻿using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
+using AutoMapper;
+using FluentValidation;
+using LoggingService.Interfaces;
+using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<UpdateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
+    private readonly IRequisitionLogService _logger = logger;
 
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -41,13 +42,13 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _reqRepository.UpdateAsync(requisition);
 
-            await _loggerHelpers.LogRequisitionAsync(requisition.Id, "Update", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(requisition.Id, "Update", userEmail, ipAddress, userAgent, "Success");
 
             return Unit.Value;
         }
         catch (Exception ex)
         {
-            await _loggerHelpers.LogRequisitionAsync(null!, "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            await _logger.LogFailureAsync(null!, "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message);
             throw;
         }
     }
