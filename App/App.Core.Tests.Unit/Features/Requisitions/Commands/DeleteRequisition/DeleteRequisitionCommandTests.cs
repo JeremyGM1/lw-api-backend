@@ -15,6 +15,7 @@ public class DeleteRequisitionCommandTests
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<IValidator<DeleteRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
+    private readonly Mock<ILoggerHelpers> _mockLoggerHelpers;
     private readonly DeleteRequisitionCommandHandler _handler;
 
     public DeleteRequisitionCommandTests()
@@ -22,10 +23,12 @@ public class DeleteRequisitionCommandTests
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockValidator = new Mock<IValidator<DeleteRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
+        _mockLoggerHelpers = new Mock<ILoggerHelpers>();
         _handler = new DeleteRequisitionCommandHandler(
             _mockReqRepository.Object,
             _mockValidator.Object,
-            _mockCommonHelpers.Object
+            _mockCommonHelpers.Object,
+            _mockLoggerHelpers.Object
             );
     }
 

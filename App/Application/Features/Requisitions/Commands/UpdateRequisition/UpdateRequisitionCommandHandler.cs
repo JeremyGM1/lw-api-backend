@@ -7,17 +7,24 @@ using Application.Interfaces;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<UpdateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
+    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
 
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        _commonHelpers.ThrowIfValidationFails(validationResult);
+        var userEmail = _commonHelpers.GetCurrentUserFromToken();
+        var ipAddress = _commonHelpers.GetUserIpAddress();
+        var userAgent = _commonHelpers.GetUserAgent();
+
+        try
+        {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            _commonHelpers.ThrowIfValidationFails(validationResult);
 
         var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
         if (requisition == null)
@@ -25,16 +32,23 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
         _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
-        var userEmail = _commonHelpers.GetCurrentUserFromToken();
-        _mapper.Map(request, requisition);
+            _mapper.Map(request, requisition);
 
-        requisition.CreatedAt = requisition!.CreatedAt;
-        requisition.CreatedBy = requisition!.CreatedBy;
-        requisition.UpdatedAt = DateTime.UtcNow;
-        requisition.UpdatedBy = userEmail;
+            requisition.CreatedAt = requisition!.CreatedAt;
+            requisition.CreatedBy = requisition!.CreatedBy;
+            requisition.UpdatedAt = DateTime.UtcNow;
+            requisition.UpdatedBy = userEmail;
 
-        await _reqRepository.UpdateAsync(requisition);
+            await _reqRepository.UpdateAsync(requisition);
 
-        return Unit.Value;
+            await _loggerHelpers.LogRequisitionAsync(requisition.Id, "Update", userEmail, ipAddress, userAgent, "Success");
+
+            return Unit.Value;
+        }
+        catch (Exception ex)
+        {
+            await _loggerHelpers.LogRequisitionAsync(null!, "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            throw;
+        }
     }
 }

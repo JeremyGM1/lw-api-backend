@@ -6,24 +6,38 @@ using Application.Interfaces;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, IValidator<DeleteRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<DeleteRequisitionCommand, Unit>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<DeleteRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    //private readonly IAppLogger<DeleteRequisitionCommand> _logger = logger;
+    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
 
     public async Task<Unit> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        _commonHelpers.ThrowIfValidationFails(validationResult);
+        var userEmail = _commonHelpers.GetCurrentUserFromToken();
+        var ipAddress = _commonHelpers.GetUserIpAddress();
+        var userAgent = _commonHelpers.GetUserAgent();
+
+        try
+        {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            _commonHelpers.ThrowIfValidationFails(validationResult);
 
         var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
         if (requisition == null)
             throw new NotFoundException(nameof(requisition), request.ReqCode);
 
-        await _reqRepository.DeleteAsync(requisition!);
+            await _loggerHelpers.LogRequisitionAsync(requisition.Id, "Delete", userEmail, ipAddress, userAgent, "Success");
 
-        return Unit.Value;
+            await _reqRepository.DeleteAsync(requisition!);
+
+            return Unit.Value;
+        }
+        catch (Exception ex)
+        {
+            await _loggerHelpers.LogRequisitionAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            throw;
+        }
     }
 }

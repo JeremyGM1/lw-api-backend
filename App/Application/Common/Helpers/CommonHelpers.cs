@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using LoggingService.Interfaces;
 
 namespace Application.Common.Helpers;
 
@@ -21,6 +22,30 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             throw new UnauthorizedAccessException("User not authenticated");
 
         return email;
+    }
+
+    public string GetUserIpAddress()
+    {
+        var httpContext = _httpContextAccessor.HttpContext;
+
+        var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(forwardedFor))
+        {
+            return forwardedFor.Split(',').First().Trim();
+        }
+
+        var realIp = httpContext.Request.Headers["X-Real-IP"].FirstOrDefault();
+        if (!string.IsNullOrEmpty(realIp))
+        {
+            return realIp;
+        }
+
+        return httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+    }
+
+    public string GetUserAgent()
+    {
+        return _httpContextAccessor.HttpContext.Request.Headers["User-Agent"].ToString() ?? "Unknown";
     }
 
     public void ThrowIfValidationFails(ValidationResult validationResult)

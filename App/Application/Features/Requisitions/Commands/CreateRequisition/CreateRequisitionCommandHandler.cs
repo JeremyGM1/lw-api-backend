@@ -4,21 +4,22 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILogger<CreateRequisitionCommandHandler> logger) : IRequestHandler<CreateRequisitionCommand, Unit>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<CreateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<CreateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILogger<CreateRequisitionCommandHandler> _logger = logger;
+    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
 
     public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Creating requisition {RequisitionId}", request.Id);
+        var userEmail = _commonHelpers.GetCurrentUserFromToken();
+        var ipAddress = _commonHelpers.GetUserIpAddress();
+        var userAgent = _commonHelpers.GetUserAgent();
 
         try
         {
@@ -27,8 +28,6 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
         _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
-            var userEmail = _commonHelpers.GetCurrentUserFromToken();
-
             var reqToCreate = _mapper.Map<Requisition>(request);
 
             reqToCreate.CreatedAt = DateTime.UtcNow;
@@ -36,12 +35,13 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _reqRepository.CreateAsync(reqToCreate);
 
-            _logger.LogInformation("Requisition {Requisitionid} created successfully", request.Id);
+            await _loggerHelpers.LogRequisitionAsync(reqToCreate.Id, "Create", userEmail, ipAddress, userAgent, "Success");
+
             return Unit.Value;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create requisition {RequisitionId}", request.Id);
+            await _loggerHelpers.LogRequisitionAsync(request.Id, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
             throw;
         }
     }
