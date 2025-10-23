@@ -4,16 +4,17 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using LoggingService.Interfaces;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerHelpers loggerHelpers) : IRequestHandler<CreateRequisitionCommand, Unit>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<CreateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<CreateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILoggerHelpers _loggerHelpers = loggerHelpers;
+    private readonly IRequisitionLogService _logger = logger;
 
     public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -35,13 +36,13 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _reqRepository.CreateAsync(reqToCreate);
 
-            await _loggerHelpers.LogRequisitionAsync(reqToCreate.Id, "Create", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(reqToCreate.Id, "Create", userEmail, ipAddress, userAgent, "Success");
 
             return Unit.Value;
         }
         catch (Exception ex)
         {
-            await _loggerHelpers.LogRequisitionAsync(request.Id, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            await _logger.LogFailureAsync(request.Id, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
             throw;
         }
     }
