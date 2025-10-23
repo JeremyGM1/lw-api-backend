@@ -8,7 +8,9 @@ public interface ICommonHelpers
 
     void ThrowIfValidationFails(ValidationResult validationResult);
 
-    //T ValidateIfEntityExist<T>(T? entity, string id) where T : class;
+    string GetUserIpAddress();
+
+    string GetUserAgent();
 
     void ValidateForeignKey(int statusId, int workTypeId, int hardwareId);
 }

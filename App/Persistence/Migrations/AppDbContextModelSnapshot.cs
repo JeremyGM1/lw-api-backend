@@ -17,7 +17,7 @@ namespace Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -398,6 +398,52 @@ namespace Persistence.Migrations
                     b.ToTable("RequisitionJobs");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActionResult")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequisitionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequisitionId");
+
+                    b.HasIndex("TimeStamp");
+
+                    b.ToTable("RequisitionLogs");
+                });
+
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -675,6 +721,16 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("JobDescription");
+
+                    b.Navigation("Requisition");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
+                {
+                    b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
+                        .WithMany()
+                        .HasForeignKey("RequisitionId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Requisition");
                 });
