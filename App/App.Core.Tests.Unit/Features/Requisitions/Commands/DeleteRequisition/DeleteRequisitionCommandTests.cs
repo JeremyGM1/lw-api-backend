@@ -7,6 +7,7 @@ using Application.Exceptions;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 
@@ -15,7 +16,7 @@ public class DeleteRequisitionCommandTests
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<IValidator<DeleteRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<ILoggerHelpers> _mockLoggerHelpers;
+    private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly DeleteRequisitionCommandHandler _handler;
 
     public DeleteRequisitionCommandTests()
@@ -23,12 +24,12 @@ public class DeleteRequisitionCommandTests
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockValidator = new Mock<IValidator<DeleteRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLoggerHelpers = new Mock<ILoggerHelpers>();
+        _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new DeleteRequisitionCommandHandler(
             _mockReqRepository.Object,
             _mockValidator.Object,
             _mockCommonHelpers.Object,
-            _mockLoggerHelpers.Object
+            _mockLogger.Object
             );
     }
 
