@@ -11,6 +11,7 @@ using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -20,7 +21,7 @@ public class UpdateRequisitionCommandHandlerTests
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<IValidator<UpdateRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<ILoggerHelpers> _mockLoggerHelpers;
+    private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly UpdateRequisitionCommandHandler _handler;
 
     public UpdateRequisitionCommandHandlerTests()
@@ -32,13 +33,13 @@ public class UpdateRequisitionCommandHandlerTests
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockValidator = new Mock<IValidator<UpdateRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLoggerHelpers = new Mock<ILoggerHelpers>();
+        _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new UpdateRequisitionCommandHandler(
             _mapper,
             _mockReqRepository.Object,
             _mockValidator.Object,
             _mockCommonHelpers.Object,
-            _mockLoggerHelpers.Object
+            _mockLogger.Object
         );
     }
 

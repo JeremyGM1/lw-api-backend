@@ -20,9 +20,8 @@ public class CreateRequisitionCommandHandlerTests
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<IValidator<CreateRequisitionCommand>> _mockValidator;
-    private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<ILoggerHelpers> _mockLogger;
+    private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly CreateRequisitionCommandHandler _handler;
 
     public CreateRequisitionCommandHandlerTests()
@@ -30,9 +29,8 @@ public class CreateRequisitionCommandHandlerTests
         _mockMapper = new Mock<IMapper>();
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockValidator = new Mock<IValidator<CreateRequisitionCommand>>();
-        _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLogger = new Mock<ILoggerHelpers>();
+        _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new CreateRequisitionCommandHandler(
             _mockMapper.Object,
             _mockReqRepository.Object,

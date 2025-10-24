@@ -1,10 +1,9 @@
-﻿using Application.Common.Helpers;
+﻿using FluentValidation;
+using MediatR;
+using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
-using FluentValidation;
 using LoggingService.Interfaces;
-using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
