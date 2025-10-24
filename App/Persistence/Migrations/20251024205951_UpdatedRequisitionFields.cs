@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class UpdatedRequisitionFields : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,6 +57,19 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RequisitionCurrency",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequisitionCurrency", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RequisitionHardware",
                 columns: table => new
                 {
@@ -67,6 +80,32 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RequisitionHardware", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequisitionInterval",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Interval = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequisitionInterval", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequisitionLocation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequisitionLocation", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -192,15 +231,15 @@ namespace Persistence.Migrations
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     WorkTypeId = table.Column<int>(type: "int", nullable: false),
                     HardwareId = table.Column<int>(type: "int", nullable: false),
+                    LocationId = table.Column<int>(type: "int", nullable: false),
                     Headcount = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Department = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     HiringManager = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Owner = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CompensationBandMin = table.Column<decimal>(type: "decimal(20,4)", precision: 20, scale: 4, nullable: false),
                     CompensationBandMax = table.Column<decimal>(type: "decimal(20,4)", precision: 20, scale: 4, nullable: false),
-                    CompensationBandCurrency = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    CompensationBandInterval = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CompensationBandCurrencyId = table.Column<int>(type: "int", nullable: false),
+                    CompensationBandIntervalId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     BackfillName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -213,9 +252,27 @@ namespace Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Requisitions", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Requisitions_RequisitionCurrency_CompensationBandCurrencyId",
+                        column: x => x.CompensationBandCurrencyId,
+                        principalTable: "RequisitionCurrency",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Requisitions_RequisitionHardware_HardwareId",
                         column: x => x.HardwareId,
                         principalTable: "RequisitionHardware",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Requisitions_RequisitionInterval_CompensationBandIntervalId",
+                        column: x => x.CompensationBandIntervalId,
+                        principalTable: "RequisitionInterval",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Requisitions_RequisitionLocation_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "RequisitionLocation",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -350,12 +407,51 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "RequisitionCurrency",
+                columns: new[] { "Id", "Currency" },
+                values: new object[,]
+                {
+                    { 1, "COP" },
+                    { 2, "USD" },
+                    { 3, "CAD" },
+                    { 4, "PHP" },
+                    { 5, "EUR" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "RequisitionHardware",
                 columns: new[] { "Id", "Hardware" },
                 values: new object[,]
                 {
                     { 1, "Dell" },
                     { 2, "Mac" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RequisitionInterval",
+                columns: new[] { "Id", "Interval" },
+                values: new object[,]
+                {
+                    { 1, "Weekly" },
+                    { 2, "Bi-Weekly" },
+                    { 3, "Monthly" },
+                    { 4, "Bi-Monthly" },
+                    { 5, "Quarterly" },
+                    { 6, "Bi-Annually" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RequisitionLocation",
+                columns: new[] { "Id", "Location" },
+                values: new object[,]
+                {
+                    { 1, "Medellín" },
+                    { 2, "Bogotá" },
+                    { 3, "Cali" },
+                    { 4, "Barranquilla" },
+                    { 5, "Cartagena" },
+                    { 6, "Bucaramanga" },
+                    { 7, "Santa Marta" }
                 });
 
             migrationBuilder.InsertData(
@@ -436,6 +532,16 @@ namespace Persistence.Migrations
                 column: "JobDescriptionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_CompensationBandCurrencyId",
+                table: "Requisitions",
+                column: "CompensationBandCurrencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_CompensationBandIntervalId",
+                table: "Requisitions",
+                column: "CompensationBandIntervalId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Requisitions_CreatedAt",
                 table: "Requisitions",
                 column: "CreatedAt");
@@ -454,6 +560,11 @@ namespace Persistence.Migrations
                 name: "IX_Requisitions_HiringManager",
                 table: "Requisitions",
                 column: "HiringManager");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_LocationId",
+                table: "Requisitions",
+                column: "LocationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requisitions_StatusId",
@@ -516,7 +627,16 @@ namespace Persistence.Migrations
                 name: "JobDescriptionStatus");
 
             migrationBuilder.DropTable(
+                name: "RequisitionCurrency");
+
+            migrationBuilder.DropTable(
                 name: "RequisitionHardware");
+
+            migrationBuilder.DropTable(
+                name: "RequisitionInterval");
+
+            migrationBuilder.DropTable(
+                name: "RequisitionLocation");
 
             migrationBuilder.DropTable(
                 name: "RequisitionStatus");

@@ -1,23 +1,29 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using Moq;
 using Shouldly;
-using Application.Exceptions;
 using Identity.Models;
 using Identity.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Application.Common.Helpers;
+using Application.Exceptions;
 
 namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
 
 public class DeleteUserTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+    private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly UserService _userService;
 
     public DeleteUserTests()
     {
         _mockUserManager = CreateMockUserManager();
-        _userService = new UserService(_mockUserManager.Object);
+        _mockCommonHelpers = new Mock<ICommonHelpers>();
+        _userService = new UserService(
+            _mockUserManager.Object,
+            _mockCommonHelpers.Object
+        );
     }
 
     private static Mock<UserManager<ApplicationUser>> CreateMockUserManager()

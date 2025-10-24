@@ -1,0 +1,14 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Application.Interfaces.Lookup;
+using Domain.Entities.Requisitions;
+
+namespace Persistence.Repositories.Lookup;
+public class ReqLocationRepository(AppDbContext context) : IReqWorkTypeRepository
+{
+    private readonly AppDbContext _context = context;
+
+    public async Task<List<RequisitionWorkType>> GetWorkTypes()
+    {
+        return await _context.RequisitionWorkType.ToListAsync();
+    }
+}

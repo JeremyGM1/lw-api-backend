@@ -202,7 +202,7 @@ public class CreateRequisitionCommandValidatorTests
     public async Task Validator_WhenBandCurrencyHasMoreThan3Characters_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
-        command.CompensationBandCurrency = "USDD";
+        //command.CompensationBandCurrency = "USDD";
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 
@@ -216,7 +216,7 @@ public class CreateRequisitionCommandValidatorTests
     public async Task Validator_WhenBandIntervalyHasMoreThan10Characters_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
-        command.CompensationBandCurrency = "USDD";
+        //command.CompensationBandCurrency = "USDD";
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 

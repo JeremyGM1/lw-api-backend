@@ -6,17 +6,14 @@ using Application.Exceptions;
 using Application.Features.Identity.Models;
 using Application.Interfaces.Identity;
 using Identity.Models;
+using Application.Common.Helpers;
 
 namespace Identity.Services;
 
-public class UserService : IUserService
+public class UserService(UserManager<ApplicationUser> userManager, ICommonHelpers commonHelpers) : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public UserService(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly ICommonHelpers _commonHelpers = commonHelpers;
 
     public async Task<RegistrationResponse> Register(RegistrationRequest request)
     {
@@ -54,6 +51,7 @@ public class UserService : IUserService
     public async Task<UpdateResponse> Update(UpdateRequest request)
     {
         var user = await _userManager.FindByIdAsync(request.Id) ?? throw new NotFoundException($"User with {request.Id} not found.", request.Id);
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         if (!string.IsNullOrEmpty(request.Email))
         {
@@ -67,9 +65,9 @@ public class UserService : IUserService
         if (!string.IsNullOrEmpty(request.LastName))
             user.LastName = request.LastName;
 
-        if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
+        if (!string.IsNullOrEmpty(request.NewPassword))
         {
-            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
             if (!result.Succeeded)
             {
                 var errors = string.Join(",", result.Errors.Select(e => e.Description));

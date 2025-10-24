@@ -33,7 +33,8 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
 
         RuleFor(r => r.Headcount).RequiredInt();
 
-        RuleFor(r => r.Location).RequiredString();
+        RuleFor(r => r.LocationId)
+            .RequiredForeignKey();
 
         RuleFor(r => r.Department).RequiredString();
 
@@ -51,9 +52,11 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
             .NotEmpty()
             .InclusiveBetween(0, int.MaxValue);
 
-        RuleFor(r => r.CompensationBandCurrency).RequiredString(3);
+        RuleFor(r => r.CompensationBandCurrencyId)
+            .RequiredForeignKey();
 
-        RuleFor(r => r.CompensationBandInterval).RequiredString(10);
+        RuleFor(r => r.CompensationBandIntervalId)
+            .RequiredForeignKey();
 
         RuleFor(r => r.Description)
             .MaximumLength(200);

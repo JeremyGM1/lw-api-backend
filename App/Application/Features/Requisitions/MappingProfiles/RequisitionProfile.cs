@@ -25,5 +25,9 @@ public class RequisitionProfile : Profile
         CreateMap<RequisitionStatus, GetReqStatusesDto>();
         CreateMap<RequisitionWorkType, GetReqWorkTypeDto>();
         CreateMap<RequisitionHardware, GetReqHardwareDto>();
+
+        CreateMap<RequisitionLocation, GetReqLocationDto>();
+        CreateMap<RequisitionCurrency, GetReqCurrencyDto>();
+        CreateMap<RequisitionInterval, GetReqIntervalDto>();
     }
 }

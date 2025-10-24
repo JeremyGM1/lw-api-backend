@@ -1,25 +1,30 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using Application.Common.Helpers;
+using Application.Exceptions;
+using Application.Features.Identity.Models;
+using FluentAssertions;
 using Identity.Models;
 using Identity.Services;
-using Microsoft.AspNetCore.Identity.Data;
-using Application.Features.Identity.Models;
+using Moq;
 using Shouldly;
-using Application.Exceptions;
-using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
 public class RegisterUserTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+    private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly UserService _userService;
 
     public RegisterUserTests()
     {
         _mockUserManager = CreateMockUserManager();
-        _userService = new UserService(_mockUserManager.Object);
+        _mockCommonHelpers = new Mock<ICommonHelpers>();
+        _userService = new UserService(
+            _mockUserManager.Object,
+            _mockCommonHelpers.Object
+        );
     }
 
     private static Mock<UserManager<ApplicationUser>> CreateMockUserManager()

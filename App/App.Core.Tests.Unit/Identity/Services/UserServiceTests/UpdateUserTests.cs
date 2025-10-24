@@ -1,12 +1,12 @@
-﻿using Application.Exceptions;
-using Application.Features.Identity.Models;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
-using Xunit;
+using Application.Common.Helpers;
+using Application.Exceptions;
+using Application.Features.Identity.Models;
 using Identity.Models;
 using Identity.Services;
 
@@ -15,12 +15,17 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
 public class UpdateUserTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+    private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly UserService _userService;
 
     public UpdateUserTests()
     {
         _mockUserManager = CreateMockUserManager();
-        _userService = new UserService(_mockUserManager.Object);
+        _mockCommonHelpers = new Mock<ICommonHelpers>();
+        _userService = new UserService(
+            _mockUserManager.Object,
+            _mockCommonHelpers.Object
+        );
     }
 
     private static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
@@ -60,7 +65,6 @@ public class UpdateUserTests
             Email = "updated@example.com",
             FirstName = "Jane",
             LastName = "Smith",
-            CurrentPassword = "TestPassword123@",
             NewPassword = "NewPassword123!",
         };
     }
@@ -70,13 +74,14 @@ public class UpdateUserTests
     {
         var request = CreateUpdateRequest();
         var user = CreateTestUser(request.Id);
+        const string token = "test-reset-token";
 
         _mockUserManager
             .Setup(u => u.FindByIdAsync(request.Id))
             .ReturnsAsync(user);
 
         _mockUserManager
-            .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
+            .Setup(u => u.ChangePasswordAsync(user, token, request.NewPassword!))
             .ReturnsAsync(IdentityResult.Success);
 
         _mockUserManager
@@ -111,6 +116,7 @@ public class UpdateUserTests
     {
         var request = CreateUpdateRequest();
         var user = CreateTestUser(request.Id);
+        var token = "test-reset-token";
         var identityError = new IdentityError { Description = "Current Password is incorrect" };
 
         _mockUserManager
@@ -118,7 +124,7 @@ public class UpdateUserTests
             .ReturnsAsync(user);
 
         _mockUserManager
-            .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
+            .Setup(u => u.ChangePasswordAsync(user, token, request.NewPassword!))
             .ReturnsAsync(IdentityResult.Failed(identityError));
 
         var exception = await Should.ThrowAsync<ValidationException>(() => _userService.Update(request));
@@ -230,15 +236,15 @@ public class UpdateUserTests
     public async Task Update_ProvidesValidCurrentPasswordAndNewPassword_UpdatesPassword()
     {
         var request = CreateUpdateRequest();
-
         var user = CreateTestUser(request.Id);
+        var token = "test-reset-token";
 
         _mockUserManager
             .Setup(u => u.FindByIdAsync(request.Id))
             .ReturnsAsync(user);
 
         _mockUserManager
-            .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
+            .Setup(u => u.ChangePasswordAsync(user, token, request.NewPassword!))
             .ReturnsAsync(IdentityResult.Success);
 
         _mockUserManager
@@ -250,9 +256,9 @@ public class UpdateUserTests
         result.ShouldNotBeNull();
         result.UserId.ShouldBe(request.Id);
 
-        _mockUserManager.Verify(u => u.ChangePasswordAsync(
+        _mockUserManager.Verify(u => u.ResetPasswordAsync(
             It.Is<ApplicationUser>(u => u.Id == user.Id),
-            request.CurrentPassword!,
+            token,
             request.NewPassword!),
             Times.Once
         );
