@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Application.Interfaces.Lookup;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Lookup.Requisition;
 
-namespace Persistence.Repositories.Lookup;
-public class ReqLocationRepository(AppDbContext context) : IReqWorkTypeRepository
+namespace Persistence.Repositories.Lookup.Requisition;
+public class ReqWorkTypeRepository(AppDbContext context) : IReqWorkTypeRepository
 {
     private readonly AppDbContext _context = context;
 

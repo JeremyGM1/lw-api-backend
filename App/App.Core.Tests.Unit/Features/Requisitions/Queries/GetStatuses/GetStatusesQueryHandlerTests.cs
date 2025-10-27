@@ -4,8 +4,8 @@ using Moq;
 using Shouldly;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetStatuses;
-using Application.Interfaces.Lookup;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Lookup.Requisition;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetStatuses;
 

@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251024205951_UpdatedRequisitionFields")]
-    partial class UpdatedRequisitionFields
+    [Migration("20251027165451_AddSupportEntities")]
+    partial class AddSupportEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

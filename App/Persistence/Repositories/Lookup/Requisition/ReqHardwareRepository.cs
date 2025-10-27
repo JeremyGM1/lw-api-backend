@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Application.Interfaces.Lookup;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Lookup.Requisition;
 
-namespace Persistence.Repositories.Lookup;
+namespace Persistence.Repositories.Lookup.Requisition;
 
 public class ReqHardwareRepository(AppDbContext context) : IReqHardwareRepository
 {
