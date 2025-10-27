@@ -18,9 +18,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
     public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
-        var userEmail = _commonHelpers.GetCurrentUserFromToken();
-        var ipAddress = _commonHelpers.GetUserIpAddress();
-        var userAgent = _commonHelpers.GetUserAgent();
+        var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
 
         try
         {

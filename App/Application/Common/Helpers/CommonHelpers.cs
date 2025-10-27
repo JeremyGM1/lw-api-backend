@@ -78,4 +78,13 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             throw new ForeignKeyNotFoundException("Invalid foreign key", errors);
         }
     }
+
+    public (string Email, string IpAddress, string UserAgent) GetLoggingContext()
+    {
+        return (
+            GetCurrentUserFromToken(),
+            GetUserIpAddress(),
+            GetUserAgent()
+        );
+    }
 }
