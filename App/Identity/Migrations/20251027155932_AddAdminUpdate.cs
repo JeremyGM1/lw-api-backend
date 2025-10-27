@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace Persistence.Migrations
+namespace Identity.Migrations
 {
     /// <inheritdoc />
-    public partial class SupportEntityTables : Migration
+    public partial class AddAdminUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

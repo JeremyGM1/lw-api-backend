@@ -1,43 +1,39 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
-using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers handlerHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers) : IRequestHandler<UpdateRequisitionCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<UpdateRequisitionCommand> _validator = validator;
-    private readonly ICommonHelpers _handlerHelpers = handlerHelpers;
+    private readonly ICommonHelpers _commonHelpers = commonHelpers;
 
     public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        var requisition = await _reqRepository.GetByIdAsync(request.Id!);
+        _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        if (validationResult.Errors.Count != 0)
-        {
-            throw new BadRequestException("Invalid requisition update", validationResult);
-        }
+        var requisition = await _reqRepository.GetRequisitionById(request.Id!);
+        if (requisition == null)
+            throw new NotFoundException(nameof(requisition), request.Id!);
 
-        _handlerHelpers.ValidateForeighKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
 
-        _handlerHelpers.ValidateEntityExist(requisition, request.Id!);
+        var userEmail = _commonHelpers.GetCurrentUserFromToken();
+        _mapper.Map(request, requisition);
 
-        var userEmail = _handlerHelpers.GetCurrentUserFromToken();
+        requisition.CreatedAt = requisition!.CreatedAt;
+        requisition.CreatedBy = requisition!.CreatedBy;
+        requisition.UpdatedAt = DateTime.UtcNow;
+        requisition.UpdatedBy = userEmail;
 
-        var reqToUpdate = _mapper.Map<Requisition>(request);
-
-        reqToUpdate.CreatedAt = requisition!.CreatedAt;
-        reqToUpdate.CreatedBy = requisition!.CreatedBy;
-        reqToUpdate.UpdatedAt = DateTime.UtcNow;
-        reqToUpdate.UpdatedBy = userEmail;
-
-        await _reqRepository.UpdateAsync(reqToUpdate);
+        await _reqRepository.UpdateAsync(requisition);
 
         return Unit.Value;
     }

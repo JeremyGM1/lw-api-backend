@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
-using Application.Interfaces.Lookup;
+using Application.Interfaces.Lookup.Requisition;
 using Application.Features.Requisitions.Dtos.Lookup;
 
 namespace Application.Features.Requisitions.Queries.GetStatuses;

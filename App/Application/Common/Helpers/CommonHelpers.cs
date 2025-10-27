@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Application.Exceptions;
 using Application.Interfaces;
@@ -14,16 +15,23 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
     public string GetCurrentUserFromToken()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        return user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value ?? "System";
+        var email = user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+            throw new UnauthorizedAccessException("User not authenticated");
+
+        return email;
     }
 
-    public void ValidateEntityExist<T>(T entity, string id)
+    public void ThrowIfValidationFails(ValidationResult validationResult)
     {
-        if (entity == null)
-            throw new NotFoundException(typeof(T).Name, id);
+        if (validationResult.Errors.Count != 0)
+        {
+            throw new BadRequestException("Invalid requisition", validationResult);
+        }
     }
 
-    public async void ValidateForeighKey(int statusId, int workTypeId, int hardwareId)
+    public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
         var workTypestatusExist = await _reqRepository.ForeignKeyExist<RequisitionWorkType>(workTypeId);
@@ -33,8 +41,8 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         {
             var errors = new Dictionary<string, string[]>();
             if (!statusExist) errors.Add("StatusId", ["Status not found"]);
-            if (!workTypestatusExist) errors.Add("StatusId", ["Status not found"]);
-            if (!hardwareExist) errors.Add("StatusId", ["Status not found"]);
+            if (!workTypestatusExist) errors.Add("WorkTypeId", ["WorkType not found"]);
+            if (!hardwareExist) errors.Add("HardwareId", ["hardware not found"]);
 
             throw new ForeignKeyNotFoundException("Invalid foreign key", errors);
         }

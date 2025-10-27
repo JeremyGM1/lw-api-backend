@@ -1,6 +1,4 @@
-﻿using Application.Exceptions;
-using Application.Features.Identity.Models;
-using FluentValidation;
+﻿using FluentValidation;
 using Identity.Configurations;
 using Identity.Models;
 using Identity.Services;
@@ -77,7 +75,6 @@ public class UpdateUserTests
             Email = "updated@example.com",
             FirstName = "Jane",
             LastName = "Smith",
-            CurrentPassword = "TestPassword123@",
             NewPassword = "NewPassword123!",
         };
     }
@@ -353,9 +350,9 @@ public class UpdateUserTests
         result.ShouldNotBeNull();
         result.UserId.ShouldBe(request.Id);
 
-        _mockUserManager.Verify(u => u.ChangePasswordAsync(
+        _mockUserManager.Verify(u => u.ResetPasswordAsync(
             It.Is<ApplicationUser>(u => u.Id == user.Id),
-            request.CurrentPassword!,
+            token,
             request.NewPassword!),
             Times.Once
         );

@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Identity.Services;
 
-public class UserService : IUserService
+public class UserService(UserManager<ApplicationUser> userManager) : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
@@ -180,7 +180,45 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
         {
-            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(",", result.Errors.Select(e => e.Description));
+                throw new ValidationException($"Password change failed. {errors}");
+            }
+        }
+
+        var updateResult = await _userManager.UpdateAsync(user);
+
+        if (!updateResult.Succeeded)
+        {
+            var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
+            throw new ValidationException($"User update failed: {errors}");
+        }
+
+        return new UpdateResponse() { UserId = user.Id };
+    }
+
+    public async Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request)
+    {
+        var user = await _userManager.FindByIdAsync(request.Id) ?? throw new NotFoundException($"User with {request.Id} not found.", request.Id);
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        if (!string.IsNullOrEmpty(request.Email))
+        {
+            user.Email = request.Email;
+            user.UserName = request.Email;
+        }
+
+        if (!string.IsNullOrEmpty(request.FirstName))
+            user.FirstName = request.FirstName;
+
+        if (!string.IsNullOrEmpty(request.LastName))
+            user.LastName = request.LastName;
+
+        if (!string.IsNullOrEmpty(request.NewPassword))
+        {
+            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
             if (!result.Succeeded)
             {
                 var errors = string.Join(",", result.Errors.Select(e => e.Description));

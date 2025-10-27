@@ -18,6 +18,9 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.Status)
             .Include(r => r.WorkType)
             .Include(r => r.Hardware)
+            .Include(r => r.Location)
+            .Include(r => r.CompensationBandCurrency)
+            .Include(r => r.CompensationBandInterval)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
@@ -27,6 +30,15 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.Status)
             .Include(r => r.WorkType)
             .Include(r => r.Hardware)
+            .Include(r => r.Location)
+            .Include(r => r.CompensationBandCurrency)
+            .Include(r => r.CompensationBandInterval)
             .ToListAsync();
+    }
+
+    public async Task<bool> RequisitionExists(string id)
+    {
+        return await _context.Requisitions
+            .AnyAsync(r => r.Id == id);
     }
 }

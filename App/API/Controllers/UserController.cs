@@ -38,6 +38,14 @@ public class UserController : ControllerBase
         return Ok(await _userService.Update(request, userId));
     }
 
+    [HttpPut("admin/Update")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UpdateResponse>> AdminUpdateRequest(AdminUpdateRequest request)
+    {
+        return Ok(await _userService.AdminUpdateRequest(request));
+    }
+
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

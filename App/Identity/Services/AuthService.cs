@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Identity.Services;
 
-public class AuthService : IAuthService
+public class AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtSettings _jwtSettings;
@@ -34,14 +34,10 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> Login(AuthRequest request)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
-        {
-            throw new NotFoundException($"User with {request.Email} not found.", request.Email);
-        }
+        var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new NotFoundException($"User with {request.Email} not found.", request.Email);
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
-        if (result.Succeeded == false)
+        if (!result.Succeeded)
         {
             throw new BadRequestException($"Credentials for '{request.Email} aren't valid'.");
         }

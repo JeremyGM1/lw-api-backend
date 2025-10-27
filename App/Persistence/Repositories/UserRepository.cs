@@ -4,12 +4,8 @@ using Application.Interfaces;
 
 namespace Persistence.Repositories;
 
-public class UserRepository : GenericRepository<User, string>, IUserRepository
+public class UserRepository(AppDbContext context) : GenericRepository<User, string>(context), IUserRepository
 {
-    public UserRepository(AppDbContext context) : base(context)
-    {
-    }
-
     public async Task<User?> GetUserById(string Id)
     {
         return await _context.Users.FindAsync(Id);

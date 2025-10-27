@@ -2,9 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-public partial class AppDbContext : DbContext
+public partial class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
 }
