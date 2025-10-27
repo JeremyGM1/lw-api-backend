@@ -10,6 +10,7 @@ using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
+using API.Middleware;
 
 namespace API.Controllers;
 

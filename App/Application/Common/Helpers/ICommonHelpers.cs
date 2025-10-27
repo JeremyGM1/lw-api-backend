@@ -13,4 +13,6 @@ public interface ICommonHelpers
     string GetUserAgent();
 
     void ValidateForeignKey(int statusId, int workTypeId, int hardwareId);
+
+    (string Email, string IpAddress, string UserAgent) GetLoggingContext();
 }

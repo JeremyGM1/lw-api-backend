@@ -9,7 +9,7 @@ public record UpdateRequisitionCommand : IRequest<Unit>
 {
     public string? Id { get; set; }
 
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public string? Name { get; set; }
 
     [Range(1, ValidationDefaultValues.IntMaxValue)]
@@ -24,16 +24,16 @@ public record UpdateRequisitionCommand : IRequest<Unit>
     [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int Headcount { get; set; }
 
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public string? Location { get; set; }
 
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public string? Department { get; set; }
 
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public string? HiringManager { get; set; }
 
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public string? Owner { get; set; }
 
     [Range(0, (double)ValidationDefaultValues.CompensationBandMaxValue)]

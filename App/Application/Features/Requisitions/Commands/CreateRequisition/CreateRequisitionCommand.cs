@@ -11,7 +11,7 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public required string Id { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public required string Name { get; set; }
 
     [Required]
@@ -31,19 +31,19 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public int Headcount { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public required string Location { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public required string Department { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public required string HiringManager { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = 1)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
     public required string Owner { get; set; }
 
     [Required]

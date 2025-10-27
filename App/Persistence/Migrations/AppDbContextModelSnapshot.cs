@@ -730,7 +730,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
                         .WithMany()
                         .HasForeignKey("RequisitionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Requisition");
                 });

@@ -12,7 +12,6 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 builder.Services.AddControllers();
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.AppServiceExtensions();
-builder.Services.AddOpenApi();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
 builder.Services.AddSwaggerWithJwt();
@@ -20,6 +19,7 @@ builder.Services.AddSwaggerWithJwt();
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ValidationLoggingMiddleware>();
 
 app.UseCors("all");
 
