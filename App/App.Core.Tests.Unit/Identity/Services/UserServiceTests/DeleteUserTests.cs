@@ -5,7 +5,6 @@ using Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Application.Common.Helpers;
 using Application.Exceptions;
 
 namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
@@ -13,16 +12,13 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
 public class DeleteUserTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
-    private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly UserService _userService;
 
     public DeleteUserTests()
     {
         _mockUserManager = CreateMockUserManager();
-        _mockCommonHelpers = new Mock<ICommonHelpers>();
         _userService = new UserService(
-            _mockUserManager.Object,
-            _mockCommonHelpers.Object
+            _mockUserManager.Object
         );
     }
 

@@ -11,4 +11,6 @@ public interface IUserService
     Task<bool> DeleteUserAsync(string userId);
 
     Task<UserProfileResponse> GetCurrentUserProfileAsync(string userId);
+
+    Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request);
 }

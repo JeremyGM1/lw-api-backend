@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Migrations
 {
     [DbContext(typeof(TalentSuiteIdentityDbContext))]
-    [Migration("20251024212653_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20251027155932_AddAdminUpdate")]
+    partial class AddAdminUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

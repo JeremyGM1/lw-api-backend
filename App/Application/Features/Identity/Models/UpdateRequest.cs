@@ -21,5 +21,10 @@ public class UpdateRequest
     [StringLength(128, MinimumLength = 6)]
     [DataType(DataType.Password)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$", ErrorMessage = "Password must contain uppercase, lowercase, number and special character")]
+    public string? CurrentPassword { get; set; }
+
+    [StringLength(128, MinimumLength = 6)]
+    [DataType(DataType.Password)]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$", ErrorMessage = "Password must contain uppercase, lowercase, number and special character")]
     public string? NewPassword { get; set; }
 }
