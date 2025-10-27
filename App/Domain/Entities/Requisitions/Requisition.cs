@@ -10,7 +10,6 @@ public class Requisition : BaseEntity<string>
     public int WorkTypeId { get; set; }
     public int HardwareId { get; set; }
     public int LocationId { get; set; }
-
     public int Headcount { get; set; }
     public required RequisitionStatus Status { get; set; }
     public required RequisitionLocation Location { get; set; }

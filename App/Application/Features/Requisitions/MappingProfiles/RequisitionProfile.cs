@@ -17,7 +17,9 @@ public class RequisitionProfile : Profile
             .ForMember(dest => dest.StatusName, opt => opt.MapFrom(src => src.Status.Status))
             .ForMember(dest => dest.WorkTypeName, opt => opt.MapFrom(src => src.WorkType.WorkType))
             .ForMember(dest => dest.HardwareName, opt => opt.MapFrom(src => src.Hardware.Hardware))
-            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location.Location));
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location.Location))
+            .ForMember(dest => dest.CompensationBandCurrency, opt => opt.MapFrom(src => src.CompensationBandCurrency.Currency))
+            .ForMember(dest => dest.CompensationBandInterval, opt => opt.MapFrom(src => src.CompensationBandInterval.Interval));
         CreateMap<CreateRequisitionCommand, Requisition>();
         CreateMap<UpdateRequisitionCommand, Requisition>();
         CreateMap<UpdateRequisitionDto, UpdateRequisitionCommand>();

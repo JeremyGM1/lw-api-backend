@@ -20,6 +20,7 @@ public class GetRequisitionDto
 
     public int Headcount { get; set; }
 
+    public int LocationId { get; set; }
     public string Location { get; set; } = null!;
 
     public string Department { get; set; } = null!;
@@ -32,7 +33,10 @@ public class GetRequisitionDto
 
     public decimal CompensationBandMax { get; set; }
 
+    public int CompensationBandCurrencyId { get; set; }
     public string CompensationBandCurrency { get; set; } = null!;
+
+    public int CompensationBandIntervalId { get; set; }
 
     public string CompensationBandInterval { get; set; } = null!;
 
