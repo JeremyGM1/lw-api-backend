@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Identity.Services;
 
-public class UserService(UserManager<ApplicationUser> userManager) : IUserService
+public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;

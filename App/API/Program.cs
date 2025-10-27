@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Middleware;
+using Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 

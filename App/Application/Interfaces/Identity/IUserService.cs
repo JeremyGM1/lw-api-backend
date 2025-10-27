@@ -4,7 +4,7 @@ namespace Application.Interfaces.Identity;
 
 public interface IUserService
 {
-    Task<RegistrationResponse> Register(RegistrationRequest request,string requestingUserId);
+    Task<RegistrationResponse> Register(RegistrationRequest request, string requestingUserId);
 
     Task<UpdateResponse> Update(UpdateRequest request, string requestingUserId);
 
@@ -13,4 +13,6 @@ public interface IUserService
     Task<UserProfileResponse> GetCurrentUserProfileAsync(string userId);
 
     Task<IEnumerable<UserProfileResponse>> GetAllUsersByRoleAsync(string requestingUserId);
+
+    public Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request)
 }

@@ -14,17 +14,14 @@ using System.Text;
 
 namespace Identity.Services;
 
-public class AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager) : IAuthService
+public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtSettings _jwtSettings;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly TalentSuiteIdentityDbContext _context;
 
-    public AuthService(UserManager<ApplicationUser> userManager,
-        IOptions<JwtSettings> jwtSettings,
-        SignInManager<ApplicationUser> signInManager,
-        TalentSuiteIdentityDbContext context)
+    public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager, TalentSuiteIdentityDbContext context)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
