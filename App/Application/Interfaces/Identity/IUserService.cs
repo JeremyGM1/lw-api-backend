@@ -14,5 +14,5 @@ public interface IUserService
 
     Task<IEnumerable<UserProfileResponse>> GetAllUsersByRoleAsync(string requestingUserId);
 
-    public Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request)
+    public Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request);
 }
