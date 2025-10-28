@@ -2,7 +2,7 @@
 using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions.Lookup;
 
-namespace Persistence.Repositories.Lookup.Requisition;
+namespace Persistence.Repositories.Requisitions.Lookup;
 
 public class ReqLocationRepository(AppDbContext context) : IReqLocationRepository
 {

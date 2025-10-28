@@ -2,7 +2,7 @@
 using Domain.Entities.Users;
 using Application.Interfaces.Features.Users;
 
-namespace Persistence.Repositories;
+namespace Persistence.Repositories.Users;
 
 public class UserRepository(AppDbContext context) : GenericRepository<User, string>(context), IUserRepository
 {
