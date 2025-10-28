@@ -3,7 +3,7 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
-using LoggingService.Interfaces;
+using Application.Interfaces.LoggingService;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 

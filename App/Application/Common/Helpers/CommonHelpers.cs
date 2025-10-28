@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
 
 namespace Application.Common.Helpers;
 

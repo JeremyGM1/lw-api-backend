@@ -1,7 +1,6 @@
 ﻿using Application;
 using LoggingService;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using System.Threading.RateLimiting;
@@ -17,7 +16,7 @@ public static class ServiceExtensions
         services.AddPersistenceServices();
     }
 
-    public static void AddCorsPolicies(this IServiceCollection services, IConfiguration configuration)
+    public static void AddCorsPolicies(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
@@ -47,10 +46,7 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" });
-        });
+        services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Intership_backend", Version = "v1" }));
 
         services.AddSwaggerGen(options =>
         {

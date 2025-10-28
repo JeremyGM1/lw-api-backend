@@ -1,9 +1,7 @@
 using API.Extensions;
 using Identity;
 using Serilog;
-using API.Extentions;
 using API.Middleware;
-using Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +14,7 @@ builder.Services.AppServiceExtensions();
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddRateLimitingPolicies();
 
-builder.Services.AddCorsPolicies(builder.Configuration);
+builder.Services.AddCorsPolicies();
 // **Swagger with JWT**
 builder.Services.AddSwaggerConfiguration();
 

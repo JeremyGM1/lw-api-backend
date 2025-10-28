@@ -5,9 +5,9 @@ using Shouldly;
 using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
+using Application.Interfaces.LoggingService;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 

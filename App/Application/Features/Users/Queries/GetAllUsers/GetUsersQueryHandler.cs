@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using LoggingService.Interfaces;
 using Application.Interfaces;
 using Application.Features.Users.Dtos;
+using Application.Interfaces.LoggingService;
 
 namespace Application.Features.Users.Queries.GetAllUsers;
 

@@ -1,4 +1,4 @@
-﻿using LoggingService.Interfaces;
+﻿using Application.Interfaces.LoggingService;
 
 namespace LoggingService.Repositories;
 

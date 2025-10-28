@@ -4,7 +4,7 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
+using Application.Interfaces.LoggingService;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
