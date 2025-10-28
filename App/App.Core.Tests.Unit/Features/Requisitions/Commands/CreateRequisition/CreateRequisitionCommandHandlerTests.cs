@@ -4,12 +4,12 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using Shouldly;
-using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.Features.Common;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 

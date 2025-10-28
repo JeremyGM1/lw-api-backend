@@ -5,7 +5,7 @@ using Shouldly;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Lookup.Requisition;
+using Application.Interfaces.Features.Requisitions.Lookup;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetWorkTypes;
 

@@ -1,4 +1,4 @@
-﻿using Application.Common.Helpers;
+﻿using Application.Interfaces.Features.Common;
 using Application.Interfaces.LoggingService;
 
 namespace API.Middleware;

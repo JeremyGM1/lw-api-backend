@@ -3,9 +3,9 @@ using Persistence.Repositories.Lookup;
 using Persistence.Repositories;
 using Persistence.Repositories.Lookup.Requisition;
 using Application.Interfaces.Features;
-using Application.Interfaces.Features.Lookup.Requisition;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.Features.Users;
+using Application.Interfaces.Features.Requisitions.Lookup;
 
 namespace Persistence;
 
