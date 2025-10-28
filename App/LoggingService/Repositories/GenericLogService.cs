@@ -1,5 +1,5 @@
-﻿using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
+﻿using Application.Interfaces.LoggingService;
+using Domain.Entities.Requisitions;
 
 namespace LoggingService.Repositories;
 public class GenericLogService(LoggingServiceDbContext context) : IGenericLogService

@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using FluentValidation.Results;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
+using FluentValidation.Results;
 using Moq;
 using Shouldly;
 using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces;
+using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Microsoft.Extensions.Logging;
-using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 

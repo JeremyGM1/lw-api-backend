@@ -1,9 +1,9 @@
 ﻿using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Interfaces.LoggingService;
 using AutoMapper;
 using FluentValidation;
-using LoggingService.Interfaces;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;

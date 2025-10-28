@@ -2,8 +2,8 @@
 using MediatR;
 using Application.Exceptions;
 using Domain.Entities.Users;
-using LoggingService.Interfaces;
 using Application.Interfaces;
+using Application.Interfaces.LoggingService;
 
 namespace Application.Features.Users.Commands.CreateUser;
 

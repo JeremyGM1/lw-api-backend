@@ -3,9 +3,9 @@ using Moq;
 using Shouldly;
 using Application.Features.Requisitions.Dtos;
 using Application.Features.Requisitions.Queries.GetRequisitions;
+using Application.Interfaces.LoggingService;
 using Application.Interfaces;
 using Domain.Entities.Requisitions;
-using LoggingService.Interfaces;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitions;
 
