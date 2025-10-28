@@ -23,7 +23,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         if (requisition == null)
             throw new NotFoundException(nameof(requisition), request.Id!);
 
-        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
         var userEmail = _commonHelpers.GetCurrentUserFromToken();
         _mapper.Map(request, requisition);

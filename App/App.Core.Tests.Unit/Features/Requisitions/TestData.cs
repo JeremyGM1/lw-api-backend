@@ -62,14 +62,14 @@ public static class TestData
         WorkTypeId = 2,
         HardwareId = 2,
         Headcount = 10,
-        Location = "Philippines",
+        LocationId = 1,
         Department = "Engineering",
         HiringManager = "Adrian",
         Owner = "Camilo",
         CompensationBandMin = 9000000,
         CompensationBandMax = 15000000,
-        CompensationBandCurrency = "COP",
-        CompensationBandInterval = "Weekly",
+        CompensationBandCurrencyId = 1,
+        CompensationBandIntervalId = 1,
         Description = "No experience needed",
         BackfillName = "John Doe"
     };

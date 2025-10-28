@@ -31,11 +31,14 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         }
     }
 
-    public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId)
+    public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId, int locationId, int currencyId, int intervalId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
         var workTypestatusExist = await _reqRepository.ForeignKeyExist<RequisitionWorkType>(workTypeId);
         var hardwareExist = await _reqRepository.ForeignKeyExist<RequisitionHardware>(hardwareId);
+        var locationExist = await _reqRepository.ForeignKeyExist<RequisitionLocation>(locationId);
+        var currencyExist = await _reqRepository.ForeignKeyExist<RequisitionCurrency>(currencyId);
+        var intervalExist = await _reqRepository.ForeignKeyExist<RequisitionInterval>(intervalId);
 
         if (!statusExist || !workTypestatusExist || !hardwareExist)
         {
@@ -43,6 +46,9 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             if (!statusExist) errors.Add("StatusId", ["Status not found"]);
             if (!workTypestatusExist) errors.Add("WorkTypeId", ["WorkType not found"]);
             if (!hardwareExist) errors.Add("HardwareId", ["hardware not found"]);
+            if (!locationExist) errors.Add("LocationId", ["location not found"]);
+            if (!currencyExist) errors.Add("CurrencyId", ["currency not found"]);
+            if (!intervalExist) errors.Add("IntervalId", ["interval not found"]);
 
             throw new ForeignKeyNotFoundException("Invalid foreign key", errors);
         }

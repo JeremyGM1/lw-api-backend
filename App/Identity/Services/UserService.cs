@@ -139,9 +139,7 @@ public class UserService : IUserService
             throw new ValidationException("Administrators cannot modify Super Administrators.");
 
         if (!isSuperAdmin && !isAdmin && !isSelf)
-        {
             throw new UnauthorizedAccessException("You are not allowed to update other users.");
-        }
 
         if (!string.IsNullOrEmpty(request.Email))
         {
@@ -180,11 +178,11 @@ public class UserService : IUserService
 
         if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
         {
-            var result = await _userManager.ResetPasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
             if (!result.Succeeded)
             {
                 var errors = string.Join(",", result.Errors.Select(e => e.Description));
-                throw new ValidationException($"Password change failed. {errors}");
+                    throw new ValidationException($"Password change failed. {errors}");
             }
         }
 

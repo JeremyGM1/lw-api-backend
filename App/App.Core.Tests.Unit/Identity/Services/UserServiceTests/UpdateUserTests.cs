@@ -150,7 +150,7 @@ public class UpdateUserTests
         var request = CreateUpdateRequest();
         var user = CreateTestUser(request.Id);
         var adminUser = CreateTestUser("admin-id");
-        var identityError = new IdentityError { Description = "Current Password is incorrect" };
+        var identityError = new IdentityError { Description = "Password change failed. Incorrect password." };
 
         _mockUserManager
             .Setup(u => u.FindByIdAsync(request.Id))
@@ -173,7 +173,7 @@ public class UpdateUserTests
             .ReturnsAsync(IdentityResult.Failed(identityError));
 
         var exception = await Should.ThrowAsync<ValidationException>(() => _userService.Update(request, "admin-id"));
-        exception.Message.ShouldContain("Current Password is incorrect");
+        exception.Message.ShouldContain("incorrect password");
 
         _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Never);
     }

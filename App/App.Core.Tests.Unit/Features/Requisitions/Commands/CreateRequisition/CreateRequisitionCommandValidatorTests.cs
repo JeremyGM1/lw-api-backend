@@ -15,6 +15,13 @@ public class CreateRequisitionCommandValidatorTests
         _mockReqRepository = new Mock<IRequisitionRepository>();
     }
 
+    private void SetupForeignKeyExist<Type>(object id) where Type : class
+    {
+        _mockReqRepository
+            .Setup(r => r.ForeignKeyExist<Type>(id))
+            .ReturnsAsync(true);
+    }
+
     [Fact]
     public async Task Validator_WhenIdAlreadyExist_ShouldReturnValidationError()
     {
@@ -45,17 +52,12 @@ public class CreateRequisitionCommandValidatorTests
             .Setup(r => r.RequisitionExists(command.Id))
             .ReturnsAsync(false);
 
-        _mockReqRepository
-            .Setup(r => r.ForeignKeyExist<RequisitionStatus>(command.StatusId))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
-            .Setup(r => r.ForeignKeyExist<RequisitionWorkType>(command.WorkTypeId))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
-            .Setup(r => r.ForeignKeyExist<RequisitionHardware>(command.HardwareId))
-            .ReturnsAsync(true);
+        SetupForeignKeyExist<RequisitionStatus>(command.StatusId);
+        SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId);
+        SetupForeignKeyExist<RequisitionHardware>(command.HardwareId);
+        SetupForeignKeyExist<RequisitionLocation>(command.LocationId);
+        SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId);
+        SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId);
 
         var result = await validator.ValidateAsync(command);
 
@@ -104,6 +106,9 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("StatusId")]
     [InlineData("WorkTypeId")]
     [InlineData("HardwareId")]
+    [InlineData("LocationId")]
+    [InlineData("CompensationBandCurrencyId")]
+    [InlineData("CompensationBandIntervalId")]
     public async Task Validator_WhenForeignKeysAreNull_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
@@ -123,12 +128,9 @@ public class CreateRequisitionCommandValidatorTests
     [Theory]
     [InlineData("Name")]
     [InlineData("Headcount")]
-    [InlineData("Location")]
     [InlineData("Department")]
     [InlineData("HiringManager")]
     [InlineData("Owner")]
-    [InlineData("CompensationBandCurrency")]
-    [InlineData("CompensationBandInterval")]
     public async Task Validator_WhenRequiredPropertiesAreNull_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
@@ -145,12 +147,9 @@ public class CreateRequisitionCommandValidatorTests
 
     [Theory]
     [InlineData("Name")]
-    [InlineData("Location")]
     [InlineData("Department")]
     [InlineData("HiringManager")]
     [InlineData("Owner")]
-    [InlineData("CompensationBandCurrency")]
-    [InlineData("CompensationBandInterval")]
     public async Task Validator_WhenRequiredPropertiesAreEmpty_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
@@ -181,6 +180,8 @@ public class CreateRequisitionCommandValidatorTests
             .ErrorMessage.ShouldContain("'Headcount' must be between 0 and");
     }
 
+    //public async Task Validator_WhenHeadcountIsHigherThan
+
     [Theory]
     [InlineData("CompensationBandMin")]
     [InlineData("CompensationBandMax")]
@@ -196,34 +197,6 @@ public class CreateRequisitionCommandValidatorTests
 
         result.IsValid.ShouldBeFalse();
         result.Errors.ShouldContain(e => e.PropertyName == propertyName);
-    }
-
-    [Fact]
-    public async Task Validator_WhenBandCurrencyHasMoreThan3Characters_ShouldReturnFailure()
-    {
-        var command = TestData.CreateRequisitionCommand();
-        //command.CompensationBandCurrency = "USDD";
-
-        var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
-
-        var result = await validator.ValidateAsync(command);
-
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "CompensationBandCurrency");
-    }
-
-    [Fact]
-    public async Task Validator_WhenBandIntervalyHasMoreThan10Characters_ShouldReturnFailure()
-    {
-        var command = TestData.CreateRequisitionCommand();
-        //command.CompensationBandCurrency = "USDD";
-
-        var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
-
-        var result = await validator.ValidateAsync(command);
-
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "CompensationBandCurrency");
     }
 
     [Fact]
