@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Application.Interfaces;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 

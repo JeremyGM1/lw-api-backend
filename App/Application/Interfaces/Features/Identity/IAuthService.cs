@@ -1,6 +1,6 @@
 ﻿using Application.Features.Identity.Models;
 
-namespace Application.Interfaces.Identity;
+namespace Application.Interfaces.Features.Identity;
 
 public interface IAuthService
 {

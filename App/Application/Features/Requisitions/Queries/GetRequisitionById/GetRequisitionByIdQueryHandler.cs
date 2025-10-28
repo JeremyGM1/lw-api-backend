@@ -4,7 +4,7 @@ using MediatR;
 using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Dtos;
-using Application.Interfaces;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Features.Requisitions.Queries.GetRequisitionById;
 

@@ -1,6 +1,6 @@
 ﻿using Domain.Common;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.Features;
 
 public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {

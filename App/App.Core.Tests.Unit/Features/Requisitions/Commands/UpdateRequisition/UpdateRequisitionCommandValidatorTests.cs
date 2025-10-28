@@ -2,8 +2,8 @@
 using Shouldly;
 using Application.Common.Configs;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Features.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 

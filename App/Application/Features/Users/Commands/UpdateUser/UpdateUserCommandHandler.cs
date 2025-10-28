@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Application.Exceptions;
-using Application.Interfaces;
 using Domain.Entities.Users;
+using Application.Interfaces.Features.Users;
 
 namespace Application.Features.Users.Commands.UpdateUser;
 

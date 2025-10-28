@@ -1,6 +1,6 @@
 ﻿using Domain.Entities.Users;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.Features.Users;
 
 public interface IUserRepository : IGenericRepository<User, string>
 {

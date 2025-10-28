@@ -1,6 +1,6 @@
 ﻿using Application.Common.Helpers;
 using Application.Exceptions;
-using Application.Interfaces;
+using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using AutoMapper;
 using FluentValidation;

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
+using Application.Interfaces.Features.Identity;
 using Identity.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

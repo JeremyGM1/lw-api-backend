@@ -5,7 +5,7 @@ using Shouldly;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Lookup.Requisition;
+using Application.Interfaces.Features.Lookup.Requisition;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetStatuses;
 

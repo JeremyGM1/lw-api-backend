@@ -6,8 +6,8 @@ using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces.LoggingService;
-using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Features.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 

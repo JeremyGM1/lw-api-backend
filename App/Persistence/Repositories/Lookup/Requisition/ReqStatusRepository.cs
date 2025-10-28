@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Lookup.Requisition;
+﻿using Application.Interfaces.Features.Lookup.Requisition;
 using Domain.Entities.Requisitions;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Application.Features.Requisitions.Dtos;
-using Application.Interfaces;
 using Application.Interfaces.LoggingService;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Features.Requisitions.Queries.GetRequisitions;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Lookup.Requisition;
+using Application.Interfaces.Features.Lookup.Requisition;
 
 namespace Persistence.Repositories.Lookup.Requisition;
 

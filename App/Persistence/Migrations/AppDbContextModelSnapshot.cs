@@ -17,7 +17,7 @@ namespace Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -498,60 +498,6 @@ namespace Persistence.Migrations
                     b.ToTable("RequisitionJobs");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequisitionLocation");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Location = "Medellín"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Location = "Bogotá"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Location = "Cali"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Location = "Barranquilla"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Location = "Cartagena"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Location = "Bucaramanga"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Location = "Santa Marta"
-                        });
-                });
-
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -858,6 +804,16 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("JobDescription");
+
+                    b.Navigation("Requisition");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
+                {
+                    b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
+                        .WithMany()
+                        .HasForeignKey("RequisitionId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Requisition");
                 });
