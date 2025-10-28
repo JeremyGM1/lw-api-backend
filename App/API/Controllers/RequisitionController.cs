@@ -3,13 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Features.Requisitions.Dtos;
 using Application.Features.Requisitions.Queries.GetHardware;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
+using Application.Features.Requisitions.Queries.GetLocation;
+using Application.Features.Requisitions.Queries.GetCurrencies;
+using Application.Features.Requisitions.Dtos.Lookup;
+using Application.Features.Requisitions.Queries.GetInterval;
 using API.Middleware;
 
 namespace API.Controllers;
@@ -91,5 +94,29 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<List<GetReqHardwareDto>>> GetHardware()
     {
         return await _mediator.Send(new GetReqHardwareQuery());
+    }
+
+    [HttpGet("location")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<List<GetReqLocationDto>>> GetLocations()
+    {
+        return await _mediator.Send(new GetReqLocationQuery());
+    }
+
+    [HttpGet("compensationCurrency")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<List<GetReqCurrencyDto>>> GetCurrencies()
+    {
+        return await _mediator.Send(new GetReqCurrencyQuery());
+    }
+
+    [HttpGet("compensationInterval")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<List<GetReqIntervalDto>>> GetIntervals()
+    {
+        return await _mediator.Send(new GetReqIntervalQuery());
     }
 }

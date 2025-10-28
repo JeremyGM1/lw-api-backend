@@ -22,4 +22,6 @@ public class RegistrationRequest
     [DataType(DataType.Password)]
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$", ErrorMessage = "Password must contain uppercase, lowercase, number and special character")]
     public required string Password { get; set; }
+    
+    public string Role { get; set; } = string.Empty;
 }

@@ -52,7 +52,7 @@ public class CreateRequisitionCommandHandlerTests
             .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
+            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
         _mockCommonHelpers
             .Setup(ch => ch.GetCurrentUserFromToken())
@@ -88,7 +88,7 @@ public class CreateRequisitionCommandHandlerTests
             .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
+            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
         _mockCommonHelpers
             .Setup(ch => ch.GetCurrentUserFromToken())
@@ -148,7 +148,7 @@ public class CreateRequisitionCommandHandlerTests
         var command = TestData.CreateRequisitionCommand();
 
         _mockCommonHelpers
-            .Setup(h => h.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(h => h.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
             .Throws(new ForeignKeyNotFoundException("Invalid foreign key"));
 
         var exception = await Should.ThrowAsync<ForeignKeyNotFoundException>(() => _handler.Handle(command, CancellationToken.None));

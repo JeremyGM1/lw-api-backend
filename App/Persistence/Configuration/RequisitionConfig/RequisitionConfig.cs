@@ -25,16 +25,31 @@ public class RequisitionConfig : IEntityTypeConfiguration<Requisition>
             .HasForeignKey(r => r.HardwareId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(r => r.Location)
+            .WithMany(s => s.Requisitions)
+            .HasForeignKey(r => r.LocationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(r => r.CompensationBandCurrency)
+            .WithMany(s => s.Requisitions)
+            .HasForeignKey(r => r.CompensationBandCurrencyId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(r => r.CompensationBandInterval)
+            .WithMany(s => s.Requisitions)
+            .HasForeignKey(r => r.CompensationBandIntervalId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.Property(r => r.Name).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Headcount).IsRequired();
-        builder.Property(r => r.Location).HasMaxLength(100).IsRequired();
+        //builder.Property(r => r.Location).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Department).HasMaxLength(100).IsRequired();
         builder.Property(r => r.HiringManager).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Owner).HasMaxLength(100).IsRequired();
         builder.Property(r => r.CompensationBandMin).HasPrecision(20, 4).IsRequired();
         builder.Property(r => r.CompensationBandMax).HasPrecision(20, 4).IsRequired();
-        builder.Property(r => r.CompensationBandCurrency).HasMaxLength(10).IsRequired();
-        builder.Property(r => r.CompensationBandInterval).HasMaxLength(10).IsRequired();
+        //builder.Property(r => r.CompensationBandCurrency).HasMaxLength(10).IsRequired();
+        //builder.Property(r => r.CompensationBandInterval).HasMaxLength(10).IsRequired();
         builder.Property(r => r.Description).HasMaxLength(200);
 
         builder.HasIndex(r => r.StatusId);

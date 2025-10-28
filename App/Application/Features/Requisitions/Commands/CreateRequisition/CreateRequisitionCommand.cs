@@ -31,8 +31,8 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public int Headcount { get; set; }
 
     [Required]
-    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
-    public required string Location { get; set; }
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
+    public int LocationId { get; set; }
 
     [Required]
     [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
@@ -57,13 +57,12 @@ public class CreateRequisitionCommand : IRequest<Unit>
     public decimal CompensationBandMax { get; set; }
 
     [Required]
-    [StringLength(3, MinimumLength = 3)] // ISO 4217
-    [RegularExpression("^[A-Z]{3}$", ErrorMessage = "Currency must be 3 Uppercase letters ISO code")]
-    public required string CompensationBandCurrency { get; set; }
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
+    public int CompensationBandCurrencyId { get; set; }
 
     [Required]
-    [StringLength(10)]
-    public required string CompensationBandInterval { get; set; }
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
+    public int CompensationBandIntervalId { get; set; }
 
     [StringLength(200)]
     [DataType(DataType.MultilineText)]

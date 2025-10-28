@@ -25,7 +25,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             _commonHelpers.ThrowIfValidationFails(validationResult);
 
-            _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId);
+        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
             var reqToCreate = _mapper.Map<Requisition>(request);
 

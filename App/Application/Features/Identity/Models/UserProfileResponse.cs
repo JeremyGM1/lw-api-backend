@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Identity.Models;
+﻿using Domain.Entities.Users;
+
+namespace Application.Features.Identity.Models;
 
 public class UserProfileResponse
 {
@@ -6,4 +8,5 @@ public class UserProfileResponse
     public required string Email { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
+    public required string Role { get; set; }
 }

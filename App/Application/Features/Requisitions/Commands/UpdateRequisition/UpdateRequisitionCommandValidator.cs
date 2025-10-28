@@ -32,7 +32,9 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
 
         RuleFor(r => r.Headcount).InclusiveBetween(0, 1000);
 
-        RuleFor(r => r.Location).NotRequiredString();
+        RuleFor(r => r.LocationId)
+            .MustAsync(LocationExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
         RuleFor(r => r.Department).NotRequiredString();
 
@@ -46,9 +48,13 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
         RuleFor(r => r.CompensationBandMax)
             .InclusiveBetween(0, ValidationDefaultValues.CompensationBandMaxValue);
 
-        RuleFor(r => r.CompensationBandCurrency).NotRequiredString(3);
+        RuleFor(r => r.CompensationBandCurrencyId)
+            .MustAsync(CurrencyExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
-        RuleFor(r => r.CompensationBandInterval).NotRequiredString(10);
+        RuleFor(r => r.CompensationBandIntervalId)
+            .MustAsync(IntervalExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
         RuleFor(r => r.Description)
             .MaximumLength(200);
@@ -64,6 +70,12 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
     private async Task<bool> WorkTypeExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionWorkType>(id);
 
     private async Task<bool> HardwareExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionHardware>(id);
+
+    private async Task<bool> LocationExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocation>(id);
+
+    private async Task<bool> CurrencyExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionCurrency>(id);
+
+    private async Task<bool> IntervalExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionInterval>(id);
 
     private async Task<bool> RequisitionExist(string id, CancellationToken cancellationToken) => await _reqRepository.RequisitionExists(id);
 }

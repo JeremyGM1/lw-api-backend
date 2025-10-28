@@ -33,7 +33,9 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
 
         RuleFor(r => r.Headcount).RequiredInt();
 
-        RuleFor(r => r.Location).RequiredString();
+        RuleFor(r => r.LocationId)
+            .MustAsync(LocationExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
         RuleFor(r => r.Department).RequiredString();
 
@@ -51,9 +53,13 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
             .NotEmpty()
             .InclusiveBetween(0, int.MaxValue);
 
-        RuleFor(r => r.CompensationBandCurrency).RequiredString(3);
+        RuleFor(r => r.CompensationBandCurrencyId)
+            .MustAsync(CurrencyExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
-        RuleFor(r => r.CompensationBandInterval).RequiredString(10);
+        RuleFor(r => r.CompensationBandIntervalId)
+            .MustAsync(IntervalExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
 
         RuleFor(r => r.Description)
             .MaximumLength(200);
@@ -72,6 +78,12 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
     private async Task<bool> WorkTypeExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionWorkType>(id);
 
     private async Task<bool> HardwareExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionHardware>(id);
+
+    private async Task<bool> LocationExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocation>(id);
+
+    private async Task<bool> CurrencyExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionCurrency>(id);
+
+    private async Task<bool> IntervalExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionInterval>(id);
 
     private async Task<bool> EntityNotExist(string id, CancellationToken cancellationToken) => !await _reqRepository.RequisitionExists(id);
 }

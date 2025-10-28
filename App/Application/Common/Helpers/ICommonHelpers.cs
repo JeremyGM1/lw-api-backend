@@ -12,7 +12,7 @@ public interface ICommonHelpers
 
     string GetUserAgent();
 
-    void ValidateForeignKey(int statusId, int workTypeId, int hardwareId);
+    void ValidateForeignKey(int statusId, int workTypeId, int hardwareId, int locationId, int currencyId, int intervalId);
 
     (string Email, string IpAddress, string UserAgent) GetLoggingContext();
 }

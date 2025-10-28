@@ -10,6 +10,7 @@ using Application.Interfaces.Identity;
 using Identity.DbContext;
 using Identity.Models;
 using Identity.Services;
+using Identity.Configurations;
 
 namespace Identity;
 
@@ -18,6 +19,7 @@ public static class IdentityServicesRegistration
     public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
+        services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
         services.AddDbContext<TalentSuiteIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<TalentSuiteIdentityDbContext>()
