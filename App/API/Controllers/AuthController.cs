@@ -1,5 +1,5 @@
 ﻿using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
+using Application.Interfaces.Features.Identity;
 using Identity.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

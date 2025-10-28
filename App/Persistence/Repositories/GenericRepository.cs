@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Common;
-using Application.Interfaces;
+using Application.Interfaces.Features;
 
 namespace Persistence.Repositories;
 

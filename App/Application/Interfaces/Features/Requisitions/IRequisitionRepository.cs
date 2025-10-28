@@ -1,6 +1,6 @@
 ﻿using Domain.Entities.Requisitions;
 
-namespace Application.Interfaces;
+namespace Application.Interfaces.Features.Requisitions;
 
 public interface IRequisitionRepository : IGenericRepository<Requisition, string>
 {

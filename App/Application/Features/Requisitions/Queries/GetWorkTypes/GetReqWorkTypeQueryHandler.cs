@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Application.Interfaces.Lookup.Requisition;
 using Application.Features.Requisitions.Dtos.Lookup;
+using Application.Interfaces.Features.Lookup.Requisition;
 
 namespace Application.Features.Requisitions.Queries.GetWorkTypes;
 

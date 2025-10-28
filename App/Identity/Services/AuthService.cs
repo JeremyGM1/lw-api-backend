@@ -1,6 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
+using Application.Interfaces.Features.Identity;
 using Identity.DbContext;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;

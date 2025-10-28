@@ -2,8 +2,8 @@
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Application.Exceptions;
-using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Common.Helpers;
 

@@ -2,9 +2,9 @@
 using FluentValidation;
 using MediatR;
 using Application.Common.Helpers;
-using Application.Interfaces;
 using Domain.Entities.Requisitions;
 using Application.Interfaces.LoggingService;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 

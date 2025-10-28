@@ -1,9 +1,11 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Lookup.Requisition;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Persistence.Repositories.Lookup;
 using Persistence.Repositories;
 using Persistence.Repositories.Lookup.Requisition;
+using Application.Interfaces.Features;
+using Application.Interfaces.Features.Lookup.Requisition;
+using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.Features.Users;
 
 namespace Persistence;
 

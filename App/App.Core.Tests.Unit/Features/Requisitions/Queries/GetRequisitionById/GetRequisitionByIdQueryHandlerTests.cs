@@ -8,8 +8,8 @@ using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
-using Application.Interfaces;
 using Domain.Entities.Requisitions;
+using Application.Interfaces.Features.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 

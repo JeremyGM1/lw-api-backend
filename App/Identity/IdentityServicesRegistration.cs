@@ -6,11 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
 using Identity.DbContext;
 using Identity.Models;
 using Identity.Services;
 using Identity.Configurations;
+using Application.Interfaces.Features.Identity;
 
 namespace Identity;
 

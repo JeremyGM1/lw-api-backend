@@ -1,6 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
+using Application.Interfaces.Features.Identity;
 using Domain.Entities.Users;
 using FluentValidation;
 using Identity.Configurations;

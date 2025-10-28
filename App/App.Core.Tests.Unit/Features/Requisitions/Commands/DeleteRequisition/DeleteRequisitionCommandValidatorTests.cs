@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Shouldly;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
-using Application.Interfaces;
+using Application.Interfaces.Features.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 
