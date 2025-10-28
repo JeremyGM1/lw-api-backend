@@ -2,7 +2,7 @@
 using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions;
 
-namespace Persistence.Repositories;
+namespace Persistence.Repositories.Requisitions;
 
 public class RequisitionRepository(AppDbContext context) : GenericRepository<Requisition, int>(context), IRequisitionRepository
 {

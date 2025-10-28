@@ -2,7 +2,7 @@
 using Domain.Entities.Requisitions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Persistence.Repositories.Lookup.Requisition;
+namespace Persistence.Repositories.Requisitions.Lookup;
 public class ReqIntervalRepository(AppDbContext context) : IReqIntervalRepository
 {
     private readonly AppDbContext _context = context;
