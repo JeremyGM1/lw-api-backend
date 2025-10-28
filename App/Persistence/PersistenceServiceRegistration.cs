@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Lookup.Requisition;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.Repositories.Lookup;
 using Persistence.Repositories;
 using Persistence.Repositories.Lookup.Requisition;
 
