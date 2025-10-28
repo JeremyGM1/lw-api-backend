@@ -4,12 +4,12 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
-using Application.Common.Helpers;
 using Application.Exceptions;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.Features.Common;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 

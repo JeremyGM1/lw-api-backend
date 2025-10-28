@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Application.Common.Helpers;
+namespace Application.Interfaces.Features.Common;
 
 public interface ICommonHelpers
 {

@@ -1,5 +1,5 @@
 ﻿using Application.Features.Requisitions.Dtos.Lookup;
-using Application.Interfaces.Features.Lookup.Requisition;
+using Application.Interfaces.Features.Requisitions.Lookup;
 using AutoMapper;
 using MediatR;
 

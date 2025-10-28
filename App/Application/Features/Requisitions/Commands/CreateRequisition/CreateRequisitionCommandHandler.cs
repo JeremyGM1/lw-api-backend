@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Application.Common.Helpers;
 using Domain.Entities.Requisitions;
 using Application.Interfaces.LoggingService;
 using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.Features.Common;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 

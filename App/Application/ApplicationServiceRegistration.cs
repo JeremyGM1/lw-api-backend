@@ -4,6 +4,7 @@ using FluentValidation;
 using Application.Features.Users.MappingProfiles;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Common.Helpers;
+using Application.Interfaces.Features.Common;
 
 namespace Application;
 
