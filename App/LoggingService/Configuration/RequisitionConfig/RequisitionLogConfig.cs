@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Persistence.Configuration.RequisitionConfig;
+namespace LoggingService.Configuration.RequisitionConfig;
 public class RequisitionLogConfig : IEntityTypeConfiguration<RequisitionLog>
 {
     public void Configure(EntityTypeBuilder<RequisitionLog> builder)

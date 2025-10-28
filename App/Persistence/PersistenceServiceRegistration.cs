@@ -1,11 +1,8 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Lookup;
-using LoggingService.Interfaces;
-using Microsoft.Extensions.Configuration;
+﻿using Application.Interfaces.Lookup;
+using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Persistence.Repositories;
-using Persistence.Repositories.LoggingService;
 using Persistence.Repositories.Lookup;
+using Persistence.Repositories;
 
 namespace Persistence;
 
@@ -19,8 +16,6 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IReqStatusRepository, ReqStatusRepository>();
         services.AddScoped<IReqWorkTypeRepository, ReqWorkTypeRepository>();
         services.AddScoped<IReqHardwareRepository, ReqHardwareRepository>();
-        services.AddScoped<IGenericLogService, GenericLogService>();
-        services.AddScoped<IRequisitionLogService, RequisitionLogService>();
         return services;
     }
 }

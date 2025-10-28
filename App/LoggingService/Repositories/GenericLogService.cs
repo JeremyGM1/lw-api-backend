@@ -1,10 +1,10 @@
 ﻿using Domain.Entities.Requisitions;
 using LoggingService.Interfaces;
 
-namespace Persistence.Repositories.LoggingService;
-public class GenericLogService(AppDbContext context) : IGenericLogService
+namespace LoggingService.Repositories;
+public class GenericLogService(LoggingServiceDbContext context) : IGenericLogService
 {
-    private readonly AppDbContext _context = context;
+    private readonly LoggingServiceDbContext _context = context;
 
     public async Task LogSuccessAsync(string requisitionId, string action, string userEmail, string ipAddress, string userAgent, string actionResult)
     {
