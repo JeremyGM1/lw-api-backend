@@ -1,10 +1,10 @@
-﻿using Application.Exceptions;
+﻿using AutoMapper;
+using FluentValidation;
+using MediatR;
+using Application.Exceptions;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
-using AutoMapper;
-using FluentValidation;
-using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
