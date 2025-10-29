@@ -14,7 +14,8 @@ public class CreateRequisitionDto
 
     public int Headcount { get; set; }
 
-    public required string Location { get; set; }
+    //public required string Location { get; set; }
+    public int Locationid { get; set; }
 
     public required string Department { get; set; }
 
@@ -26,9 +27,11 @@ public class CreateRequisitionDto
 
     public decimal CompensationBandMax { get; set; }
 
-    public required string CompensationBandCurrency { get; set; }
+    //public required string CompensationBandCurrency { get; set; }
+    public int CompensationBandCurrencyId { get; set; }
 
-    public required string CompensationBandInterval { get; set; }
+    //public required string CompensationBandInterval { get; set; }
+    public int CompensationBandIntervalId { get; set; }
 
     public string? Description { get; set; }
 

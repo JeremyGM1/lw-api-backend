@@ -12,7 +12,8 @@ public class UpdateRequisitionDto
 
     public int Headcount { get; set; }
 
-    public string? Location { get; set; }
+    //public string? Location { get; set; }
+    public int LocationId { get; set; }
 
     public string? Department { get; set; }
 
@@ -24,9 +25,12 @@ public class UpdateRequisitionDto
 
     public decimal CompensationBandMax { get; set; }
 
-    public string? CompensationBandCurrency { get; set; }
+    //public string? CompensationBandCurrency { get; set; }
+    public int CompensationBandCurrencyId { get; set; }
 
-    public string? CompensationBandInterval { get; set; }
+    //public string? CompensationBandInterval { get; set; }
+    public int CompensationBandIntervalId { get; set; }
+
 
     public string? Description { get; set; }
 
