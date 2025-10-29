@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Persistence.Repositories.Lookup;
 using Persistence.Repositories;
 using Application.Interfaces.Features;
 using Application.Interfaces.Features.Requisitions;

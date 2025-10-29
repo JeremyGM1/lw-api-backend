@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Features.Common;
 using Application.Interfaces.LoggingService;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Middleware;
 
@@ -20,9 +21,11 @@ public class ValidationLoggingMiddleware(RequestDelegate next, IServiceProvider 
 
             var (userEmail, ipAddress, userAgent) = contextHelper.GetLoggingContext();
 
+            var crudOperation = GetCrudOperation(context.Request.Method);
+
             await logger.LogFailureAsync(
                 null!,
-                "ValidationError",
+                crudOperation,
                 userEmail,
                 ipAddress,
                 userAgent,
@@ -30,5 +33,18 @@ public class ValidationLoggingMiddleware(RequestDelegate next, IServiceProvider 
                 "Validation Failed"
             );
         }
+    }
+
+    private static string GetCrudOperation(string httpMethod)
+    {
+        return httpMethod.ToUpper() switch
+        {
+            "GET" => "Read",
+            "POST" => "Create",
+            "PUT" => "Update",
+            "PATCH" => "Update",
+            "DELETE" => "Delete",
+            _ => httpMethod
+        };
     }
 }
