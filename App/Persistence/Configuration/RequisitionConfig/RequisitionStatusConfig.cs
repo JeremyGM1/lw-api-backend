@@ -15,7 +15,8 @@ public class RequisitionStatusConfig : IEntityTypeConfiguration<RequisitionStatu
             new RequisitionStatus { Id = 1, Status = "Cancelled" },
             new RequisitionStatus { Id = 2, Status = "Closed" },
             new RequisitionStatus { Id = 3, Status = "Completed" },
-            new RequisitionStatus { Id = 4, Status = "Open" }
+            new RequisitionStatus { Id = 4, Status = "Open" },
+            new RequisitionStatus { Id = 5, Status = "On-Hold" }
         );
     }
 }
