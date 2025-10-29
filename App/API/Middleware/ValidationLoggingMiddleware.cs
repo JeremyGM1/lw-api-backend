@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces.Features.Common;
 using Application.Interfaces.LoggingService;
-using Microsoft.IdentityModel.Tokens;
 
 namespace API.Middleware;
 

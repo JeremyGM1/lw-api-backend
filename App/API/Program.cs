@@ -20,8 +20,8 @@ builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<ValidationLoggingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors("all");
 
