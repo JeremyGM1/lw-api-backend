@@ -22,9 +22,10 @@ public static class ServiceExtensions
         services.AddCors(options =>
         {
             options.AddPolicy("all", builder => builder
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+                .WithOrigins("https://localhost:5173", "https://localhost:7276")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials());
         });
     }
 

@@ -4,7 +4,7 @@ using Domain.Entities.Requisitions;
 
 namespace Persistence.Repositories;
 
-public class RequisitionRepository(AppDbContext context) : GenericRepository<Requisition, string>(context), IRequisitionRepository
+public class RequisitionRepository(AppDbContext context) : GenericRepository<Requisition, int>(context), IRequisitionRepository
 {
     public async Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class
     {
@@ -12,7 +12,7 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
         return entity != null;
     }
 
-    public async Task<Requisition?> GetRequisitionById(string id)
+    public async Task<Requisition?> GetRequisitionById(string reqCode)
     {
         return await _context.Requisitions
             .Include(r => r.Status)
@@ -21,7 +21,7 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.Location)
             .Include(r => r.CompensationBandCurrency)
             .Include(r => r.CompensationBandInterval)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .FirstOrDefaultAsync(r => r.ReqCode == reqCode);
     }
 
     public async Task<List<Requisition>> GetRequisitions()
@@ -36,9 +36,9 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .ToListAsync();
     }
 
-    public async Task<bool> RequisitionExists(string id)
+    public async Task<bool> RequisitionExists(string reqCode)
     {
         return await _context.Requisitions
-            .AnyAsync(r => r.Id == id);
+            .AnyAsync(r => r.ReqCode == reqCode);
     }
 }

@@ -12,7 +12,8 @@ public static class TestData
         command ??= CreateRequisitionCommand();
         return new Requisition()
         {
-            Id = "600900",
+            Id = 1,
+            ReqCode = "600900",
             Name = "Senior Testing Engineer",
             StatusId = 1,
             WorkTypeId = 1,
@@ -36,7 +37,7 @@ public static class TestData
 
     public static CreateRequisitionCommand CreateRequisitionCommand() => new()
     {
-        Id = "600900",
+        ReqCode = "600900",
         Name = "Senior Testing Engineer",
         StatusId = 1,
         WorkTypeId = 1,
@@ -56,7 +57,7 @@ public static class TestData
 
     public static UpdateRequisitionCommand UpdateRequisitionCommand() => new()
     {
-        Id = "600900",
+        ReqCode = "600900",
         Name = "QA III",
         StatusId = 2,
         WorkTypeId = 2,

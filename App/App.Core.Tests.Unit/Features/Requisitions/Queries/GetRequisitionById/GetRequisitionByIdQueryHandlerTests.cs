@@ -51,7 +51,7 @@ public class GetRequisitionByIdQueryHandlerTests
         var result = await _handler.Handle(query, CancellationToken.None);
 
         result.ShouldNotBeNull();
-        result.Id.ShouldBe("600900");
+        result.ReqCode.ShouldBe("600900");
     }
 
     [Fact]

@@ -2,8 +2,9 @@
 
 namespace Domain.Entities.Requisitions;
 
-public class Requisition : BaseEntity<string>
+public class Requisition : BaseEntity<int>
 {
+    public required string ReqCode { get; set; }
     public required string Name { get; set; }
 
     public int StatusId { get; set; }

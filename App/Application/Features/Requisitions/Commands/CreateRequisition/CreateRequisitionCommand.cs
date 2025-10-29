@@ -8,7 +8,7 @@ public class CreateRequisitionCommand : IRequest<Unit>
 {
     [Required]
     [StringLength(6, MinimumLength = 6)]
-    public required string Id { get; set; }
+    public required string ReqCode { get; set; }
 
     [Required]
     [StringLength(100, MinimumLength = 1)]

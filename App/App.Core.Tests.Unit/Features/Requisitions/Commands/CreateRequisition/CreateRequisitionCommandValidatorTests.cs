@@ -28,7 +28,7 @@ public class CreateRequisitionCommandValidatorTests
         var command = TestData.CreateRequisitionCommand();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id))
+            .Setup(r => r.RequisitionExists(command.ReqCode))
             .ReturnsAsync(true);
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -37,9 +37,9 @@ public class CreateRequisitionCommandValidatorTests
 
         result.ShouldNotBeNull();
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
-            .ErrorMessage.ShouldBe("Requisition with this Id already exist.");
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
+            .ErrorMessage.ShouldContain("already exist.");
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class CreateRequisitionCommandValidatorTests
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id))
+            .Setup(r => r.RequisitionExists(command.ReqCode))
             .ReturnsAsync(false);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId);
@@ -66,39 +66,39 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Theory]
-    [InlineData(null, "Id is required")]
-    [InlineData("", "'Id' must not be empty")]
-    [InlineData("   ", "'Id' must not be empty")]
-    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? id, string expectedError)
+    [InlineData(null, "is required")]
+    [InlineData("", "must not be empty")]
+    [InlineData("   ", "must not be empty")]
+    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
     {
         var command = TestData.CreateRequisitionCommand();
-        command.Id = id!;
+        command.ReqCode = reqCode!;
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain(expectedError);
     }
 
     [Theory]
     [InlineData("60040", "must be at least 6 characters")]
     [InlineData("6004044", "must be 6 characters or fewer")]
-    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string id, string expectedError)
+    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
     {
         var command = TestData.CreateRequisitionCommand();
-        command.Id = id;
+        command.ReqCode = reqCode;
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain(expectedError);
     }
 
@@ -231,10 +231,10 @@ public class CreateRequisitionCommandValidatorTests
     public async Task Validator_WhenReqWithSameIdExist_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
-        command.Id = "600900";
+        command.ReqCode = "600900";
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id))
+            .Setup(r => r.RequisitionExists(command.ReqCode))
             .ReturnsAsync(true);
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -242,8 +242,8 @@ public class CreateRequisitionCommandValidatorTests
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("already exist");
     }
 }

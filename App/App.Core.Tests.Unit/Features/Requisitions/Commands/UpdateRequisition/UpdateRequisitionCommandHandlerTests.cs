@@ -54,7 +54,7 @@ public class UpdateRequisitionCommandHandlerTests
             .Setup(h => h.ThrowIfValidationFails(validationResult));
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         _mockCommonHelpers
@@ -73,12 +73,12 @@ public class UpdateRequisitionCommandHandlerTests
         result.ShouldBe(MediatR.Unit.Value);
 
         _mockReqRepository
-            .Verify(r => r.GetRequisitionById(command.Id!),
+            .Verify(r => r.GetRequisitionById(command.ReqCode!),
             Times.Once);
 
         _mockReqRepository
             .Verify(r => r.UpdateAsync(It.Is<Requisition>(req =>
-                req.Id == command.Id &&
+                req.ReqCode == command.ReqCode &&
                 req.Name == command.Name &&
                 req.UpdatedBy == "email@test.com"
             )),
@@ -121,10 +121,10 @@ public class UpdateRequisitionCommandHandlerTests
     public async Task Handler_WhenIdDoesNotExist_ShouldThrowNotFoundException()
     {
         var command = TestData.UpdateRequisitionCommand();
-        command.Id = "600901";
+        command.ReqCode = "600901";
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync((Requisition)null!);
 
         var exception = await Should.ThrowAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
@@ -148,7 +148,7 @@ public class UpdateRequisitionCommandHandlerTests
             .ReturnsAsync(validationResult);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(Mock.Of<Requisition>);
 
         _mockCommonHelpers
@@ -172,7 +172,7 @@ public class UpdateRequisitionCommandHandlerTests
             .ReturnsAsync(validationResult);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(Mock.Of<Requisition>);
 
         _mockCommonHelpers
@@ -202,7 +202,7 @@ public class UpdateRequisitionCommandHandlerTests
             .ReturnsAsync(validationResult);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         _mockCommonHelpers

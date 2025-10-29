@@ -7,5 +7,5 @@ public class DeleteRequisitionCommand : IRequest<Unit>
 {
     [Required]
     [StringLength(6)]
-    public required string Id { get; set; }
+    public required string ReqCode { get; set; }
 }

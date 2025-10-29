@@ -40,7 +40,7 @@ public class UpdateUserTests
 
         userManagerMock
             .Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync(new List<string>());
+            .ReturnsAsync([]);
 
         return userManagerMock;
     }
@@ -98,11 +98,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
@@ -138,7 +138,7 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         var exception = await Should.ThrowAsync<NotFoundException>(() => _userService.Update(request, "admin-id"));
         exception.Message.ShouldContain(request.Id);
@@ -162,11 +162,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
@@ -203,11 +203,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.UpdateAsync(user))
@@ -249,11 +249,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.UpdateAsync(user))
@@ -295,11 +295,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
+            .ReturnsAsync([SystemRoles.SuperAdministrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.UpdateAsync(user))
@@ -379,11 +379,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(regularUser))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
             () => _userService.Update(request, "regular-user-id"));
@@ -413,11 +413,11 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync(new List<string> { SystemRoles.Administrator });
+            .ReturnsAsync([SystemRoles.Administrator]);
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         var exception = await Should.ThrowAsync<ValidationException>(
             () => _userService.Update(request, "admin-id"));
@@ -447,7 +447,7 @@ public class UpdateUserTests
 
         _mockUserManager
             .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
+            .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
             .Setup(u => u.UpdateAsync(user))

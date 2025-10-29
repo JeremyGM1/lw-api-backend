@@ -17,10 +17,10 @@ public class DeleteRequisitionCommandValidatorTests
     [Fact]
     public async Task Validator_WhenIdExist_ShouldDeleteRequisition()
     {
-        var command = new DeleteRequisitionCommand { Id = "600900" };
+        var command = new DeleteRequisitionCommand { ReqCode = "600900" };
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id))
+            .Setup(r => r.RequisitionExists(command.ReqCode))
             .ReturnsAsync(true);
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
@@ -33,33 +33,33 @@ public class DeleteRequisitionCommandValidatorTests
     [Fact]
     public async Task ValidatorWhenIdDoesNotExist_ShouldReturnBadRequestException()
     {
-        var command = new DeleteRequisitionCommand { Id = "600901" };
+        var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id))
+            .Setup(r => r.RequisitionExists(command.ReqCode))
             .ReturnsAsync(false);
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
-            .ErrorMessage.ShouldContain("Id does not exist");
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
+            .ErrorMessage.ShouldContain("does not exist");
     }
 
     [Fact]
     public async Task Validator_WhenIdIsNull_ShouldReturnFailure()
     {
-        var command = new DeleteRequisitionCommand { Id = null! };
+        var command = new DeleteRequisitionCommand { ReqCode = null! };
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
-            .ErrorMessage.ShouldContain("Id is required");
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
+            .ErrorMessage.ShouldContain("is required");
     }
 
     [Theory]
@@ -67,42 +67,42 @@ public class DeleteRequisitionCommandValidatorTests
     [InlineData(" ")]
     public async Task Validator_WhenIdIsEmpty_ShouldReturnFailure(string propertyValue)
     {
-        var command = new DeleteRequisitionCommand { Id = propertyValue };
+        var command = new DeleteRequisitionCommand { ReqCode = propertyValue };
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("must not be empty");
     }
 
     [Fact]
     public async Task Validator_WhenIdHasMoreThan6Characters_ShouldReturnFailure()
     {
-        var command = new DeleteRequisitionCommand { Id = "6009001" };
+        var command = new DeleteRequisitionCommand { ReqCode = "6009001" };
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("must be 6 characters or fewer");
     }
 
     [Fact]
     public async Task Validator_WhenIdHasLessThan6Characters_ShouldReturnFailure()
     {
-        var command = new DeleteRequisitionCommand { Id = "60090" };
+        var command = new DeleteRequisitionCommand { ReqCode = "60090" };
 
         var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("must be at least 6 characters");
     }
 }

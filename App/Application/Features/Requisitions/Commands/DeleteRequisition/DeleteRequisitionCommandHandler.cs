@@ -18,9 +18,9 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        var requisition = await _reqRepository.GetRequisitionById(request.Id);
+        var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
         if (requisition == null)
-            throw new NotFoundException(nameof(requisition), request.Id);
+            throw new NotFoundException(nameof(requisition), request.ReqCode);
 
         await _reqRepository.DeleteAsync(requisition!);
 

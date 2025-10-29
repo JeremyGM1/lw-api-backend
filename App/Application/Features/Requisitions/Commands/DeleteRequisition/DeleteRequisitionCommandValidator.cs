@@ -9,7 +9,7 @@ public class DeleteRequisitionCommandValidator : AbstractValidator<DeleteRequisi
 
     public DeleteRequisitionCommandValidator(IRequisitionRepository reqRepository)
     {
-        RuleFor(r => r.Id)
+        RuleFor(r => r.ReqCode)
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
             .MinimumLength(6)

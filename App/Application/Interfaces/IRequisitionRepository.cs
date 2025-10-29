@@ -2,7 +2,7 @@
 
 namespace Application.Interfaces;
 
-public interface IRequisitionRepository : IGenericRepository<Requisition, string>
+public interface IRequisitionRepository : IGenericRepository<Requisition, int>
 {
     Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class;
 

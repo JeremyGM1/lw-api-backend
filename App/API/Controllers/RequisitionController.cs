@@ -55,7 +55,7 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Update(string Id, [FromBody] UpdateRequisitionCommand requisition)
     {
-        requisition.Id = Id;
+        requisition.ReqCode = Id;
         await _mediator.Send(requisition);
         return NoContent();
     }
@@ -66,7 +66,7 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> Delete(string Id)
     {
-        var command = new DeleteRequisitionCommand { Id = Id };
+        var command = new DeleteRequisitionCommand { ReqCode = Id };
         await _mediator.Send(command);
         return NoContent();
     }

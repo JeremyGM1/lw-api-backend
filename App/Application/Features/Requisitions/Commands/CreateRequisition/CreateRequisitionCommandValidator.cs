@@ -11,7 +11,7 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
 
     public CreateRequisitionCommandValidator(IRequisitionRepository reqRepository)
     {
-        RuleFor(r => r.Id)
+        RuleFor(r => r.ReqCode)
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
             .MinimumLength(6)
@@ -67,7 +67,7 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
         RuleFor(r => r.BackfillName)
             .MaximumLength(100);
 
-        RuleFor(r => r.Id)
+        RuleFor(r => r.ReqCode)
             .MustAsync(EntityNotExist).WithMessage("Requisition with this {PropertyName} already exist.");
 
         _reqRepository = reqRepository;

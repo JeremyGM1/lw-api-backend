@@ -18,56 +18,56 @@ public class GetRequisitionByIdQueryValidatorTests
     [Fact]
     public async Task Validator_WhenIdDoesntExist_ShouldThrowBadRequestException()
     {
-        const string id = "600901";
-        var query = new GetRequisitionByIdQuery(id);
+        const string reqCode = "600901";
+        var query = new GetRequisitionByIdQuery(reqCode);
 
         var validator = new GetRequisitionByIdQueryValidator(_mockReqRepository.Object);
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(id))
+            .Setup(r => r.RequisitionExists(reqCode))
             .ReturnsAsync(false);
 
         var result = await validator.ValidateAsync(query);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("does not exist");
     }
 
     [Theory]
-    [InlineData(null, "Id is required")]
-    [InlineData("", "'Id' must not be empty")]
-    [InlineData("   ", "'Id' must not be empty")]
-    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? id, string expectedError)
+    [InlineData(null, "is required")]
+    [InlineData("", "must not be empty")]
+    [InlineData("   ", "must not be empty")]
+    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
     {
-        var query = new GetRequisitionByIdQuery(id!);
+        var query = new GetRequisitionByIdQuery(reqCode!);
 
         var validator = new GetRequisitionByIdQueryValidator(_mockReqRepository.Object);
 
         var result = await validator.ValidateAsync(query);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain(expectedError);
     }
 
     [Theory]
     [InlineData("60040", "must be at least 6 characters")]
     [InlineData("6004044", "must be 6 characters or fewer")]
-    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string id, string expectedError)
+    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
     {
         var query = TestData.CreateRequisitionCommand();
-        query.Id = id;
+        query.ReqCode = reqCode;
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
 
         var result = await validator.ValidateAsync(query);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain(expectedError);
     }
 }

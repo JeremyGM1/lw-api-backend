@@ -32,7 +32,7 @@ public class DeleteRequisitionCommandTests
     [Fact]
     public async Task Handle_WhenRequestIsValid_ShouldDeleteRequisition()
     {
-        var command = new DeleteRequisitionCommand { Id = "600900" };
+        var command = new DeleteRequisitionCommand { ReqCode = "600900" };
         var existingRequisition = TestData.CreateRequisition();
         var validationResult = new ValidationResult();
 
@@ -44,7 +44,7 @@ public class DeleteRequisitionCommandTests
             .Setup(h => h.ThrowIfValidationFails(validationResult));
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync(existingRequisition);
 
         _mockReqRepository
@@ -55,7 +55,7 @@ public class DeleteRequisitionCommandTests
 
         result.ShouldBe(MediatR.Unit.Value);
         _mockReqRepository
-            .Verify(r => r.GetRequisitionById(command.Id),
+            .Verify(r => r.GetRequisitionById(command.ReqCode),
             Times.Once);
 
         _mockReqRepository
@@ -66,7 +66,7 @@ public class DeleteRequisitionCommandTests
     [Fact]
     public async Task Handle_WhenValidationFails_ShouldThrowBadRequestException()
     {
-        var command = new DeleteRequisitionCommand { Id = "600901" };
+        var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
         var validationResult = new ValidationResult(
         [
@@ -99,10 +99,10 @@ public class DeleteRequisitionCommandTests
     [Fact]
     public async Task Handle_WhenIdDoesNotExist_ShouldThrowNotFoundException()
     {
-        var command = new DeleteRequisitionCommand { Id = "600901" };
+        var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync((Requisition)null!);
 
         var exception = await Should.ThrowAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));

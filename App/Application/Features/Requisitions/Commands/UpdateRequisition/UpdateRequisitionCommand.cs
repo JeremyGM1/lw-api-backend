@@ -7,7 +7,9 @@ namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
 public record UpdateRequisitionCommand : IRequest<Unit>
 {
-    public string? Id { get; set; }
+    [Required]
+    [StringLength(6)]
+    public string? ReqCode { get; set; }
 
     [StringLength(100, MinimumLength = 1)]
     public string? Name { get; set; }

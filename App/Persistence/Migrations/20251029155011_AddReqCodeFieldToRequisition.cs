@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationAfterMerge : Migration
+    public partial class AddReqCodeFieldToRequisition : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -226,7 +226,9 @@ namespace Persistence.Migrations
                 name: "Requisitions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReqCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     WorkTypeId = table.Column<int>(type: "int", nullable: false),
@@ -366,7 +368,7 @@ namespace Persistence.Migrations
                 name: "RequisitionJobs",
                 columns: table => new
                 {
-                    ReqId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReqId = table.Column<int>(type: "int", nullable: false),
                     JobDescriptionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -462,7 +464,8 @@ namespace Persistence.Migrations
                     { 1, "Cancelled" },
                     { 2, "Closed" },
                     { 3, "Completed" },
-                    { 4, "Open" }
+                    { 4, "Open" },
+                    { 5, "On-Hold" }
                 });
 
             migrationBuilder.InsertData(

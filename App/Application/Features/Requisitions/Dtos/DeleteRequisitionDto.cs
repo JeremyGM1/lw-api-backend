@@ -2,5 +2,5 @@
 
 public class DeleteRequisitionDto
 {
-    public required string Id { get; set; }
+    public required string ReqCode { get; set; }
 }

@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251027201933_MigrationAfterMerge")]
-    partial class MigrationAfterMerge
+    [Migration("20251029155011_AddReqCodeFieldToRequisition")]
+    partial class AddReqCodeFieldToRequisition
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,8 +257,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ApprovalDate")
                         .HasColumnType("datetime2");
@@ -319,6 +322,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ReqCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -481,8 +488,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
                 {
-                    b.Property<string>("ReqId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReqId")
+                        .HasColumnType("int");
 
                     b.Property<int>("JobDescriptionId")
                         .HasColumnType("int");
@@ -584,6 +591,11 @@ namespace Persistence.Migrations
                         {
                             Id = 4,
                             Status = "Open"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Status = "On-Hold"
                         });
                 });
 

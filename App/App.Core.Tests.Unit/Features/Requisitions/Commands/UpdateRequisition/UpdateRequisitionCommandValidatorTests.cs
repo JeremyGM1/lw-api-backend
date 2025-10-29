@@ -30,11 +30,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -56,10 +56,10 @@ public class UpdateRequisitionCommandValidatorTests
     public async Task Validate_WhenIdDoesNotExist_ShouldReturnFailure()
     {
         var command = TestData.UpdateRequisitionCommand();
-        command.Id = "600901";
+        command.ReqCode = "600901";
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync((Requisition)null!);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -74,8 +74,8 @@ public class UpdateRequisitionCommandValidatorTests
         var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "Id");
-        result.Errors.First(e => e.PropertyName == "Id")
+        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
+        result.Errors.First(e => e.PropertyName == "ReqCode")
             .ErrorMessage.ShouldContain("does not exist");
     }
 
@@ -90,11 +90,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -117,7 +117,7 @@ public class UpdateRequisitionCommandValidatorTests
         var command = TestData.UpdateRequisitionCommand();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, false);
@@ -170,11 +170,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.Id!))
+           .Setup(r => r.RequisitionExists(command.ReqCode!))
            .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -202,11 +202,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -234,11 +234,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -302,11 +302,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -334,11 +334,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.Id!))
+           .Setup(r => r.RequisitionExists(command.ReqCode!))
            .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -362,11 +362,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.Id!))
+            .Setup(r => r.RequisitionExists(command.ReqCode!))
             .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -394,11 +394,11 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.Id!))
+           .Setup(r => r.RequisitionExists(command.ReqCode!))
            .ReturnsAsync(true);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.Id!))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);

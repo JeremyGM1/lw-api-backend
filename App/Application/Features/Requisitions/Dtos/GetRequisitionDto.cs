@@ -4,23 +4,17 @@ public class GetRequisitionDto
 {
     public string Id { get; set; } = null!;
 
+    public string ReqCode { get; set; } = null!;
     public string Name { get; set; } = null!;
-
-    //public int StatusId { get; set; }
 
     public string StatusName { get; set; } = null!;
 
-    //public int WorkTypeId { get; set; }
-
     public string WorkTypeName { get; set; } = null!;
-
-    //public int HardwareId { get; set; }
 
     public string HardwareName { get; set; } = null!;
 
     public int Headcount { get; set; }
 
-    //public int LocationId { get; set; }
     public string Location { get; set; } = null!;
 
     public string Department { get; set; } = null!;
@@ -33,10 +27,7 @@ public class GetRequisitionDto
 
     public decimal CompensationBandMax { get; set; }
 
-    //public int CompensationBandCurrencyId { get; set; }
     public string CompensationBandCurrency { get; set; } = null!;
-
-    //public int CompensationBandIntervalId { get; set; }
 
     public string CompensationBandInterval { get; set; } = null!;
 

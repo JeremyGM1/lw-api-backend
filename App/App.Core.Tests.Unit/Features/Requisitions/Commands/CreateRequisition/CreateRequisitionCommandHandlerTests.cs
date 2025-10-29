@@ -67,7 +67,7 @@ public class CreateRequisitionCommandHandlerTests
 
         result.ShouldBe(MediatR.Unit.Value);
         _mockReqRepository
-            .Verify(r => r.CreateAsync(It.Is<Requisition>(req => req.Id == "600900")),
+            .Verify(r => r.CreateAsync(It.Is<Requisition>(req => req.ReqCode == "600900")),
             Times.Once
         );
     }

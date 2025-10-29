@@ -19,9 +19,9 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         _commonHelpers.ThrowIfValidationFails(validationResult);
 
-        var requisition = await _reqRepository.GetRequisitionById(request.Id!);
+        var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
         if (requisition == null)
-            throw new NotFoundException(nameof(requisition), request.Id!);
+            throw new NotFoundException(nameof(requisition), request.ReqCode!);
 
         _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 

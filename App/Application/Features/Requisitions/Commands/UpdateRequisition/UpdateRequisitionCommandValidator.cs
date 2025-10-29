@@ -12,7 +12,7 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
 
     public UpdateRequisitionCommandValidator(IRequisitionRepository reqRepository)
     {
-        RuleFor(r => r.Id)
+        RuleFor(r => r.ReqCode)
             .MaximumLength(6)
             .MustAsync(RequisitionExist).WithMessage("Requisition with {PropertyName} does not exist");
 
