@@ -1,13 +1,13 @@
-﻿using FluentValidation;
+﻿using Application.Exceptions;
+using Application.Features.Requisitions.Commands.DeleteRequisition;
+using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.LoggingService;
+using Domain.Entities.Requisitions;
+using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 using Shouldly;
-using Application.Exceptions;
-using Application.Features.Requisitions.Commands.DeleteRequisition;
-using Application.Interfaces.LoggingService;
-using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
-using Application.Interfaces.Features.Common;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 
@@ -34,7 +34,7 @@ public class DeleteRequisitionCommandTests
     }
 
     [Fact]
-    public async Task Handle_WhenRequestIsValid_ShouldDeleteRequisition()
+    public async Task DeleteHandler_WhenRequestIsValid_ShouldDeleteRequisition()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600900" };
         var existingRequisition = TestData.CreateRequisition();
@@ -68,7 +68,7 @@ public class DeleteRequisitionCommandTests
     }
 
     [Fact]
-    public async Task Handle_WhenValidationFails_ShouldThrowBadRequestException()
+    public async Task DeleteHandler_WhenValidationFails_ShouldThrowBadRequestException()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
@@ -101,7 +101,7 @@ public class DeleteRequisitionCommandTests
     }
 
     [Fact]
-    public async Task Handle_WhenIdDoesNotExist_ShouldThrowNotFoundException()
+    public async Task DeleteHandler_WhenIdDoesNotExist_ShouldThrowNotFoundException()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 

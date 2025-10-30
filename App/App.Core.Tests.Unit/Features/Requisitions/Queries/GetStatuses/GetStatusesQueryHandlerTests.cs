@@ -28,43 +28,43 @@ public class GetStatusesQueryHandlerTests
         );
     }
 
-    //[Fact]
-    //public async Task Handler_WhenStatusExists_ShouldReturnListOfAllStatuses()
-    //{
-    //    var query = new GetReqStatusesQuery();
+    [Fact]
+    public async Task GetStatusesHandler_WhenStatusExists_ShouldReturnListOfAllStatuses()
+    {
+        var query = new GetReqStatusesQuery();
 
-    //    var statusList = new List<RequisitionStatus>
-    //    {
-    //        new() { Id = 1, Status = "Cancelled" },
-    //        new() { Id = 2, Status = "Closed" },
-    //        new() { Id = 3, Status = "Completed" },
-    //        new() { Id = 4, Status = "Open" },
-    //    };
+        var statusList = new List<RequisitionStatus>
+        {
+            new() { Id = 1, Status = "Cancelled" },
+            new() { Id = 2, Status = "Closed" },
+            new() { Id = 3, Status = "Completed" },
+            new() { Id = 4, Status = "Open" },
+        };
 
-    //    _mockReqStatusRepository
-    //        .Setup(r => r.GetStatuses())
-    //        .ReturnsAsync(statusList);
+        _mockReqStatusRepository
+            .Setup(r => r.GetStatuses())
+            .ReturnsAsync(statusList);
 
-    //    var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
-    //    result.ShouldNotBeNull();
-    //    result.Count.ShouldBe(4);
-    //    result[0].Id.ShouldBe(1);
-    //    result[0].Status.ShouldBe("Cancelled");
-    //    result[1].Id.ShouldBe(2);
-    //    result[1].Status.ShouldBe("Closed");
-    //    result[2].Id.ShouldBe(3);
-    //    result[2].Status.ShouldBe("Completed");
-    //    result[3].Id.ShouldBe(4);
-    //    result[3].Status.ShouldBe("Open");
+        result.ShouldNotBeNull();
+        result.Count.ShouldBe(4);
+        result[0].Id.ShouldBe(1);
+        result[0].Status.ShouldBe("Cancelled");
+        result[1].Id.ShouldBe(2);
+        result[1].Status.ShouldBe("Closed");
+        result[2].Id.ShouldBe(3);
+        result[2].Status.ShouldBe("Completed");
+        result[3].Id.ShouldBe(4);
+        result[3].Status.ShouldBe("Open");
 
-    //    _mockReqStatusRepository
-    //        .Verify(r => r.GetStatuses(),
-    //        Times.Once);
-    //}
+        _mockReqStatusRepository
+            .Verify(r => r.GetStatuses(),
+            Times.Once);
+    }
 
     [Fact]
-    public async Task Handler_WhenNoStatusExist_ShouldReturnEmptyList()
+    public async Task GetStatusesHandler_WhenNoStatusExist_ShouldReturnEmptyList()
     {
         var query = new GetReqStatusesQuery();
 

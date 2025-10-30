@@ -1,7 +1,7 @@
-﻿using Moq;
-using Shouldly;
-using Application.Features.Requisitions.Commands.DeleteRequisition;
+﻿using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces.Features.Requisitions;
+using Moq;
+using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 
@@ -15,7 +15,7 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdExist_ShouldDeleteRequisition()
+    public async Task DeleteValidator_WhenIdExist_ShouldDeleteRequisition()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600900" };
 
@@ -31,7 +31,7 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task ValidatorWhenIdDoesNotExist_ShouldReturnBadRequestException()
+    public async Task DeleteValidator_WhenIdDoesNotExist_ShouldReturnBadRequestException()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
@@ -49,7 +49,7 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdIsNull_ShouldReturnFailure()
+    public async Task DeleteValidator_WhenIdIsNull_ShouldReturnFailure()
     {
         var command = new DeleteRequisitionCommand { ReqCode = null! };
 
@@ -65,7 +65,7 @@ public class DeleteRequisitionCommandValidatorTests
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    public async Task Validator_WhenIdIsEmpty_ShouldReturnFailure(string propertyValue)
+    public async Task DeleteValidator_WhenIdIsEmpty_ShouldReturnFailure(string propertyValue)
     {
         var command = new DeleteRequisitionCommand { ReqCode = propertyValue };
 
@@ -79,7 +79,7 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdHasMoreThan6Characters_ShouldReturnFailure()
+    public async Task DeleteValidator_WhenIdHasMoreThan6Characters_ShouldReturnFailure()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "6009001" };
 
@@ -93,7 +93,7 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdHasLessThan6Characters_ShouldReturnFailure()
+    public async Task DeleteValidator_WhenIdHasLessThan6Characters_ShouldReturnFailure()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "60090" };
 

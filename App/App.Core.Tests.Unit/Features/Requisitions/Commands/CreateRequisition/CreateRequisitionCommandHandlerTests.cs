@@ -39,7 +39,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenRequestIsValid_ShouldRegisterRequisition()
+    public async Task CreateHandler_WhenRequestIsValid_ShouldRegisterRequisition()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
@@ -74,12 +74,16 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenAuditFieldsAreSetCorrectly_ShouldSucceed()
+    public async Task CreateHandler_WhenAuditFieldsAreSetCorrectly_ShouldSucceed()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
         var validationResult = new ValidationResult();
         Requisition capturedRequisition = null!;
+
+        const string userEmail = "TestUser@email.com";
+        var ipAddress = It.IsAny<string>();
+        var userAgent = It.IsAny<string>();
 
         _mockValidator
             .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
@@ -89,8 +93,8 @@ public class CreateRequisitionCommandHandlerTests
             .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
         _mockCommonHelpers
-            .Setup(ch => ch.GetCurrentUserFromToken())
-            .Returns("TestUser@email.com");
+            .Setup(ch => ch.GetLoggingContext())
+            .Returns((userEmail, ipAddress, userAgent));
 
         _mockMapper
             .Setup(m => m.Map<Requisition>(command))
@@ -109,7 +113,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenValidationFails_ShouldThrowBadRequestException()
+    public async Task CreateHandler_WhenValidationFails_ShouldThrowBadRequestException()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
@@ -141,7 +145,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenForeignKeyIsInvalid_ShouldThrowForeignKeyNotFoundException()
+    public async Task CreateHandler_WhenForeignKeyIsInvalid_ShouldThrowForeignKeyNotFoundException()
     {
         var command = TestData.CreateRequisitionCommand();
 
@@ -160,12 +164,12 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_WhenUserIsNotAuthenticated_ShouldThrowsUnauthorizedAccessException()
+    public async Task CreateHandler_WhenUserIsNotAuthenticated_ShouldThrowsUnauthorizedAccessException()
     {
         var command = TestData.CreateRequisitionCommand();
 
         _mockCommonHelpers
-            .Setup(h => h.GetCurrentUserFromToken())
+            .Setup(h => h.GetLoggingContext())
             .Throws(new UnauthorizedAccessException("User not authenticated"));
 
         var exception = await Should.ThrowAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));

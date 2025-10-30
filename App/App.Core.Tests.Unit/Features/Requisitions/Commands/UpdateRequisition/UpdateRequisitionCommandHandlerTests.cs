@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.MappingProfiles;
+using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
-using Application.Interfaces.Features.Common;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -44,7 +44,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenRequestIsValid_ShouldUpdateRequisition()
+    public async Task UpdateHandler_WhenRequestIsValid_ShouldUpdateRequisition()
     {
         var command = TestData.UpdateRequisitionCommand();
         var existingRequisition = TestData.CreateRequisition();
@@ -90,7 +90,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenValidationFailed_ShouldReturnBadRequestException()
+    public async Task UpdateHandler_WhenValidationFailed_ShouldReturnBadRequestException()
     {
         var command = TestData.UpdateRequisitionCommand();
         var existingRequisition = TestData.CreateRequisition();
@@ -122,7 +122,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenIdDoesNotExist_ShouldThrowNotFoundException()
+    public async Task UpdateHandler_WhenIdDoesNotExist_ShouldThrowNotFoundException()
     {
         var command = TestData.UpdateRequisitionCommand();
         command.ReqCode = "600901";
@@ -142,7 +142,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenWrongForeignKeys_ShouldThrowForeignKeyNotFoundException()
+    public async Task UpdateHandler_WhenWrongForeignKeys_ShouldThrowForeignKeyNotFoundException()
     {
         var command = TestData.UpdateRequisitionCommand();
         var validationResult = new ValidationResult();
@@ -166,7 +166,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenUserIsNotAuthenticated_ShouldThrowUnauthorizedAccessException()
+    public async Task UpdateHandler_WhenUserIsNotAuthenticated_ShouldThrowUnauthorizedAccessException()
     {
         var command = TestData.UpdateRequisitionCommand();
         var validationResult = new ValidationResult();
@@ -191,7 +191,7 @@ public class UpdateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenUploadSuccessfuly_ShouldPresertveAuditFields()
+    public async Task UpdateHandler_WhenUploadSuccessfuly_ShouldPresertveAuditFields()
     {
         var command = TestData.UpdateRequisitionCommand();
         var existingRequisition = TestData.CreateRequisition();

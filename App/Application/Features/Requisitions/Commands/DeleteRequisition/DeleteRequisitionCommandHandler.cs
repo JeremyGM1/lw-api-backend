@@ -29,7 +29,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         if (requisition == null)
             throw new NotFoundException(nameof(requisition), request.ReqCode);
 
-            await _logger.LogSuccessAsync(requisition.Id, "Delete", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(requisition.ReqCode, "Delete", userEmail, ipAddress, userAgent, "Success");
 
             await _reqRepository.DeleteAsync(requisition!);
 

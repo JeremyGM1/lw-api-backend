@@ -1,8 +1,8 @@
-﻿using Moq;
-using Shouldly;
-using Application.Features.Requisitions.Commands.CreateRequisition;
-using Domain.Entities.Requisitions;
+﻿using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces.Features.Requisitions;
+using Domain.Entities.Requisitions;
+using Moq;
+using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -23,7 +23,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdAlreadyExist_ShouldReturnValidationError()
+    public async Task CreateValidator_WhenIdAlreadyExist_ShouldReturnValidationError()
     {
         var command = TestData.CreateRequisitionCommand();
 
@@ -43,7 +43,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenCommandIsValid_ShouldReturnSuccess()
+    public async Task CreateValidator_WhenCommandIsValid_ShouldReturnSuccess()
     {
         var command = TestData.CreateRequisitionCommand();
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -69,7 +69,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData(null, "is required")]
     [InlineData("", "must not be empty")]
     [InlineData("   ", "must not be empty")]
-    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
+    public async Task CreateValidator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
     {
         var command = TestData.CreateRequisitionCommand();
         command.ReqCode = reqCode!;
@@ -87,7 +87,7 @@ public class CreateRequisitionCommandValidatorTests
     [Theory]
     [InlineData("60040", "must be at least 6 characters")]
     [InlineData("6004044", "must be 6 characters or fewer")]
-    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
+    public async Task CreateValidator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
     {
         var command = TestData.CreateRequisitionCommand();
         command.ReqCode = reqCode;
@@ -109,7 +109,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("LocationId")]
     [InlineData("CompensationBandCurrencyId")]
     [InlineData("CompensationBandIntervalId")]
-    public async Task Validator_WhenForeignKeysAreNull_ShouldReturnFailure(string propertyName)
+    public async Task CreateValidator_WhenForeignKeysAreNull_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
@@ -131,7 +131,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("Department")]
     [InlineData("HiringManager")]
     [InlineData("Owner")]
-    public async Task Validator_WhenRequiredPropertiesAreNull_ShouldReturnFailure(string propertyName)
+    public async Task CreateValidator_WhenRequiredPropertiesAreNull_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
@@ -150,7 +150,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("Department")]
     [InlineData("HiringManager")]
     [InlineData("Owner")]
-    public async Task Validator_WhenRequiredPropertiesAreEmpty_ShouldReturnFailure(string propertyName)
+    public async Task CreateValidator_WhenRequiredPropertiesAreEmpty_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
@@ -165,7 +165,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenHeadcountIsLowerThan0_ShouldReturnFailure()
+    public async Task CreateValidator_WhenHeadcountIsLowerThan0_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
         command.Headcount = -1;
@@ -180,12 +180,10 @@ public class CreateRequisitionCommandValidatorTests
             .ErrorMessage.ShouldContain("'Headcount' must be between 0 and");
     }
 
-    //public async Task Validator_WhenHeadcountIsHigherThan
-
     [Theory]
     [InlineData("CompensationBandMin")]
     [InlineData("CompensationBandMax")]
-    public async Task Validator_WhenCurrencyBandsIsLowerThan0_ShouldReturnFailure(string propertyName)
+    public async Task CreateValidator_WhenCurrencyBandsIsLowerThan0_ShouldReturnFailure(string propertyName)
     {
         var command = TestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
@@ -200,7 +198,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenDescriptionHasMoreThan200Characters_ShouldReturnFailure()
+    public async Task CreateValidator_WhenDescriptionHasMoreThan200Characters_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
         command.Description = new string('x', 201);
@@ -214,7 +212,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenBackfillNameHasMoreThan100Characters_ShouldReturnFailure()
+    public async Task CreateValidator_WhenBackfillNameHasMoreThan100Characters_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
         command.BackfillName = new string('x', 101);
@@ -228,7 +226,7 @@ public class CreateRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenReqWithSameIdExist_ShouldReturnFailure()
+    public async Task CreateValidator_WhenReqWithSameIdExist_ShouldReturnFailure()
     {
         var command = TestData.CreateRequisitionCommand();
         command.ReqCode = "600900";

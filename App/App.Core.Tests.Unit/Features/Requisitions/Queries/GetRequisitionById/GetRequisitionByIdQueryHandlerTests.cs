@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
 using Application.Exceptions;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
-using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
+using Domain.Entities.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 
@@ -39,13 +39,13 @@ public class GetRequisitionByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenIdExists_ShouldReturnRequisition()
+    public async Task GetRequisitionHandler_WhenIdExists_ShouldReturnRequisition()
     {
         var query = new GetRequisitionByIdQuery("600900");
         var requisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(query.Id))
+            .Setup(r => r.GetRequisitionById(query.ReqCode))
             .ReturnsAsync(requisition);
 
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -55,7 +55,7 @@ public class GetRequisitionByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenIdDoesntExist_ShouldThrowNotFoundException()
+    public async Task GetRequisitionHandler_WhenIdDoesntExist_ShouldThrowNotFoundException()
     {
         const string id = "600901";
         var query = new GetRequisitionByIdQuery(id);
@@ -76,7 +76,7 @@ public class GetRequisitionByIdQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenInvalidId_ShouldThrowBadRequestException()
+    public async Task GetRequisitionHandler_WhenInvalidId_ShouldThrowBadRequestException()
     {
         var query = new GetRequisitionByIdQuery("");
         var validationResult = new ValidationResult(

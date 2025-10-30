@@ -16,7 +16,7 @@ public class GetRequisitionByIdQueryValidatorTests
     }
 
     [Fact]
-    public async Task Validator_WhenIdDoesntExist_ShouldThrowBadRequestException()
+    public async Task GetRequisitionByIdValidator_WhenIdDoesntExist_ShouldThrowBadRequestException()
     {
         const string reqCode = "600901";
         var query = new GetRequisitionByIdQuery(reqCode);
@@ -39,7 +39,7 @@ public class GetRequisitionByIdQueryValidatorTests
     [InlineData(null, "is required")]
     [InlineData("", "must not be empty")]
     [InlineData("   ", "must not be empty")]
-    public async Task Validator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
+    public async Task GetRequisitionByIdValidator_WhenIdIsNullOrEmpty_ShouldReturnFailure(string? reqCode, string expectedError)
     {
         var query = new GetRequisitionByIdQuery(reqCode!);
 
@@ -56,7 +56,7 @@ public class GetRequisitionByIdQueryValidatorTests
     [Theory]
     [InlineData("60040", "must be at least 6 characters")]
     [InlineData("6004044", "must be 6 characters or fewer")]
-    public async Task Validator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
+    public async Task GetRequisitionByIdValidator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
     {
         var query = TestData.CreateRequisitionCommand();
         query.ReqCode = reqCode;

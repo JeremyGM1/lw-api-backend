@@ -42,7 +42,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _reqRepository.UpdateAsync(requisition);
 
-            await _logger.LogSuccessAsync(requisition.Id, "Update", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(requisition.ReqCode, "Update", userEmail, ipAddress, userAgent, "Success");
 
             return Unit.Value;
         }

@@ -31,8 +31,8 @@ public class UpdateUserTests
             new Mock<IUserStore<ApplicationUser>>().Object,
             new Mock<IOptions<IdentityOptions>>().Object,
             new Mock<IPasswordHasher<ApplicationUser>>().Object,
-            new IUserValidator<ApplicationUser>[0],
-            new IPasswordValidator<ApplicationUser>[0],
+            Array.Empty<IUserValidator<ApplicationUser>>(),
+            Array.Empty<IPasswordValidator<ApplicationUser>>(),
             new Mock<ILookupNormalizer>().Object,
             new Mock<IdentityErrorDescriber>().Object,
             new Mock<IServiceProvider>().Object,
@@ -148,6 +148,9 @@ public class UpdateUserTests
     public async Task Update_IncorrectCurrentPassword_ReturnsValidationException()
     {
         var request = CreateUpdateRequest();
+        request.CurrentPassword = "oldPassword";
+        request.NewPassword = "newPassword";
+
         var user = CreateTestUser(request.Id);
         var adminUser = CreateTestUser("admin-id");
         var identityError = new IdentityError { Description = "Password change failed. Incorrect password." };

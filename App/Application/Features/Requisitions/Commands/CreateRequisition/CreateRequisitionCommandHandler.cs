@@ -34,13 +34,13 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _reqRepository.CreateAsync(reqToCreate);
 
-            await _logger.LogSuccessAsync(reqToCreate.Id, "Create", userEmail, ipAddress, userAgent, "Success");
+            await _logger.LogSuccessAsync(reqToCreate.ReqCode, "Create", userEmail, ipAddress, userAgent, "Success");
 
             return Unit.Value;
         }
         catch (Exception ex)
         {
-            await _logger.LogFailureAsync(request.Id, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
+            await _logger.LogFailureAsync(request.ReqCode, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
             throw;
         }
     }

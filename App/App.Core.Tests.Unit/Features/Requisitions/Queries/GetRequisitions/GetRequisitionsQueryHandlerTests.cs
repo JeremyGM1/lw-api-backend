@@ -3,9 +3,9 @@ using Moq;
 using Shouldly;
 using Application.Features.Requisitions.Dtos;
 using Application.Features.Requisitions.Queries.GetRequisitions;
+using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitions;
 
@@ -29,7 +29,7 @@ public class GetRequisitionsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenListItsNotEmpty_ShouldReturnAllRequisitions()
+    public async Task GetRequisitionsHandler_WhenListItsNotEmpty_ShouldReturnAllRequisitions()
     {
         var query = new GetRequisitionsQuery();
 
@@ -63,7 +63,7 @@ public class GetRequisitionsQueryHandlerTests
     }
 
     [Fact]
-    public async Task Handler_WhenListItsEmpty_ShouldReturnEmptyList()
+    public async Task GetRequisitionsHandler_WhenListItsEmpty_ShouldReturnEmptyList()
     {
         var query = new GetRequisitionsQuery();
 
