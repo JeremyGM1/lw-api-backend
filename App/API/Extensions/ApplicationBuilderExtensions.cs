@@ -1,7 +1,10 @@
-﻿using Identity.Configurations;
+﻿using Application.Interfaces;
+using Application.Interfaces.Identity;
+using Identity.Configurations;
 using Identity.Models;
 using Identity.Seed;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace API.Extensions
@@ -15,8 +18,10 @@ namespace API.Extensions
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>();
+            var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+            var permissionRepository = scope.ServiceProvider.GetRequiredService<IPermissionRepository>();
 
-            await IdentitySeeder.SeedAsync(userManager, roleManager, adminSettings);
+            await IdentitySeeder.SeedAsync(userManager, roleManager, adminSettings, permissionService, permissionRepository);
         }
     }
 }

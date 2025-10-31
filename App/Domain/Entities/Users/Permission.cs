@@ -2,8 +2,11 @@
 
 namespace Domain.Entities.Users;
 
-public class Permission : BaseEntity<int>
+public class Permission : BaseEntity<Guid>
 {
-    public required string Name { get; set; }
-    public string? Description { get; set; }
+    public string Name { get; set; } = default!;
+    public string Description { get; set; } = default!;
+
+    public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+    public ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 }

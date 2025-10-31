@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Users;
-
-namespace Application.Features.Identity.Models;
+﻿namespace Application.Features.Identity.Models;
 
 public class UserProfileResponse
 {

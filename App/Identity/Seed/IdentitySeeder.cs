@@ -1,12 +1,9 @@
-﻿using Identity.Configurations;
+﻿using Application.Interfaces;
+using Application.Interfaces.Identity;
+using Identity.Configurations;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Identity.Seed
 {
@@ -15,7 +12,9 @@ namespace Identity.Seed
         public static async Task SeedAsync(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IOptions<AdminSettings> adminSettings)
+            IOptions<AdminSettings> adminSettings,
+            IPermissionService permissionService,
+            IPermissionRepository permissionRepository)
         {
             foreach (var roleName in SystemRoles.AllRoles)
             {
@@ -50,6 +49,7 @@ namespace Identity.Seed
                     throw new Exception($"Error creating admin: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                 }
             }
+            await PermissionSeeder.SeedAsync(adminSettings,permissionService, permissionRepository, roleManager, userManager);
         }
     }
 }
