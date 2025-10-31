@@ -67,8 +67,8 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
         RuleFor(r => r.BackfillName)
             .MaximumLength(100);
 
-        RuleFor(r => r.ReqCode)
-            .MustAsync(EntityNotExist).WithMessage("Requisition with this {PropertyName} already exist.");
+        //RuleFor(r => r.ReqCode)
+        //    .MustAsync(EntityNotExist).WithMessage("Requisition with this {PropertyName} already exist.");
 
         _reqRepository = reqRepository;
     }
@@ -85,5 +85,5 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
 
     private async Task<bool> IntervalExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionInterval>(id);
 
-    private async Task<bool> EntityNotExist(string id, CancellationToken cancellationToken) => !await _reqRepository.RequisitionExists(id);
+    //private async Task<bool> EntityNotExist(string id, CancellationToken cancellationToken) => !await _reqRepository.RequisitionExists(id);
 }

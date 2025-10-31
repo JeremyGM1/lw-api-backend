@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Application.Common.Configs;
+using Application.Common.Result;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommand : IRequest<Unit>
+public class CreateRequisitionCommand : IRequest<Result>
 {
     [Required]
     [StringLength(6, MinimumLength = 6)]

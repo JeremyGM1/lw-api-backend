@@ -3,7 +3,7 @@ using Domain.Entities.Requisitions;
 using Persistence;
 
 namespace LoggingService.Repositories;
-public class GenericLogService(AppDbContext context) : IGenericLogService
+public class GenericLogService(AppDbContext context) : ILoggerService
 {
     private readonly AppDbContext _context = context;
 

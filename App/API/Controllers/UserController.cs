@@ -43,7 +43,8 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UpdateResponse>> AdminUpdateRequest(AdminUpdateRequest request)
     {
-        return Ok(await _userService.AdminUpdateRequest(request));
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Ok(await _userService.AdminUpdateRequest(request, userId));
     }
 
     [HttpDelete("{id}")]

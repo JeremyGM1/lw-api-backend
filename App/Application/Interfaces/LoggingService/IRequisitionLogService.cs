@@ -1,3 +1,3 @@
 ﻿namespace Application.Interfaces.LoggingService;
 
-public interface IRequisitionLogService : IGenericLogService;
+public interface IRequisitionLogService : ILoggerService;

@@ -1,6 +1,6 @@
 ﻿namespace Application.Interfaces.LoggingService;
 
-public interface IGenericLogService
+public interface ILoggerService
 {
     Task LogSuccessAsync(string requisitionId, string action, string userEmail, string ipAddress, string userAgent, string actionResult);
 

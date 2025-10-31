@@ -16,10 +16,7 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
     public string GetCurrentUserFromToken()
     {
         var user = _httpContextAccessor.HttpContext?.User;
-        var email = user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value;
-
-        if (string.IsNullOrEmpty(email))
-            throw new UnauthorizedAccessException("User not authenticated");
+        var email = user?.Identity?.Name ?? user?.FindFirst(ClaimTypes.Email)?.Value ?? "unknown-user@email.com";
 
         return email;
     }

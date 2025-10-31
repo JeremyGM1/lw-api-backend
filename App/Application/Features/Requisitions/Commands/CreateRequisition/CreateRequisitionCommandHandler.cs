@@ -5,25 +5,27 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using Application.Common.Result;
+using Application.Features.Requisitions.Errors;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<CreateRequisitionCommand, Unit>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<CreateRequisitionCommand, Result>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly IValidator<CreateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly IRequisitionLogService _logger = logger;
+    private readonly ILoggerService _logger = logger;
 
-    public async Task<Unit> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
 
         try
         {
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-            _commonHelpers.ThrowIfValidationFails(validationResult);
+            if (await _reqRepository.RequisitionExists(request.ReqCode))
+                return Result.Failure(RequisitionErrors.ExistingRequisition(request.ReqCode));
 
             _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
@@ -36,7 +38,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _logger.LogSuccessAsync(reqToCreate.ReqCode, "Create", userEmail, ipAddress, userAgent, "Success");
 
-            return Unit.Value;
+            return Result.Success();
         }
         catch (Exception ex)
         {

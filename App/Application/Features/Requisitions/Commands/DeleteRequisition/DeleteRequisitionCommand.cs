@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Application.Common.Result;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommand : IRequest<Unit>
+public class DeleteRequisitionCommand : IRequest<Result>
 {
     [Required]
     [StringLength(6)]

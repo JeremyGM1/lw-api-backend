@@ -13,7 +13,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
     {
         var validatorList = _validators.ToList();
 
-        if (!validatorList.Any())
+        if (validatorList.Count == 0)
         {
             return await next(cancellationToken);
         }
