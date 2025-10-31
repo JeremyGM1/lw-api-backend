@@ -1,19 +1,20 @@
-﻿using Domain.Entities.Requisitions;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Entities.Requisitions;
 
-namespace LoggingService.Configuration.RequisitionConfig;
+namespace Persistence.Configuration.RequisitionConfig;
 public class RequisitionLogConfig : IEntityTypeConfiguration<RequisitionLog>
 {
     public void Configure(EntityTypeBuilder<RequisitionLog> builder)
     {
         builder.HasKey(e => e.Id);
-        builder.HasIndex(e => e.RequisitionId);
+        builder.HasIndex(e => e.EntityId);
         builder.HasIndex(e => e.TimeStamp);
 
         builder.HasOne(e => e.Requisition)
             .WithMany()
-            .HasForeignKey(e => e.RequisitionId)
+            .HasForeignKey(e => e.EntityId)
+            .HasPrincipalKey(e => e.ReqCode)
             .OnDelete(DeleteBehavior.SetNull)
             .IsRequired(false);
     }

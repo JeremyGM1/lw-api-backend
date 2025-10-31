@@ -25,6 +25,7 @@ public partial class AppDbContext : DbContext
     public required DbSet<RequisitionJob> RequisitionJobs { get; set; }
     public required DbSet<JobCandidate> JobCandidates { get; set; }
     public required DbSet<JobSkill> JobSkills { get; set; }
+    public required DbSet<RequisitionLog> RequisitionLogs { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

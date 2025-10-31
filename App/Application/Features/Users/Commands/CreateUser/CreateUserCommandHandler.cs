@@ -1,17 +1,17 @@
-﻿using AutoMapper;
-using MediatR;
-using Application.Exceptions;
-using Domain.Entities.Users;
-using Application.Interfaces.LoggingService;
+﻿using Application.Exceptions;
+using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Users;
+using AutoMapper;
+using Domain.Entities.Users;
+using MediatR;
 
 namespace Application.Features.Users.Commands.CreateUser;
 
-public class CreateUserCommandHandler(IMapper mapper, IUserRepository userRepository, IAppLogger<CreateUserCommandHandler> logger) : IRequestHandler<CreateUserCommand, Unit>
+public class CreateUserCommandHandler(IMapper mapper, IUserRepository userRepository, ICommonHelpers commonHelpers) : IRequestHandler<CreateUserCommand, Unit>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IUserRepository _userRepository = userRepository;
-    private readonly IAppLogger<CreateUserCommandHandler> _logger = logger;
+    private readonly ICommonHelpers _commonHelpers = commonHelpers;
 
     public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -28,7 +28,6 @@ public class CreateUserCommandHandler(IMapper mapper, IUserRepository userReposi
         userToCreate.CreatedBy = "Admin";
 
         await _userRepository.CreateAsync(userToCreate);
-        _logger.LogInformation("User created successfully", userToCreate.Id, userToCreate.CreatedBy, userToCreate.CreatedAt);
 
         return Unit.Value;
     }

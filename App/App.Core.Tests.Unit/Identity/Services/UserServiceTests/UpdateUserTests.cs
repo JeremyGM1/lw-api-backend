@@ -172,6 +172,9 @@ public class UpdateUserTests
             .ReturnsAsync([SystemRoles.RegularUser]);
 
         _mockUserManager
+            .Setup(u => u.GetUserWith)
+
+        _mockUserManager
             .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
             .ReturnsAsync(IdentityResult.Failed(identityError));
 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddReqCodeFieldToRequisition : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -228,7 +228,7 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReqCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReqCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     WorkTypeId = table.Column<int>(type: "int", nullable: false),
@@ -253,6 +253,7 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Requisitions", x => x.Id);
+                    table.UniqueConstraint("AK_Requisitions_ReqCode", x => x.ReqCode);
                     table.ForeignKey(
                         name: "FK_Requisitions_RequisitionCurrency_CompensationBandCurrencyId",
                         column: x => x.CompensationBandCurrencyId,
@@ -386,6 +387,33 @@ namespace Persistence.Migrations
                         principalTable: "Requisitions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequisitionLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntityType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EntityId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ActionResult = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequisitionLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequisitionLogs_Requisitions_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "Requisitions",
+                        principalColumn: "ReqCode",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.InsertData(
@@ -535,6 +563,16 @@ namespace Persistence.Migrations
                 column: "JobDescriptionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RequisitionLogs_EntityId",
+                table: "RequisitionLogs",
+                column: "EntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequisitionLogs_TimeStamp",
+                table: "RequisitionLogs",
+                column: "TimeStamp");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Requisitions_CompensationBandCurrencyId",
                 table: "Requisitions",
                 column: "CompensationBandCurrencyId");
@@ -601,6 +639,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "RequisitionJobs");
+
+            migrationBuilder.DropTable(
+                name: "RequisitionLogs");
 
             migrationBuilder.DropTable(
                 name: "UserRole");

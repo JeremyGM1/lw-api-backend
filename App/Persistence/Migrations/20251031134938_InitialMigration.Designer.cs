@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251023133403_MadeRequisitionIdNullable")]
-    partial class MadeRequisitionIdNullable
+    [Migration("20251031134938_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,8 +257,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ApprovalDate")
                         .HasColumnType("datetime2");
@@ -266,15 +269,11 @@ namespace Persistence.Migrations
                     b.Property<string>("BackfillName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CompensationBandCurrency")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("CompensationBandCurrencyId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("CompensationBandInterval")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("CompensationBandIntervalId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("CompensationBandMax")
                         .HasPrecision(20, 4)
@@ -311,10 +310,8 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -325,6 +322,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ReqCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -340,6 +341,10 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompensationBandCurrencyId");
+
+                    b.HasIndex("CompensationBandIntervalId");
+
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("CreatedBy");
@@ -348,6 +353,8 @@ namespace Persistence.Migrations
 
                     b.HasIndex("HiringManager");
 
+                    b.HasIndex("LocationId");
+
                     b.HasIndex("StatusId");
 
                     b.HasIndex("WorkTypeId");
@@ -355,6 +362,50 @@ namespace Persistence.Migrations
                     b.HasIndex("StatusId", "CreatedAt");
 
                     b.ToTable("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionCurrency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionCurrency");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Currency = "COP"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Currency = "USD"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Currency = "CAD"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Currency = "PHP"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Currency = "EUR"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionHardware", b =>
@@ -386,10 +437,59 @@ namespace Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionInterval", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Interval")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionInterval");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Interval = "Weekly"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Interval = "Bi-Weekly"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Interval = "Monthly"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Interval = "Bi-Monthly"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Interval = "Quarterly"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Interval = "Bi-Annually"
+                        });
+                });
+
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
                 {
-                    b.Property<string>("ReqId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReqId")
+                        .HasColumnType("int");
 
                     b.Property<int>("JobDescriptionId")
                         .HasColumnType("int");
@@ -399,6 +499,60 @@ namespace Persistence.Migrations
                     b.HasIndex("JobDescriptionId");
 
                     b.ToTable("RequisitionJobs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionLocation");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Location = "Medellín"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Location = "Bogotá"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Location = "Cali"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Location = "Barranquilla"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Location = "Cartagena"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Location = "Bucaramanga"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Location = "Santa Marta"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
@@ -417,15 +571,19 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EntityId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ErrorMessage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequisitionId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
@@ -440,7 +598,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RequisitionId");
+                    b.HasIndex("EntityId");
 
                     b.HasIndex("TimeStamp");
 
@@ -483,6 +641,11 @@ namespace Persistence.Migrations
                         {
                             Id = 4,
                             Status = "Open"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Status = "On-Hold"
                         });
                 });
 
@@ -684,9 +847,27 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
                 {
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionCurrency", "CompensationBandCurrency")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("CompensationBandCurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionInterval", "CompensationBandInterval")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("CompensationBandIntervalId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Requisitions.RequisitionHardware", "Hardware")
                         .WithMany("Requisitions")
                         .HasForeignKey("HardwareId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionLocation", "Location")
+                        .WithMany("Requisitions")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -702,7 +883,13 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("CompensationBandCurrency");
+
+                    b.Navigation("CompensationBandInterval");
+
                     b.Navigation("Hardware");
+
+                    b.Navigation("Location");
 
                     b.Navigation("Status");
 
@@ -732,8 +919,9 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
                         .WithMany()
-                        .HasForeignKey("RequisitionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EntityId")
+                        .HasPrincipalKey("ReqCode")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Requisition");
                 });
@@ -791,7 +979,22 @@ namespace Persistence.Migrations
                     b.Navigation("LinkedPostingList");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionCurrency", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionHardware", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionInterval", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
                 {
                     b.Navigation("Requisitions");
                 });

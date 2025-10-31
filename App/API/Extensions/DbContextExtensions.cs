@@ -14,12 +14,5 @@ public static class DbContextExtensions
                 configuration.GetConnectionString("DefaultConnection")
                 );
         });
-
-        services.AddDbContext<LoggingServiceDbContext>(options =>
-        {
-            options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection")
-                );
-        });
     }
 }

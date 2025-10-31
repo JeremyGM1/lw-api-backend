@@ -1,16 +1,18 @@
 ﻿using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using Persistence;
 
 namespace LoggingService.Repositories;
-public class GenericLogService(LoggingServiceDbContext context) : IGenericLogService
+public class GenericLogService(AppDbContext context) : IGenericLogService
 {
-    private readonly LoggingServiceDbContext _context = context;
+    private readonly AppDbContext _context = context;
 
-    public async Task LogSuccessAsync(string requisitionId, string action, string userEmail, string ipAddress, string userAgent, string actionResult)
+    public async Task LogSuccessAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult)
     {
         var log = new RequisitionLog
         {
-            RequisitionId = requisitionId,
+            EntityType = nameof(Requisition),
+            EntityId = reqCode,
             Action = action,
             UserEmail = userEmail,
             IpAddress = ipAddress,
@@ -22,11 +24,12 @@ public class GenericLogService(LoggingServiceDbContext context) : IGenericLogSer
         await _context.SaveChangesAsync();
     }
 
-    public async Task LogFailureAsync(string requisitionId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage)
+    public async Task LogFailureAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage)
     {
         var log = new RequisitionLog
         {
-            RequisitionId = requisitionId,
+            EntityType = nameof(Requisition),
+            EntityId = reqCode,
             Action = action,
             UserEmail = userEmail,
             IpAddress = ipAddress,
