@@ -17,6 +17,7 @@ public partial class AppDbContext : DbContext
     public required DbSet<RequisitionWorkType> RequisitionWorkType { get; set; }
     public required DbSet<RequisitionHardware> RequisitionHardware { get; set; }
     public required DbSet<RequisitionLocation> RequisitionLocation { get; set; }
+    public required DbSet<RequisitionLocationType> RequisitionLocationType { get; set; }
     public required DbSet<RequisitionCurrency> RequisitionCurrency { get; set; }
     public required DbSet<RequisitionInterval> RequisitionInterval { get; set; }
     public required DbSet<JobDescription> JobDescriptions { get; set; }

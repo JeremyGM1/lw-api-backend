@@ -7,6 +7,7 @@ using Application.Interfaces.Features.Requisitions.Lookup;
 using Persistence.Repositories.Requisitions;
 using Persistence.Repositories.Requisitions.Lookup;
 using Persistence.Repositories.Users;
+using Domain.Entities.Requisitions;
 
 namespace Persistence;
 
@@ -23,6 +24,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IReqLocationRepository, ReqLocationRepository>();
         services.AddScoped<IReqCurrencyRepository, ReqCurrencyRepository>();
         services.AddScoped<IReqIntervalRepository, ReqIntervalRepository>();
+        services.AddScoped<IReqLocationTypeRepository, ReqLocationTypeRepository>();
         return services;
     }
 }

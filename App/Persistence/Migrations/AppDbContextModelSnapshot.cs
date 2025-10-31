@@ -324,6 +324,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("RequisitionLocationTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -351,6 +354,8 @@ namespace Persistence.Migrations
                     b.HasIndex("HiringManager");
 
                     b.HasIndex("LocationId");
+
+                    b.HasIndex("RequisitionLocationTypeId");
 
                     b.HasIndex("StatusId");
 
@@ -549,6 +554,40 @@ namespace Persistence.Migrations
                         {
                             Id = 7,
                             Location = "Santa Marta"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("LocationType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequisitionLocationType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            LocationType = "On-Site"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            LocationType = "Hybrid"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            LocationType = "Virtual"
                         });
                 });
 
@@ -868,6 +907,10 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Requisitions.RequisitionLocationType", null)
+                        .WithMany("Requisitions")
+                        .HasForeignKey("RequisitionLocationTypeId");
+
                     b.HasOne("Domain.Entities.Requisitions.RequisitionStatus", "Status")
                         .WithMany("Requisitions")
                         .HasForeignKey("StatusId")
@@ -992,6 +1035,11 @@ namespace Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
+                {
+                    b.Navigation("Requisitions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocationType", b =>
                 {
                     b.Navigation("Requisitions");
                 });

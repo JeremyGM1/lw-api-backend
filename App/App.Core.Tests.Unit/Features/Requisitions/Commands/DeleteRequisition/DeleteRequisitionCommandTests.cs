@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using Application.Common.Result;
+using Application.Exceptions;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
@@ -57,7 +58,7 @@ public class DeleteRequisitionCommandTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        result.ShouldBe(MediatR.Unit.Value);
+        result.ShouldBe(Result.Success());
         _mockReqRepository
             .Verify(r => r.GetRequisitionById(command.ReqCode),
             Times.Once);

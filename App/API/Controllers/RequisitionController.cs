@@ -4,7 +4,11 @@ using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.Dtos;
+using Application.Features.Requisitions.Dtos.Lookup;
+using Application.Features.Requisitions.Queries.GetCurrencies;
 using Application.Features.Requisitions.Queries.GetHardware;
+using Application.Features.Requisitions.Queries.GetInterval;
+using Application.Features.Requisitions.Queries.GetLocation;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
@@ -93,6 +97,14 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<List<GetReqHardwareDto>>> GetHardware()
     {
         return await _mediator.Send(new GetReqHardwareQuery());
+    }
+
+    [HttpGet("locationType")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<List<GetReqLocationTypeDto>>> GetLocationTypes()
+    {
+        return await _mediator.Send(new GetReqLocationTypeQuery());
     }
 
     [HttpGet("location")]
