@@ -1,16 +1,18 @@
-﻿using System.Text;
+﻿using Application.Features.Identity.Models;
+using Application.Interfaces;
+using Application.Interfaces.Identity;
+using Identity.Configurations;
+using Identity.DbContext;
+using Identity.Models;
+using Identity.Repositories;
+using Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Application.Features.Identity.Models;
-using Application.Interfaces.Identity;
-using Identity.DbContext;
-using Identity.Models;
-using Identity.Services;
-using Identity.Configurations;
+using System.Text;
 
 namespace Identity;
 
@@ -26,6 +28,10 @@ public static class IdentityServicesRegistration
             .AddDefaultTokenProviders();
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IUserService, UserService>();
+
+        services.AddScoped<IPermissionRepository, PermissionRepository>();
+        services.AddScoped<IPermissionService, PermissionService>();
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

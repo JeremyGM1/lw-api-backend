@@ -2,10 +2,10 @@
 
 namespace Domain.Entities.Users;
 
-public class RolePermission : BaseEntity<int>
+public class RolePermission : BaseEntity<Guid>
 {
-    public int RoleId { get; set; }
-    public int PermissionId { get; set; }
-    public virtual Role Role { get; set; } = null!;
-    public virtual Permission Permission { get; set; } = null!;
+    public string RoleId { get; set; } = default!;
+    public Guid PermissionId { get; set; } = default!;
+
+    public Permission Permission { get; set; } = default!;
 }
