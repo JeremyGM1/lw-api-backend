@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using Application.Features.Identity.Models;
 using Application.Interfaces;
 using Application.Interfaces.Identity;
 using Domain.Entities.Users;
@@ -52,6 +53,23 @@ public class PermissionService : IPermissionService
         var permissionIds = await ValidateAndMapPermissionNamesAsync(permissionNames);
 
         await _permissionRepository.AssignPermissionsToUserAsync(userId, permissionIds, updatedBy);
+    }
+
+    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllRolesWithPermissionsAsync()
+    {
+        var data = await _permissionRepository.GetAllRolesWithPermissionsAsync();
+
+        var result = data.Select(r => new RolePermissionsDto
+        {
+            RoleName = r.RoleName,
+            Permissions = r.Permissions.Select(p => new PermissionDto
+            {
+                Name = p.Name,
+                Description = p.Description
+            }).ToList()
+        }).ToList();
+
+        return result;
     }
 
     private async Task<List<Guid>> ValidateAndMapPermissionNamesAsync(IEnumerable<string> permissionNames)

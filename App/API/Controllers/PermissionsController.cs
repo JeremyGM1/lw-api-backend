@@ -1,6 +1,7 @@
 ﻿using Application.Features.Identity.Commands.AssignPermissionToUser;
 using Application.Features.Identity.Commands.AssingPermissionToRole;
 using Application.Features.Identity.Queries.GetAllPermissions;
+using Application.Features.Identity.Queries.GetAllPermissionsByRole;
 using Application.Features.Identity.Queries.GetPermissionsByRole;
 using Application.Features.Identity.Queries.GetPermissionsByUserQuery;
 using MediatR;
@@ -35,6 +36,13 @@ public class PermissionsController : ControllerBase
     public async Task<IActionResult> GetByUser(string userId)
     {
         var result = await _mediator.Send(new GetPermissionsByUserQuery { UserId = userId });
+        return Ok(result);
+    }
+
+    [HttpGet("roles")]
+    public async Task<IActionResult> GetRolesWithPermissions()
+    {
+        var result = await _mediator.Send(new GetAllPermissionsByRoleQuery());
         return Ok(result);
     }
 

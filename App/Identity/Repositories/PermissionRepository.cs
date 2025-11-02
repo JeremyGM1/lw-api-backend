@@ -199,6 +199,25 @@ public class PermissionRepository : IPermissionRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<IReadOnlyList<(string RoleName, List<Permission> Permissions)>> GetAllRolesWithPermissionsAsync()
+    {
+        var rolesWithPermissions = await _context.Roles
+            .Select(r => new
+            {
+                RoleName = r.Name!,
+                Permissions = _context.RolePermissions
+                    .Where(rp => rp.RoleId == r.Id)
+                    .Include(rp => rp.Permission)
+                    .Select(rp => rp.Permission)
+                    .ToList()
+            })
+            .ToListAsync();
+
+        return rolesWithPermissions
+            .Select(r => (r.RoleName, r.Permissions))
+            .ToList();
+    }
+
     private async Task CleanUserPermissionInconsistenciesAsync(string roleId)
     {
         // Fetch all permissions linked to the role

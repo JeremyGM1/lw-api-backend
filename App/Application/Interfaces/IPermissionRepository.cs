@@ -7,4 +7,5 @@ public interface IPermissionRepository : IGenericRepository<Permission, Guid>
     Task<IReadOnlyList<Permission>> GetPermissionsByUserIdAsync(string userId);
     Task AssignPermissionsToRoleAsync(string roleId, IEnumerable<Guid> permissionIds, string updatedBy);
     Task AssignPermissionsToUserAsync(string userId, IEnumerable<Guid> permissionIds, string updatedBy);
+    Task<IReadOnlyList<(string RoleName, List<Permission> Permissions)>> GetAllRolesWithPermissionsAsync();
 }

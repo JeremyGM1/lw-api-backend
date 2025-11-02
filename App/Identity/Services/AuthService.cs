@@ -20,13 +20,15 @@ public class AuthService : IAuthService
     private readonly JwtSettings _jwtSettings;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly TalentSuiteIdentityDbContext _context;
+    private readonly IPermissionService _permissionService;
 
-    public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager, TalentSuiteIdentityDbContext context)
+    public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwtSettings, SignInManager<ApplicationUser> signInManager, TalentSuiteIdentityDbContext context, IPermissionService permissionService)
     {
         _userManager = userManager;
         _jwtSettings = jwtSettings.Value;
         _signInManager = signInManager;
         _context = context;
+        _permissionService = permissionService;
     }
 
     public async Task<AuthResponse> Login(AuthRequest request)
@@ -113,8 +115,10 @@ public class AuthService : IAuthService
     private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
     {
         var roles = await _userManager.GetRolesAsync(user);
-
         var roleClaims = roles.Select(q => new Claim(ClaimTypes.Role, q)).ToList();
+
+        var permissions = await _permissionService.GetPermissionsByUserIdAsync(user.Id);
+        var permissionClaims = permissions.Select(p => new Claim("permission", p.Name)).ToList();
 
         var claims = new[]
         {
@@ -122,7 +126,8 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
         }
-        .Union(roleClaims);
+        .Union(roleClaims)
+        .Union(permissionClaims);
 
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
 
