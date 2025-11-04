@@ -113,18 +113,20 @@ public class PermissionRepository : IPermissionRepository
 
     public async Task AssignPermissionsToUserAsync(string userId, IEnumerable<Guid> newPermissionIds, string updatedBy)
     {
-        // Fetch user role and inherited permissions
+        // Get user roles
         var userRoles = await _context.UserRoles
             .Where(ur => ur.UserId == userId)
             .Select(ur => ur.RoleId)
             .ToListAsync();
 
+        // Get role-inherited permissions
         var rolePermissionIds = await _context.RolePermissions
             .Where(rp => userRoles.Contains(rp.RoleId))
             .Select(rp => rp.PermissionId)
             .Distinct()
             .ToListAsync();
 
+        // Get existing user-specific overrides
         var existingOverrides = await _context.UserPermissions
             .Where(up => up.UserId == userId)
             .ToListAsync();
@@ -133,8 +135,13 @@ public class PermissionRepository : IPermissionRepository
         var toAdd = new List<UserPermission>();
         var toRemove = new List<UserPermission>();
 
-        // Determine new overrides to add or remove
-        foreach (var pid in rolePermissionIds.Union(newPermissionIds).Distinct())
+        // Combine inherited, selected, and existing permissions for full evaluation
+        var allPermissionIds = rolePermissionIds
+            .Union(newPermissionIds)
+            .Union(existingOverrides.Select(x => x.PermissionId))
+            .Distinct();
+
+        foreach (var pid in allPermissionIds)
         {
             bool inherited = rolePermissionIds.Contains(pid);
             bool shouldHave = newPermissionIds.Contains(pid);
@@ -142,18 +149,18 @@ public class PermissionRepository : IPermissionRepository
 
             if (inherited)
             {
-                // Permission comes from a role
+                // Handle inherited permissions
                 if (shouldHave)
                 {
-                    // If user had a revoked override, remove it
                     if (existing != null && existing.IsGranted == false)
-                        toRemove.Add(existing);
+                        toRemove.Add(existing); // Remove unnecessary revoke
                 }
                 else
                 {
-                    // Explicitly revoke inherited permission
+                    
                     if (existing == null)
                     {
+                        // Add explicit revoke
                         toAdd.Add(new UserPermission
                         {
                             Id = Guid.NewGuid(),
@@ -168,12 +175,13 @@ public class PermissionRepository : IPermissionRepository
             }
             else
             {
-                // Permission not inherited (purely user-level)
+                // Handle user-level permissions
                 if (shouldHave)
                 {
-                    // Add explicit grant
+                    
                     if (existing == null)
                     {
+                        // Add explicit grant
                         toAdd.Add(new UserPermission
                         {
                             Id = Guid.NewGuid(),
@@ -187,13 +195,11 @@ public class PermissionRepository : IPermissionRepository
                 }
                 else
                 {
-                    // Remove unnecessary override
                     if (existing != null)
-                        toRemove.Add(existing);
+                        toRemove.Add(existing);// Remove unused override
                 }
             }
         }
-
         _context.UserPermissions.RemoveRange(toRemove);
         await _context.UserPermissions.AddRangeAsync(toAdd);
         await _context.SaveChangesAsync();
