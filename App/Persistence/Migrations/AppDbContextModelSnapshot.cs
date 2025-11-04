@@ -324,9 +324,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("RequisitionLocationTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
@@ -354,8 +351,6 @@ namespace Persistence.Migrations
                     b.HasIndex("HiringManager");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("RequisitionLocationTypeId");
 
                     b.HasIndex("StatusId");
 
@@ -555,90 +550,6 @@ namespace Persistence.Migrations
                             Id = 7,
                             Location = "Santa Marta"
                         });
-                });
-
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocationType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("LocationType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequisitionLocationType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            LocationType = "On-Site"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            LocationType = "Hybrid"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            LocationType = "Virtual"
-                        });
-                });
-
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ActionResult")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EntityId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ErrorMessage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IpAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserAgent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EntityId");
-
-                    b.HasIndex("TimeStamp");
-
-                    b.ToTable("RequisitionLogs");
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionStatus", b =>
@@ -907,10 +818,6 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Requisitions.RequisitionLocationType", null)
-                        .WithMany("Requisitions")
-                        .HasForeignKey("RequisitionLocationTypeId");
-
                     b.HasOne("Domain.Entities.Requisitions.RequisitionStatus", "Status")
                         .WithMany("Requisitions")
                         .HasForeignKey("StatusId")
@@ -959,8 +866,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
                         .WithMany()
-                        .HasForeignKey("EntityId")
-                        .HasPrincipalKey("ReqCode")
+                        .HasForeignKey("RequisitionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Requisition");
@@ -1035,11 +941,6 @@ namespace Persistence.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
-                {
-                    b.Navigation("Requisitions");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocationType", b =>
                 {
                     b.Navigation("Requisitions");
                 });
