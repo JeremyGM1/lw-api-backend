@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Users;
+﻿using Application.Interfaces.Features;
+using Domain.Entities.Users;
 
 namespace Application.Interfaces;
 public interface IPermissionRepository : IGenericRepository<Permission, Guid>

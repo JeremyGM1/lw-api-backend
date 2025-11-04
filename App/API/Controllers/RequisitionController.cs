@@ -17,6 +17,7 @@ using Application.Features.Requisitions.Queries.GetLocation;
 using Application.Features.Requisitions.Queries.GetCurrencies;
 using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Features.Requisitions.Queries.GetInterval;
+using Application.Features.Requisitions.Queries.GetLocationTypes;
 
 namespace API.Controllers;
 

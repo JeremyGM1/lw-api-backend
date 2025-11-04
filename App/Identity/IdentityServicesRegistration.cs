@@ -1,5 +1,6 @@
 ﻿using Application.Features.Identity.Models;
 using Application.Interfaces;
+using Application.Interfaces.Features.Identity;
 using Application.Interfaces.Identity;
 using Identity.Configurations;
 using Identity.DbContext;
