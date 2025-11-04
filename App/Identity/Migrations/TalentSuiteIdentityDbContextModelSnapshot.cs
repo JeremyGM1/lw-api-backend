@@ -22,6 +22,115 @@ namespace Identity.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entities.Users.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.RolePermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId", "PermissionId")
+                        .IsUnique();
+
+                    b.ToTable("RolePermissions", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.UserPermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsGranted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("UserId", "PermissionId")
+                        .IsUnique();
+
+                    b.ToTable("UserPermissions", (string)null);
+                });
+
             modelBuilder.Entity("Identity.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -267,6 +376,28 @@ namespace Identity.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.Users.RolePermission", b =>
+                {
+                    b.HasOne("Domain.Entities.Users.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.UserPermission", b =>
+                {
+                    b.HasOne("Domain.Entities.Users.Permission", "Permission")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+                });
+
             modelBuilder.Entity("Identity.Models.RefreshToken", b =>
                 {
                     b.HasOne("Identity.Models.ApplicationUser", "User")
@@ -327,6 +458,13 @@ namespace Identity.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
+
+                    b.Navigation("UserPermissions");
                 });
 #pragma warning restore 612, 618
         }
