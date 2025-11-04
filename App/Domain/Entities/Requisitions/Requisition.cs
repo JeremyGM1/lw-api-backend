@@ -6,14 +6,15 @@ public class Requisition : BaseEntity<int>
 {
     public required string ReqCode { get; set; }
     public required string Name { get; set; }
-
     public int StatusId { get; set; }
     public int WorkTypeId { get; set; }
     public int HardwareId { get; set; }
     public int LocationId { get; set; }
+    public int LocationTypeId { get; set; }
     public int Headcount { get; set; }
     public required RequisitionStatus Status { get; set; }
     public required RequisitionLocation Location { get; set; }
+    public required RequisitionLocationType LocationType { get; set; }
     public required RequisitionWorkType WorkType { get; set; }
     public required string Department { get; set; }
     public required string HiringManager { get; set; }

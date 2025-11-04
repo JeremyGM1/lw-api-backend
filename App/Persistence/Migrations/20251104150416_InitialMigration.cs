@@ -109,6 +109,19 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RequisitionLocationType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LocationType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequisitionLocationType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RequisitionStatus",
                 columns: table => new
                 {
@@ -234,6 +247,7 @@ namespace Persistence.Migrations
                     WorkTypeId = table.Column<int>(type: "int", nullable: false),
                     HardwareId = table.Column<int>(type: "int", nullable: false),
                     LocationId = table.Column<int>(type: "int", nullable: false),
+                    LocationTypeId = table.Column<int>(type: "int", nullable: false),
                     Headcount = table.Column<int>(type: "int", nullable: false),
                     Department = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     HiringManager = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -270,6 +284,12 @@ namespace Persistence.Migrations
                         name: "FK_Requisitions_RequisitionInterval_CompensationBandIntervalId",
                         column: x => x.CompensationBandIntervalId,
                         principalTable: "RequisitionInterval",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Requisitions_RequisitionLocationType_LocationTypeId",
+                        column: x => x.LocationTypeId,
+                        principalTable: "RequisitionLocationType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -485,6 +505,16 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "RequisitionLocationType",
+                columns: new[] { "Id", "LocationType" },
+                values: new object[,]
+                {
+                    { 1, "On-Site" },
+                    { 2, "Hybrid" },
+                    { 3, "Virtual" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "RequisitionStatus",
                 columns: new[] { "Id", "Status" },
                 values: new object[,]
@@ -608,6 +638,11 @@ namespace Persistence.Migrations
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Requisitions_LocationTypeId",
+                table: "Requisitions",
+                column: "LocationTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Requisitions_StatusId",
                 table: "Requisitions",
                 column: "StatusId");
@@ -678,6 +713,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "RequisitionInterval");
+
+            migrationBuilder.DropTable(
+                name: "RequisitionLocationType");
 
             migrationBuilder.DropTable(
                 name: "RequisitionLocation");

@@ -30,6 +30,11 @@ public class RequisitionConfig : IEntityTypeConfiguration<Requisition>
             .HasForeignKey(r => r.LocationId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(r => r.LocationType)
+            .WithMany(s => s.Requisitions)
+            .HasForeignKey(r => r.LocationTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(r => r.CompensationBandCurrency)
             .WithMany(s => s.Requisitions)
             .HasForeignKey(r => r.CompensationBandCurrencyId)

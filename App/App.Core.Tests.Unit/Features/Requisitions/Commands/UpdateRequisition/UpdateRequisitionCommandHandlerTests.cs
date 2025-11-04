@@ -12,6 +12,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using Application.Common.Result;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -74,7 +75,7 @@ public class UpdateRequisitionCommandHandlerTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        result.ShouldBe(MediatR.Unit.Value);
+        result.ShouldBe(Result.Success());
 
         _mockReqRepository
             .Verify(r => r.GetRequisitionById(command.ReqCode!),

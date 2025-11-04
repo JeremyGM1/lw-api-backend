@@ -10,11 +10,10 @@ using Application.Features.Requisitions.Errors;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<CreateRequisitionCommand> validator, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<CreateRequisitionCommand, Result>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<CreateRequisitionCommand, Result>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
-    private readonly IValidator<CreateRequisitionCommand> _validator = validator;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
     private readonly ILoggerService _logger = logger;
 
@@ -43,7 +42,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         catch (Exception ex)
         {
             await _logger.LogFailureAsync(request.ReqCode, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
-            throw;
+            return Result.Failure(RequisitionErrors.RequisitionException(ex.Message));
         }
     }
 }

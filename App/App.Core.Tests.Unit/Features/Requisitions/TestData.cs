@@ -18,6 +18,7 @@ public static class TestData
             StatusId = 1,
             WorkTypeId = 1,
             HardwareId = 1,
+            LocationTypeId = 1,
             Headcount = 2,
             Location = Mock.Of<RequisitionLocation>(l => l.Id == command.LocationId),
             Department = "Engineering",
@@ -32,6 +33,7 @@ public static class TestData
             Status = Mock.Of<RequisitionStatus>(s => s.Id == command.StatusId),
             WorkType = Mock.Of<RequisitionWorkType>(s => s.Id == command.WorkTypeId),
             Hardware = Mock.Of<RequisitionHardware>(s => s.Id == command.HardwareId),
+            LocationType = Mock.Of<RequisitionLocationType>(s => s.Id == command.LocationTypeId)
         };
     }
 

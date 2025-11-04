@@ -14,8 +14,6 @@ public class CreateRequisitionDto
     public int HardwareId { get; set; }
 
     public int Headcount { get; set; }
-
-    //public required string Location { get; set; }
     public int Locationid { get; set; }
 
     public required string Department { get; set; }

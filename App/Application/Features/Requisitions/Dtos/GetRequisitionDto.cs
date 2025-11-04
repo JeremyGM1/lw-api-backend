@@ -12,7 +12,7 @@ public class GetRequisitionDto
     public string WorkTypeName { get; set; } = null!;
 
     public string HardwareName { get; set; } = null!;
-
+    public string LocationType { get; set; } = null!;
     public int Headcount { get; set; }
 
     public string Location { get; set; } = null!;

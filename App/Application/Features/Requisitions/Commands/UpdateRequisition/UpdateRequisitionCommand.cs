@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Common.Configs;
-
+using Application.Common.Result;
 using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public record UpdateRequisitionCommand : IRequest<Unit>
+public record UpdateRequisitionCommand : IRequest<Result>
 {
     [Required]
     [StringLength(6)]

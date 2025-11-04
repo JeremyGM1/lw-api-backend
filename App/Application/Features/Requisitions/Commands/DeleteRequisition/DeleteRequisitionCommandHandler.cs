@@ -25,16 +25,14 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         try
         {
             if (await _reqRepository.RequisitionExists(request.ReqCode))
-            {
                 return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode));
-            }
 
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-            _commonHelpers.ThrowIfValidationFails(validationResult);
+            //var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            //_commonHelpers.ThrowIfValidationFails(validationResult);
 
             var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
             if (requisition == null)
-            throw new NotFoundException(nameof(requisition), request.ReqCode);
+                return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode));
 
             await _logger.LogSuccessAsync(requisition.ReqCode, "Delete", userEmail, ipAddress, userAgent, "Success");
 
@@ -45,7 +43,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         catch (Exception ex)
         {
             await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message);
-            throw;
+            return Result.Failure(RequisitionErrors.RequisitionException(ex.Message));
         }
     }
 }

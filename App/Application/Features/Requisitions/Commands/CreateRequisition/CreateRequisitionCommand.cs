@@ -29,6 +29,10 @@ public class CreateRequisitionCommand : IRequest<Result>
 
     [Required]
     [Range(1, ValidationDefaultValues.IntMaxValue)]
+    public int LocationTypeId { get; set; }
+
+    [Required]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int Headcount { get; set; }
 
     [Required]

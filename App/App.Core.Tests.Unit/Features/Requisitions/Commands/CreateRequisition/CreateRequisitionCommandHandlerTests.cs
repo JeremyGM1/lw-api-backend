@@ -18,7 +18,6 @@ public class CreateRequisitionCommandHandlerTests
 {
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
-    private readonly Mock<IValidator<CreateRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly CreateRequisitionCommandHandler _handler;
@@ -27,13 +26,11 @@ public class CreateRequisitionCommandHandlerTests
     {
         _mockMapper = new Mock<IMapper>();
         _mockReqRepository = new Mock<IRequisitionRepository>();
-        _mockValidator = new Mock<IValidator<CreateRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
         _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new CreateRequisitionCommandHandler(
             _mockMapper.Object,
             _mockReqRepository.Object,
-            _mockValidator.Object,
             _mockCommonHelpers.Object,
             _mockLogger.Object
         );
@@ -45,10 +42,6 @@ public class CreateRequisitionCommandHandlerTests
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
         var validationResult = new ValidationResult();
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
             .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
@@ -86,10 +79,6 @@ public class CreateRequisitionCommandHandlerTests
         var ipAddress = It.IsAny<string>();
         var userAgent = It.IsAny<string>();
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
         _mockCommonHelpers
             .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
@@ -122,10 +111,6 @@ public class CreateRequisitionCommandHandlerTests
         [
             new ValidationFailure("Invalid requisition", "Error message")
         ]);
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
 
         _mockCommonHelpers
             .Setup(h => h.ThrowIfValidationFails(validationResult))

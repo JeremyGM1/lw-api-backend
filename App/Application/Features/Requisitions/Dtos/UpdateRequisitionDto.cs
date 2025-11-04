@@ -10,7 +10,7 @@ public class UpdateRequisitionDto
     public int WorkTypeId { get; set; }
 
     public int HardwareId { get; set; }
-
+    public int LocationTypeId { get; set; }
     public int Headcount { get; set; }
 
     public int LocationId { get; set; }

@@ -5,10 +5,12 @@ using Application.Exceptions;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
+using Application.Common.Result;
+using Application.Features.Requisitions.Errors;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 
-public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<UpdateRequisitionCommand, Unit>
+public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, IValidator<UpdateRequisitionCommand> validator, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<UpdateRequisitionCommand, Result>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
@@ -16,7 +18,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
     private readonly IRequisitionLogService _logger = logger;
 
-    public async Task<Unit> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateRequisitionCommand request, CancellationToken cancellationToken)
     {
         var userEmail = _commonHelpers.GetCurrentUserFromToken();
         var ipAddress = _commonHelpers.GetUserIpAddress();
@@ -24,14 +26,14 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
         try
         {
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-            _commonHelpers.ThrowIfValidationFails(validationResult);
+            //var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            //_commonHelpers.ThrowIfValidationFails(validationResult);
 
-        var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
-        if (requisition == null)
-            throw new NotFoundException(nameof(requisition), request.ReqCode!);
+            var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
+            if (requisition == null)
+                return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode!));
 
-        _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
+            _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
             _mapper.Map(request, requisition);
 
@@ -44,12 +46,12 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
             await _logger.LogSuccessAsync(requisition.ReqCode, "Update", userEmail, ipAddress, userAgent, "Success");
 
-            return Unit.Value;
+            return Result.Success();
         }
         catch (Exception ex)
         {
             await _logger.LogFailureAsync(null!, "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message);
-            throw;
+            return Result.Failure(RequisitionErrors.RequisitionException(ex.Message));
         }
     }
 }

@@ -10,4 +10,7 @@ public static class RequisitionErrors
     public static Error NotExistingRequisition(string id) => new(
         "Requisitions.NotExisting",
         $"A requisition with this code '{id}' does not exists");
+    public static Error RequisitionException(string message) => new(
+        "Requisitions.Exception",
+        $"An error occurred while processing the requisition: {message}");
 }
