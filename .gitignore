@@ -419,3 +419,6 @@ bin/
 obj/
 *.user
 /App/API/appsettings.json
+
+# Entity Framework migrations
+**/Migrations/
