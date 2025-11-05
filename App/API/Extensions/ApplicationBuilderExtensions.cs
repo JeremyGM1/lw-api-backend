@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Identity;
+﻿using Application.Interfaces.Features.Identity;
 using Identity.Configurations;
 using Identity.Models;
 using Identity.Seed;
@@ -16,7 +15,7 @@ namespace API.Extensions
             using var scope = app.Services.CreateScope();
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             var adminSettings = scope.ServiceProvider.GetRequiredService<IOptions<AdminSettings>>();
             var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
             var permissionRepository = scope.ServiceProvider.GetRequiredService<IPermissionRepository>();

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Identity.DbContext
 {
-    public class TalentSuiteIdentityDbContext : IdentityDbContext<ApplicationUser>
+    public class TalentSuiteIdentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public TalentSuiteIdentityDbContext(
             DbContextOptions<TalentSuiteIdentityDbContext> options) : base(options)
@@ -21,7 +21,13 @@ namespace Identity.DbContext
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(TalentSuiteIdentityDbContext).Assembly);
-            
+
+            builder.Entity<ApplicationRole>(entity =>
+            {
+                entity.Property(r => r.Description)
+                      .HasMaxLength(300);
+            });
+
             builder.Entity<RefreshToken>(entity =>
             {
                 entity.HasKey(x => x.Id);

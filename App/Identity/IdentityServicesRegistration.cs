@@ -1,7 +1,5 @@
-﻿using Application.Features.Identity.Models;
-using Application.Interfaces;
+﻿using Application.Features.Identity.Models.UserService;
 using Application.Interfaces.Features.Identity;
-using Application.Interfaces.Identity;
 using Identity.Configurations;
 using Identity.DbContext;
 using Identity.Models;
@@ -24,7 +22,7 @@ public static class IdentityServicesRegistration
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<AdminSettings>(configuration.GetSection("AdminSettings"));
         services.AddDbContext<TalentSuiteIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<TalentSuiteIdentityDbContext>()
             .AddDefaultTokenProviders();
         services.AddTransient<IAuthService, AuthService>();
@@ -32,6 +30,8 @@ public static class IdentityServicesRegistration
 
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<IPermissionService, PermissionService>();
+
+        services.AddScoped<IRoleService, RoleService>();
 
         services.AddAuthentication(options =>
         {

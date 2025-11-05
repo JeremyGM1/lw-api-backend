@@ -14,7 +14,7 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests;
 public class DeleteUserTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
-    private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
+    private readonly Mock<RoleManager<ApplicationRole>> _mockRoleManager;
     private readonly UserService _userService;
 
     public DeleteUserTests()
@@ -39,15 +39,15 @@ public class DeleteUserTests
         );
     }
 
-    private static Mock<RoleManager<IdentityRole>> CreateMockRoleManager()
+    private static Mock<RoleManager<ApplicationRole>> CreateMockRoleManager()
     {
-        var store = new Mock<IRoleStore<IdentityRole>>();
-        return new Mock<RoleManager<IdentityRole>>(
+        var store = new Mock<IRoleStore<ApplicationRole>>();
+        return new Mock<RoleManager<ApplicationRole>>(
             store.Object,
-            new IRoleValidator<IdentityRole>[0],
+            new IRoleValidator<ApplicationRole>[0],
             new Mock<ILookupNormalizer>().Object,
             new Mock<IdentityErrorDescriber>().Object,
-            new Mock<ILogger<RoleManager<IdentityRole>>>().Object
+            new Mock<ILogger<RoleManager<ApplicationRole>>>().Object
         );
     }
 

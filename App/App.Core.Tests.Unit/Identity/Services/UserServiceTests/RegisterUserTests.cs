@@ -1,6 +1,6 @@
 ﻿
 using Application.Exceptions;
-using Application.Features.Identity.Models;
+using Application.Features.Identity.Models.UserService;
 using Identity.Configurations;
 using Identity.Models;
 using Identity.Services;
@@ -15,7 +15,7 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests
     public class RegisterUserTests
     {
         private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
-        private readonly Mock<RoleManager<IdentityRole>> _mockRoleManager;
+        private readonly Mock<RoleManager<ApplicationRole>> _mockRoleManager;
         private readonly UserService _userService;
 
         public RegisterUserTests()
@@ -39,14 +39,14 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests
             );
         }
 
-        private static Mock<RoleManager<IdentityRole>> CreateMockRoleManager()
+        private static Mock<RoleManager<ApplicationRole>> CreateMockRoleManager()
         {
-            return new Mock<RoleManager<IdentityRole>>(
-                new Mock<IRoleStore<IdentityRole>>().Object,
-                Array.Empty<IRoleValidator<IdentityRole>>(),
+            return new Mock<RoleManager<ApplicationRole>>(
+                new Mock<IRoleStore<ApplicationRole>>().Object,
+                Array.Empty<IRoleValidator<ApplicationRole>>(),
                 new Mock<ILookupNormalizer>().Object,
                 new Mock<IdentityErrorDescriber>().Object,
-                new Mock<ILogger<RoleManager<IdentityRole>>>().Object
+                new Mock<ILogger<RoleManager<ApplicationRole>>>().Object
             );
         }
         private static ApplicationUser CreateTestUser(string id = "test-user-id") => new()

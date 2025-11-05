@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Identity;
+﻿using Application.Interfaces.Features.Identity;
 using Identity.Configurations;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,7 @@ namespace Identity.Seed
     {
         public static async Task SeedAsync(
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<ApplicationRole> roleManager,
             IOptions<AdminSettings> adminSettings,
             IPermissionService permissionService,
             IPermissionRepository permissionRepository)
@@ -20,7 +19,12 @@ namespace Identity.Seed
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                    var role = new ApplicationRole
+                    {
+                        Name = roleName,
+                        Description = SystemRoles.RoleDescriptions[roleName]
+                    };
+                    await roleManager.CreateAsync(role);
                 }
             }
 
@@ -41,13 +45,9 @@ namespace Identity.Seed
                 var result = await userManager.CreateAsync(adminUser, adminSettings.Value.Password);
 
                 if (result.Succeeded)
-                {
                     await userManager.AddToRoleAsync(adminUser, SystemRoles.SuperAdministrator);
-                }
                 else
-                {
                     throw new Exception($"Error creating admin: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-                }
             }
             await PermissionSeeder.SeedAsync(adminSettings,permissionService, permissionRepository, roleManager, userManager);
         }

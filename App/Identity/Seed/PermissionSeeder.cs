@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Identity;
+﻿using Application.Interfaces.Features.Identity;
 using Domain.Entities.Users;
 using Identity.Configurations;
 using Identity.Models;
@@ -14,7 +13,7 @@ namespace Identity.Seed
             IOptions<AdminSettings> adminSettings,
             IPermissionService permissionService,
             IPermissionRepository permissionRepository,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager)
         {
             // Create base permissions only if the database is empty
@@ -43,8 +42,15 @@ namespace Identity.Seed
                 var role = await roleManager.FindByNameAsync(roleName);
                 if (role == null)
                 {
-                    role = new IdentityRole(roleName);
-                    await roleManager.CreateAsync(role);
+                    var newRole = new ApplicationRole
+                    {
+                        Name = roleName,
+                        Description = SystemRoles.RoleDescriptions.TryGetValue(roleName, out var desc)
+                            ? desc
+                            : "Default system role"
+                    };
+
+                    await roleManager.CreateAsync(newRole);
                 }
                 await permissionService.AssignPermissionsToRoleAsync(roleName, permissionNames, "system");
             }
@@ -58,7 +64,11 @@ namespace Identity.Seed
                 var superAdminRole = await roleManager.FindByNameAsync(SystemRoles.SuperAdministrator);
                 if (superAdminRole == null)
                 {
-                    superAdminRole = new IdentityRole(SystemRoles.SuperAdministrator);
+                    superAdminRole = new ApplicationRole
+                    {
+                        Name = SystemRoles.SuperAdministrator,
+                        Description = SystemRoles.RoleDescriptions[SystemRoles.SuperAdministrator]
+                    };
                     await roleManager.CreateAsync(superAdminRole);
                 }
                 // Ensure the Super Admin user has the Super Administrator role
