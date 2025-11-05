@@ -31,6 +31,7 @@ public class UserService : IUserService
             ValidateRequiredField(request.Password, nameof(request.Password));
 
             var (_, requesterRoles) = await GetUserWithRolesAsync(requestingUserId);
+            var requesterRole = requesterRoles.FirstOrDefault() ?? SystemRoles.RegularUser;
 
             var roleToAssign = string.IsNullOrWhiteSpace(request.Role)
                                 ? SystemRoles.RegularUser
@@ -42,8 +43,8 @@ public class UserService : IUserService
                 throw new BadRequestException($"The role '{roleToAssign}' does not exist.");
             }
 
-            if (roleToAssign == SystemRoles.SuperAdministrator && !requesterRoles.Contains(SystemRoles.SuperAdministrator))
-                throw new UnauthorizedAccessException("Only Super Admins can create other Super Admins.");
+            if (!RoleHierarchy.CanInteractWith(requesterRole, roleToAssign))
+                throw new UnauthorizedAccessException($"You cannot assign the role '{roleToAssign}' because it is higher than your current role '{requesterRole}'.");
 
             var user = new ApplicationUser
             {
@@ -82,50 +83,34 @@ public class UserService : IUserService
     public async Task<IEnumerable<UserProfileResponse>> GetAllUsersByRoleAsync(string requestingUserId)
     {
         var (_, requesterRoles) = await GetUserWithRolesAsync(requestingUserId);
-
-        bool isSuperAdmin = requesterRoles.Contains(SystemRoles.SuperAdministrator);
-        bool isAdmin = requesterRoles.Contains(SystemRoles.Administrator);
-
-        if (!isSuperAdmin && !isAdmin)
-            throw new UnauthorizedAccessException("You do not have permission to view users.");
+        var requesterRole = requesterRoles.FirstOrDefault() ?? SystemRoles.Viewer;
 
         var allUsers = await _userManager.Users
-                            .Where(u => u.Id != requestingUserId)
-                            .ToListAsync();
+                        .Where(u => u.Id != requestingUserId)
+                        .ToListAsync();
 
-        var visibleUsers = new List<ApplicationUser>();
+        var visibleUsers = new List<UserProfileResponse>();
 
-        if (isSuperAdmin)
+        foreach (var user in allUsers)
         {
-            visibleUsers = allUsers;
-        }
-        else if (isAdmin)
-        {
-            foreach (var user in allUsers)
+            var roles = await _userManager.GetRolesAsync(user);
+            var targetRole = roles.FirstOrDefault() ?? SystemRoles.Viewer;
+
+            if (RoleHierarchy.CanInteractWith(requesterRole, targetRole))
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                if (!roles.Contains(SystemRoles.SuperAdministrator))
-                    visibleUsers.Add(user);
+                visibleUsers.Add(new UserProfileResponse
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = targetRole
+                });
             }
         }
 
-        var result = new List<UserProfileResponse>();
-        foreach (var user in visibleUsers)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            result.Add(new UserProfileResponse
-            {
-                Id = user.Id,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Role = roles.FirstOrDefault()
-            });
-        }
-
-        return result;
+        return visibleUsers;
     }
-
 
     public async Task<UpdateResponse> Update(UpdateRequest request, string requestingUserId)
     {
@@ -133,20 +118,36 @@ public class UserService : IUserService
         {
             var user = await _userManager.FindByIdAsync(request.Id) ?? throw new NotFoundException($"User with {request.Id} not found.", request.Id);
 
-            var (_, requestingUserRoles) = await GetUserWithRolesAsync(requestingUserId);
-
-            bool isSuperAdmin = requestingUserRoles.Contains(SystemRoles.SuperAdministrator);
-            bool isAdmin = requestingUserRoles.Contains(SystemRoles.Administrator);
-            bool isSelf = user.Id == requestingUserId;
+            var (_, requesterRoles) = await GetUserWithRolesAsync(requestingUserId);
+            var requesterRole = requesterRoles.FirstOrDefault() ?? SystemRoles.Viewer;
 
             var targetRoles = await _userManager.GetRolesAsync(user);
-            bool targetIsSuperAdmin = targetRoles.Contains(SystemRoles.SuperAdministrator);
+            var targetRole = targetRoles.FirstOrDefault() ?? SystemRoles.Viewer;
 
-            if (isAdmin && targetIsSuperAdmin)
-                throw new ValidationException("Administrators cannot modify Super Administrators.");
+            bool isSelf = user.Id == requestingUserId;
 
-            if (!isSuperAdmin && !isAdmin && !isSelf)
-                throw new UnauthorizedAccessException("You are not allowed to update other users.");
+            if (!isSelf && !RoleHierarchy.CanInteractWith(requesterRole, targetRole))
+                throw new UnauthorizedAccessException($"Your role '{requesterRole}' cannot update a user with role '{targetRole}'.");
+
+            if (!string.IsNullOrEmpty(request.Role))
+            {
+                var roleExists = await _roleManager.RoleExistsAsync(request.Role);
+                if (!roleExists)
+                    throw new ValidationException($"The role '{request.Role}' does not exist.");
+
+                if (!RoleHierarchy.CanInteractWith(requesterRole, request.Role))
+                    throw new UnauthorizedAccessException($"You cannot assign a higher-level role ('{request.Role}').");
+
+                var userRoles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, userRoles);
+
+                var roleResult = await _userManager.AddToRoleAsync(user, request.Role);
+                if (!roleResult.Succeeded)
+                {
+                    var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                    throw new ValidationException($"Role update failed: {errors}");
+                }
+            }
 
             if (!string.IsNullOrEmpty(request.Email))
             {
@@ -160,21 +161,65 @@ public class UserService : IUserService
             if (!string.IsNullOrEmpty(request.LastName))
                 user.LastName = request.LastName;
 
+            if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
+            {
+                var passwordResult = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+                if (!passwordResult.Succeeded)
+                {
+                    var errors = string.Join(", ", passwordResult.Errors.Select(e => e.Description));
+                    throw new ValidationException($"Password change failed: {errors}");
+                }
+            }
+
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
+                throw new ValidationException($"User update failed: {errors}");
+            }
+
+            return new UpdateResponse { UserId = user.Id };
+        }
+        catch (Exception ex)
+        {
+            throw new BadRequestException($"Error: {ex.Message}");
+        }
+    }
+
+    public async Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request, string requestingUserId)
+    {
+        try
+        {
+            var user = await _userManager.FindByIdAsync(request.Id)
+                ?? throw new NotFoundException($"User with ID '{request.Id}' not found.", request.Id);
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var (_, requesterRoles) = await GetUserWithRolesAsync(requestingUserId);
+            var requesterRole = requesterRoles.FirstOrDefault() ?? SystemRoles.RegularUser;
+
+            var targetRoles = await _userManager.GetRolesAsync(user);
+            var targetRole = targetRoles.FirstOrDefault() ?? SystemRoles.RegularUser;
+
+            bool isSelf = user.Id == requestingUserId;
+
+            if (!isSelf && !RoleHierarchy.CanInteractWith(requesterRole, targetRole))
+                throw new UnauthorizedAccessException(
+                    $"Your role '{requesterRole}' cannot modify a user with role '{targetRole}'.");
+
             if (!string.IsNullOrEmpty(request.Role))
             {
-                if (!isSuperAdmin && !isAdmin)
-                    throw new UnauthorizedAccessException("You are not allowed to change user roles.");
-
-                if (!isSuperAdmin && request.Role == SystemRoles.SuperAdministrator)
-                    throw new ValidationException("Administrators cannot assign the Super Administrator role.");
-
                 var roleExists = await _roleManager.RoleExistsAsync(request.Role);
                 if (!roleExists)
                     throw new ValidationException($"The role '{request.Role}' does not exist.");
 
-                var userRoles = await _userManager.GetRolesAsync(user);
+                if (!RoleHierarchy.CanInteractWith(requesterRole, request.Role))
+                    throw new UnauthorizedAccessException(
+                        $"You cannot assign a higher-level role ('{request.Role}').");
 
+                var userRoles = await _userManager.GetRolesAsync(user);
                 await _userManager.RemoveFromRolesAsync(user, userRoles);
+
                 var roleResult = await _userManager.AddToRoleAsync(user, request.Role);
                 if (!roleResult.Succeeded)
                 {
@@ -183,137 +228,77 @@ public class UserService : IUserService
                 }
             }
 
-            if (!string.IsNullOrEmpty(request.NewPassword) && !string.IsNullOrEmpty(request.CurrentPassword))
+            if (!string.IsNullOrEmpty(request.Email))
             {
-                var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+                user.Email = request.Email;
+                user.UserName = request.Email;
+            }
+
+            if (!string.IsNullOrEmpty(request.FirstName))
+                user.FirstName = request.FirstName;
+
+            if (!string.IsNullOrEmpty(request.LastName))
+                user.LastName = request.LastName;
+
+            if (!string.IsNullOrEmpty(request.NewPassword))
+            {
+                var result = await _userManager.ResetPasswordAsync(user, resetToken, request.NewPassword);
                 if (!result.Succeeded)
                 {
-                    var errors = string.Join(",", result.Errors.Select(e => e.Description));
-                    throw new ValidationException($"Password change failed. {errors}");
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new ValidationException($"Password reset failed: {errors}");
                 }
             }
 
             var updateResult = await _userManager.UpdateAsync(user);
-
             if (!updateResult.Succeeded)
             {
                 var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
                 throw new ValidationException($"User update failed: {errors}");
             }
 
-            return new UpdateResponse() { UserId = user.Id };
-        }catch(Exception ex)
-        {
-            throw new BadRequestException($"Failes {ex}");
+            return new UpdateResponse { UserId = user.Id };
         }
-    }
-
-    public async Task<UpdateResponse> AdminUpdateRequest(AdminUpdateRequest request, string requestingUserId)
-    {
-        var user = await _userManager.FindByIdAsync(request.Id) ?? throw new NotFoundException($"User with {request.Id} not found.", request.Id);
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-        var (_, requestingUserRoles) = await GetUserWithRolesAsync(requestingUserId);
-
-        bool isSuperAdmin = requestingUserRoles.Contains(SystemRoles.SuperAdministrator);
-        bool isAdmin = requestingUserRoles.Contains(SystemRoles.Administrator);
-        bool isSelf = user.Id == requestingUserId;
-
-        var targetRoles = await _userManager.GetRolesAsync(user);
-        bool targetIsSuperAdmin = targetRoles.Contains(SystemRoles.SuperAdministrator);
-
-        if (isAdmin && targetIsSuperAdmin)
-            throw new ValidationException("Administrators cannot modify Super Administrators.");
-
-        if (!isSuperAdmin && !isAdmin && !isSelf)
-            throw new UnauthorizedAccessException("You are not allowed to update other users.");
-
-        if (!string.IsNullOrEmpty(request.Email))
+        catch (Exception ex)
         {
-            user.Email = request.Email;
-            user.UserName = request.Email;
+            throw new BadRequestException($"Error: {ex.Message}");
         }
-
-        if (!string.IsNullOrEmpty(request.FirstName))
-            user.FirstName = request.FirstName;
-
-        if (!string.IsNullOrEmpty(request.LastName))
-            user.LastName = request.LastName;
-
-        if (!string.IsNullOrEmpty(request.Role))
-        {
-            if (!isSuperAdmin && !isAdmin)
-                throw new UnauthorizedAccessException("You are not allowed to change user roles.");
-
-            if (!isSuperAdmin && request.Role == SystemRoles.SuperAdministrator)
-                throw new ValidationException("Administrators cannot assign the Super Administrator role.");
-
-            var roleExists = await _roleManager.RoleExistsAsync(request.Role);
-            if (!roleExists)
-                throw new ValidationException($"The role '{request.Role}' does not exist.");
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            await _userManager.RemoveFromRolesAsync(user, userRoles);
-            var roleResult = await _userManager.AddToRoleAsync(user, request.Role);
-            if (!roleResult.Succeeded)
-            {
-                var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
-                throw new ValidationException($"Role update failed: {errors}");
-            }
-        }
-
-        if (!string.IsNullOrEmpty(request.NewPassword))
-        {
-            var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
-            if (!result.Succeeded)
-            {
-                var errors = string.Join(",", result.Errors.Select(e => e.Description));
-                throw new ValidationException($"Password change failed. {errors}");
-            }
-        }
-
-        var updateResult = await _userManager.UpdateAsync(user);
-
-        if (!updateResult.Succeeded)
-        {
-            var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
-            throw new ValidationException($"User update failed: {errors}");
-        }
-
-        return new UpdateResponse() { UserId = user.Id };
     }
 
     public async Task<bool> DeleteUserAsync(string userId, string requestingUserId)
     {
-        var user = await _userManager.FindByIdAsync(userId)
-        ?? throw new NotFoundException("User not found", userId);
-        var userRoles = await _userManager.GetRolesAsync(user);
-
-        var (_, requestingUserRoles) = await GetUserWithRolesAsync(requestingUserId);
-       
-        bool isSuperAdmin = requestingUserRoles.Contains(SystemRoles.SuperAdministrator);
-        bool isAdmin = requestingUserRoles.Contains(SystemRoles.Administrator);
-        bool isSelf = user.Id == requestingUserId;
-        bool targetIsSuperAdmin = userRoles.Contains(SystemRoles.SuperAdministrator);
-
-        if (!isAdmin && !isSuperAdmin && !isSelf)
+        try
         {
-            throw new UnauthorizedAccessException("You are not allowed to delete this user.");
+            var user = await _userManager.FindByIdAsync(userId)
+                ?? throw new NotFoundException("User not found", userId);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var targetRole = userRoles.FirstOrDefault() ?? SystemRoles.RegularUser;
+
+            var (_, requesterRoles) = await GetUserWithRolesAsync(requestingUserId);
+            var requesterRole = requesterRoles.FirstOrDefault() ?? SystemRoles.RegularUser;
+
+            bool isSelf = user.Id == requestingUserId;
+
+            if (!isSelf && !RoleHierarchy.CanInteractWith(requesterRole, targetRole))
+            {
+                throw new UnauthorizedAccessException(
+                    $"Your role '{requesterRole}' does not have permission to delete users with role '{targetRole}'.");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException($"Unable to delete user: {errors}");
+            }
+
+            return true;
         }
-
-        if (isAdmin && targetIsSuperAdmin)
-            throw new ValidationException("Administrators cannot delete Super Administrators.");
-
-        var result = await _userManager.DeleteAsync(user);
-
-        if (!result.Succeeded)
+        catch (Exception ex)
         {
-            var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-            throw new BadRequestException($"Unable to delete user: {errors}");
+            throw new BadRequestException($"Error deleting user: {ex.Message}");
         }
-
-        return true;
     }
 
     public async Task<UserProfileResponse> GetCurrentUserProfileAsync(string userId)

@@ -9,6 +9,7 @@ namespace Application.Features.Identity.Models.PermissionService
     public class RolePermissionsDto
     {
         public string RoleName { get; set; } = default!;
+        public string? RoleDescription { get; set; }
         public List<PermissionDto> Permissions { get; set; } = new();
     }
 }

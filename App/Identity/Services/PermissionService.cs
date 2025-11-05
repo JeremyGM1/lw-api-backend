@@ -61,6 +61,7 @@ public class PermissionService : IPermissionService
         var result = data.Select(r => new RolePermissionsDto
         {
             RoleName = r.RoleName,
+            RoleDescription = r.RoleDescription,
             Permissions = r.Permissions.Select(p => new PermissionDto
             {
                 Name = p.Name,

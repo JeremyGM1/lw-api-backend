@@ -19,7 +19,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [Authorize(Roles = $"{SystemRoles.Administrator},{SystemRoles.SuperAdministrator}")]
+    //[Authorize(Roles = $"{SystemRoles.Administrator},{SystemRoles.SuperAdministrator}")]
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
         return Ok(profile);
     }
 
-    [Authorize(Roles = $"{SystemRoles.Administrator},{SystemRoles.SuperAdministrator}")]
+    //[Authorize(Roles = $"{SystemRoles.Administrator},{SystemRoles.SuperAdministrator}")]
     [HttpGet("all")]
     public async Task<IActionResult> GetAllUsers()
     {

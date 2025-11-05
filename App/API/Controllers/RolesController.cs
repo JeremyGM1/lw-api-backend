@@ -16,9 +16,6 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-        /// <summary>
-        /// Gets a role by name (Name + Description)
-        /// </summary>
         [HttpGet("{roleName}")]
         public async Task<IActionResult> GetByName(string roleName)
         {
@@ -26,9 +23,6 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        /// <summary>
-        /// Updates a role description based on role name
-        /// </summary>
         [HttpPut("{roleName}/description")]
         public async Task<IActionResult> UpdateDescription(string roleName, [FromBody] string description)
         {

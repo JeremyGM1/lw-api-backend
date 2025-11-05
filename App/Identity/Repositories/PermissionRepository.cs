@@ -205,12 +205,13 @@ public class PermissionRepository : IPermissionRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<(string RoleName, List<Permission> Permissions)>> GetAllRolesWithPermissionsAsync()
+    public async Task<IReadOnlyList<(string RoleName, string? RoleDescription, List<Permission> Permissions)>> GetAllRolesWithPermissionsAsync()
     {
         var rolesWithPermissions = await _context.Roles
             .Select(r => new
             {
                 RoleName = r.Name!,
+                RoleDescription = r.Description,
                 Permissions = _context.RolePermissions
                     .Where(rp => rp.RoleId == r.Id)
                     .Include(rp => rp.Permission)
@@ -220,7 +221,7 @@ public class PermissionRepository : IPermissionRepository
             .ToListAsync();
 
         return rolesWithPermissions
-            .Select(r => (r.RoleName, r.Permissions))
+            .Select(r => (r.RoleName, r.RoleDescription, r.Permissions))
             .ToList();
     }
 
