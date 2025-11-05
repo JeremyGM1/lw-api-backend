@@ -1,9 +1,9 @@
-﻿using Application.Features.Identity.Commands.AssignPermissionToUser;
-using Application.Features.Identity.Commands.AssingPermissionToRole;
-using Application.Features.Identity.Queries.GetAllPermissions;
-using Application.Features.Identity.Queries.GetAllPermissionsByRole;
-using Application.Features.Identity.Queries.GetPermissionsByRole;
-using Application.Features.Identity.Queries.GetPermissionsByUserQuery;
+﻿using Application.Features.Identity.Permissions.Commands.AssignPermissionToRole;
+using Application.Features.Identity.Permissions.Commands.AssignPermissionToUser;
+using Application.Features.Identity.Permissions.Queries.GetAllPermissions;
+using Application.Features.Identity.Permissions.Queries.GetAllPermissionsByRole;
+using Application.Features.Identity.Permissions.Queries.GetPermissionsByRole;
+using Application.Features.Identity.Permissions.Queries.GetPermissionsByUserQuery;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

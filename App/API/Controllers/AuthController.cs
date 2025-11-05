@@ -1,4 +1,4 @@
-﻿using Application.Features.Identity.Models;
+﻿using Application.Features.Identity.Models.AuthService;
 using Application.Interfaces.Features.Identity;
 using Identity.Services;
 using Microsoft.AspNetCore.Mvc;
