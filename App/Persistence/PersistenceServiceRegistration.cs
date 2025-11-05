@@ -7,7 +7,6 @@ using Application.Interfaces.Features.Requisitions.Lookup;
 using Persistence.Repositories.Requisitions;
 using Persistence.Repositories.Requisitions.Lookup;
 using Persistence.Repositories.Users;
-using Domain.Entities.Requisitions;
 
 namespace Persistence;
 

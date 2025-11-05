@@ -26,10 +26,19 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         if (failures.Count != 0)
         {
             var errorMessage = string.Join(", ", failures.Select(f => f.ErrorMessage));
-            var error = ValidationErrors.
+            var error = ValidationErrors.InvalidInput(errorMessage);
+
+            if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+            {
+                var method = typeof(TResponse).GetMethod("Failure", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                return (TResponse)method!.Invoke(null, [error])!;
+            }
+            else
+            {
+                return (TResponse)(object)Result.Failure(error);
+            }
         }
 
-        var failureResult = (TResponse)(object)Result.Failure(ValidationErrors.ValidationFailed(errorDictionary));
-        return failureResult;
+        return await next(cancellationToken);
     }
 }
