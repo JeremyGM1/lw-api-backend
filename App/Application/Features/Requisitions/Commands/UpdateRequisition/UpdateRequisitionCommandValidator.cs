@@ -13,8 +13,7 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
     public UpdateRequisitionCommandValidator(IRequisitionRepository reqRepository)
     {
         RuleFor(r => r.ReqCode)
-            .MaximumLength(6)
-            .MustAsync(RequisitionExist).WithMessage("Requisition with {PropertyName} does not exist");
+            .MaximumLength(6);
 
         RuleFor(r => r.Name).NotRequiredString();
 
@@ -76,6 +75,4 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
     private async Task<bool> CurrencyExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionCurrency>(id);
 
     private async Task<bool> IntervalExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionInterval>(id);
-
-    private async Task<bool> RequisitionExist(string id, CancellationToken cancellationToken) => await _reqRepository.RequisitionExists(id);
 }

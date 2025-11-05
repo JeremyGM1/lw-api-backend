@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MediatR;
 using Application.Common.Configs;
-using Application.Common.Result;
+using Application.Common.Results;
+using Application.Features.Requisitions.Dtos;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 

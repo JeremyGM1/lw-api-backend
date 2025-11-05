@@ -13,11 +13,9 @@ using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
-using Application.Features.Requisitions.Queries.GetLocation;
-using Application.Features.Requisitions.Queries.GetCurrencies;
-using Application.Features.Requisitions.Dtos.Lookup;
-using Application.Features.Requisitions.Queries.GetInterval;
 using Application.Features.Requisitions.Queries.GetLocationTypes;
+using API.Models.Errors;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Controllers;
 
@@ -47,11 +45,22 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CreateRequisitionDto>> Post(CreateRequisitionCommand requisition)
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ApiResponse<CreateRequisitionDto>>> Post(CreateRequisitionCommand requisition)
     {
-        var response = await _mediator.Send(requisition);
-        return CreatedAtAction(nameof(Get), new { id = response }, response);
+        var result = await _mediator.Send(requisition);
+        if (result.IsSuccess)
+        {
+            var response = ApiResponse<CreateRequisitionDto>.FromResult(result);
+            return Created(requisition.ReqCode, response);
+        }
+
+        var errorResponse = ApiResponse<CreateRequisitionDto>.FromResult(result);
+
+        if (result.Error.Code.EndsWith("Existing"))
+            return Conflict(errorResponse);
+
+        return BadRequest(errorResponse);
     }
 
     [HttpPut("{Id}")]
@@ -61,19 +70,37 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     public async Task<ActionResult> Update(string Id, [FromBody] UpdateRequisitionCommand requisition)
     {
         requisition.ReqCode = Id;
-        await _mediator.Send(requisition);
-        return NoContent();
+        var result = await _mediator.Send(requisition);
+
+        if (result.IsSuccess)
+            return NoContent();
+
+        var errorResponse = ApiResponse<UpdateRequisitionDto>.FromResult(result);
+
+        if (result.Error.Code.EndsWith("NotExisting"))
+            return NotFound(errorResponse);
+
+        return BadRequest(errorResponse);
     }
 
     [HttpDelete("{Id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult> Delete(string Id)
+    public async Task<ActionResult<DeleteRequisitionDto>> Delete(string Id)
     {
         var command = new DeleteRequisitionCommand { ReqCode = Id };
-        await _mediator.Send(command);
-        return NoContent();
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+            return NoContent();
+
+        var errorResponse = ApiResponse<DeleteRequisitionDto>.FromResult(result);
+
+        if (result.Error.Code.EndsWith("NotExisting"))
+            return NotFound(errorResponse);
+
+        return BadRequest(errorResponse);
     }
 
     [HttpGet("statuses")]

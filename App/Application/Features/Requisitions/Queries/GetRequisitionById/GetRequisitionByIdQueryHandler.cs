@@ -17,9 +17,6 @@ public class GetRequisitionByIdQueryHandler(IMapper mapper, IRequisitionReposito
 
     public async Task<GetRequisitionDto> Handle(GetRequisitionByIdQuery request, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        _commonHelpers.ThrowIfValidationFails(validationResult);
-
         var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
 
         if (requisition == null)

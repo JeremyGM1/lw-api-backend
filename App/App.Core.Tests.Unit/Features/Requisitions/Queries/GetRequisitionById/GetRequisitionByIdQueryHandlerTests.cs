@@ -88,9 +88,9 @@ public class GetRequisitionByIdQueryHandlerTests
             .Setup(v => v.ValidateAsync(query, It.IsAny<CancellationToken>()))
             .ReturnsAsync(validationResult);
 
-        _mockCommonHelpers
-            .Setup(h => h.ThrowIfValidationFails(validationResult))
-            .Throws(new BadRequestException("Validation Failed"));
+        //_mockCommonHelpers
+        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
+        //    .Throws(new BadRequestException("Validation Failed"));
 
         var result = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(query, CancellationToken.None));
 

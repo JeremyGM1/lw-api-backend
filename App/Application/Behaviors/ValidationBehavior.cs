@@ -1,4 +1,6 @@
-﻿using Application.Exceptions;
+﻿using Application.Common.Results;
+using Application.Common.Results.GenericErrors;
+using Application.Exceptions;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -23,12 +25,17 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         var result = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
         var failures = result.Where(r => !r.IsValid).SelectMany(r => r.Errors).ToList();
 
-        if (failures.Count != 0)
-        {
-            throw new BadRequestException("Invalid requisition", new ValidationResult(failures));
-        }
+        if (failures.Count == 0)
+            return await next(cancellationToken);
 
-        return await next(cancellationToken);
+        var errorDictionary = failures
+            .GroupBy(f => f.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(f => f.ErrorMessage).ToArray()
+            );
+
+        var failureResult = (TResponse)(object)Result.Failure(ValidationErrors.ValidationFailed(errorDictionary));
+        return failureResult;
     }
-
 }

@@ -5,6 +5,8 @@ using Application.Exceptions;
 using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.Features.Common;
+using Application.Common.Results;
+using Application.Common.Results.GenericErrors;
 
 namespace Application.Common.Helpers;
 
@@ -45,15 +47,7 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
         return _httpContextAccessor.HttpContext.Request.Headers["User-Agent"].ToString() ?? "Unknown";
     }
 
-    public void ThrowIfValidationFails(ValidationResult validationResult)
-    {
-        if (validationResult.Errors.Count != 0)
-        {
-            throw new BadRequestException("Invalid requisition", validationResult);
-        }
-    }
-
-    public async void ValidateForeignKey(int statusId, int workTypeId, int hardwareId, int locationId, int currencyId, int intervalId)
+    public async Task<Result> ValidateForeignKey(int statusId, int workTypeId, int hardwareId, int locationId, int currencyId, int intervalId)
     {
         var statusExist = await _reqRepository.ForeignKeyExist<RequisitionStatus>(statusId);
         var workTypestatusExist = await _reqRepository.ForeignKeyExist<RequisitionWorkType>(workTypeId);
@@ -72,8 +66,10 @@ public class CommonHelpers(IHttpContextAccessor httpContextAccessor, IRequisitio
             if (!currencyExist) errors.Add("CurrencyId", ["currency not found"]);
             if (!intervalExist) errors.Add("IntervalId", ["interval not found"]);
 
-            throw new ForeignKeyNotFoundException("Invalid foreign key", errors);
+            return Result.Failure(CommonErrors.InvalidForeignKey(errors));
         }
+
+        return Result.Success();
     }
 
     public (string Email, string IpAddress, string UserAgent) GetLoggingContext()

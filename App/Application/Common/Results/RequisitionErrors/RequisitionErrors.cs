@@ -1,6 +1,6 @@
-﻿using Application.Common.Result;
+﻿using Application.Common.Results;
 
-namespace Application.Features.Requisitions.Errors;
+namespace Application.Common.Results.RequisitionErrors;
 public static class RequisitionErrors
 {
     public static Error ExistingRequisition(string id) => new(

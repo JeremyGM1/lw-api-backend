@@ -5,8 +5,8 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Common.Result;
-using Application.Features.Requisitions.Errors;
+using Application.Common.Results;
+using Application.Common.Results.RequisitionErrors;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
@@ -26,7 +26,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             if (await _reqRepository.RequisitionExists(request.ReqCode))
                 return Result.Failure(RequisitionErrors.ExistingRequisition(request.ReqCode));
 
-            _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
+            await _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
             var reqToCreate = _mapper.Map<Requisition>(request);
 

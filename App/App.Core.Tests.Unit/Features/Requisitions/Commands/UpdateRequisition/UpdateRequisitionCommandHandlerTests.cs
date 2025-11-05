@@ -12,7 +12,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Common.Result;
+using Application.Common.Results;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -20,7 +20,6 @@ public class UpdateRequisitionCommandHandlerTests
 {
     private readonly IMapper _mapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
-    private readonly Mock<IValidator<UpdateRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly UpdateRequisitionCommandHandler _handler;
@@ -32,13 +31,11 @@ public class UpdateRequisitionCommandHandlerTests
         _mapper = config.CreateMapper();
 
         _mockReqRepository = new Mock<IRequisitionRepository>();
-        _mockValidator = new Mock<IValidator<UpdateRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
         _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new UpdateRequisitionCommandHandler(
             _mapper,
             _mockReqRepository.Object,
-            _mockValidator.Object,
             _mockCommonHelpers.Object,
             _mockLogger.Object
         );
@@ -51,12 +48,6 @@ public class UpdateRequisitionCommandHandlerTests
         var existingRequisition = TestData.CreateRequisition();
         var validationResult = new ValidationResult();
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
-        _mockCommonHelpers
-            .Setup(h => h.ThrowIfValidationFails(validationResult));
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -100,17 +91,17 @@ public class UpdateRequisitionCommandHandlerTests
             new ValidationFailure("Invalid requisition", "Error message")
         ]);
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+        //_mockValidator
+        //    .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
+        //    .ReturnsAsync(validationResult);
 
-        _mockCommonHelpers
-            .Setup(h => h.ThrowIfValidationFails(validationResult))
-            .Callback<ValidationResult>(vr =>
-            {
-                if (vr.Errors.Count != 0)
-                    throw new BadRequestException("Invalid requisition", vr);
-            });
+        //_mockCommonHelpers
+        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
+        //    .Callback<ValidationResult>(vr =>
+        //    {
+        //        if (vr.Errors.Count != 0)
+        //            throw new BadRequestException("Invalid requisition", vr);
+        //    });
 
         var exception = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(command, CancellationToken.None));
 
@@ -148,10 +139,6 @@ public class UpdateRequisitionCommandHandlerTests
         var command = TestData.UpdateRequisitionCommand();
         var validationResult = new ValidationResult();
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(Mock.Of<Requisition>);
@@ -171,10 +158,6 @@ public class UpdateRequisitionCommandHandlerTests
     {
         var command = TestData.UpdateRequisitionCommand();
         var validationResult = new ValidationResult();
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -201,10 +184,6 @@ public class UpdateRequisitionCommandHandlerTests
 
         var validationResult = new ValidationResult();
         Requisition capturedRequisition = null!;
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))

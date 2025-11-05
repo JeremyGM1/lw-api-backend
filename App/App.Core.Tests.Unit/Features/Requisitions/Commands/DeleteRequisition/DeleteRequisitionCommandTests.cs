@@ -1,4 +1,4 @@
-﻿using Application.Common.Result;
+﻿using Application.Common.Results;
 using Application.Exceptions;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces.Features.Common;
@@ -15,7 +15,6 @@ namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 public class DeleteRequisitionCommandTests
 {
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
-    private readonly Mock<IValidator<DeleteRequisitionCommand>> _mockValidator;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly Mock<IRequisitionLogService> _mockLogger;
     private readonly DeleteRequisitionCommandHandler _handler;
@@ -23,12 +22,10 @@ public class DeleteRequisitionCommandTests
     public DeleteRequisitionCommandTests()
     {
         _mockReqRepository = new Mock<IRequisitionRepository>();
-        _mockValidator = new Mock<IValidator<DeleteRequisitionCommand>>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
         _mockLogger = new Mock<IRequisitionLogService>();
         _handler = new DeleteRequisitionCommandHandler(
             _mockReqRepository.Object,
-            _mockValidator.Object,
             _mockCommonHelpers.Object,
             _mockLogger.Object
             );
@@ -40,13 +37,6 @@ public class DeleteRequisitionCommandTests
         var command = new DeleteRequisitionCommand { ReqCode = "600900" };
         var existingRequisition = TestData.CreateRequisition();
         var validationResult = new ValidationResult();
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
-        _mockCommonHelpers
-            .Setup(h => h.ThrowIfValidationFails(validationResult));
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode))
@@ -78,17 +68,17 @@ public class DeleteRequisitionCommandTests
             new ValidationFailure("Id", "Invalid Id")
         ]);
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
+        //_mockValidator
+        //    .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
+        //    .ReturnsAsync(validationResult);
 
-        _mockCommonHelpers
-            .Setup(h => h.ThrowIfValidationFails(validationResult))
-            .Callback<ValidationResult>(vr =>
-            {
-                if (vr.Errors.Count != 0)
-                    throw new BadRequestException("Invalid requisition", vr);
-            });
+        //_mockCommonHelpers
+        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
+        //    .Callback<ValidationResult>(vr =>
+        //    {
+        //        if (vr.Errors.Count != 0)
+        //            throw new BadRequestException("Invalid requisition", vr);
+        //    });
 
         var exception = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(command, CancellationToken.None));
 

@@ -13,11 +13,8 @@ public class DeleteRequisitionCommandValidator : AbstractValidator<DeleteRequisi
             .NotNull().WithMessage("{PropertyName} is required")
             .NotEmpty()
             .MinimumLength(6)
-            .MaximumLength(6)
-            .MustAsync(RequisitionExist).WithMessage("Requisition with {PropertyName} does not exist");
+            .MaximumLength(6);
 
         _reqRepository = reqRepository;
     }
-
-    private async Task<bool> RequisitionExist(string id, CancellationToken cancellationToken) => await _reqRepository.RequisitionExists(id);
 }
