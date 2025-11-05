@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Application.Common.Results;
 using MediatR;
+using Application.Common.Results;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 

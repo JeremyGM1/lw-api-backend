@@ -1,5 +1,4 @@
 ﻿using Application.Common.Results;
-using FluentValidation.Results;
 
 namespace Application.Interfaces.Features.Common;
 

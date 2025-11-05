@@ -4,6 +4,7 @@ using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Interfaces.Features.Requisitions.Lookup;
 
 namespace Application.Features.Requisitions.Queries.GetLocation;
+
 public class GetReqLocationQueryHandler(IMapper mapper, IReqLocationRepository reqLocationRepository) : IRequestHandler<GetReqLocationQuery, List<GetReqLocationDto>>
 {
     private readonly IMapper _mappper = mapper;

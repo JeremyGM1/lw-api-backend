@@ -1,9 +1,10 @@
-﻿using Application.Features.Requisitions.Dtos.Lookup;
-using Application.Interfaces.Features.Requisitions.Lookup;
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Application.Features.Requisitions.Dtos.Lookup;
+using Application.Interfaces.Features.Requisitions.Lookup;
 
 namespace Application.Features.Requisitions.Queries.GetCurrencies;
+
 public class GetReqCurrencyQueryHandler(IMapper mapper, IReqCurrencyRepository reqCurrencyRepository) : IRequestHandler<GetReqCurrencyQuery, List<GetReqCurrencyDto>>
 {
     private readonly IMapper _mapper = mapper;

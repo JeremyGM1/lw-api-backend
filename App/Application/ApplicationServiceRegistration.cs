@@ -1,9 +1,9 @@
-﻿using System.Reflection;
+﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using FluentValidation;
-using Application.Features.Users.MappingProfiles;
-using Application.Features.Requisitions.MappingProfiles;
+using System.Reflection;
 using Application.Common.Helpers;
+using Application.Features.Requisitions.MappingProfiles;
+using Application.Features.Users.MappingProfiles;
 using Application.Interfaces.Features.Common;
 
 namespace Application;

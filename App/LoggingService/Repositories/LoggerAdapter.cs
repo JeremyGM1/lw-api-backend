@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.LoggingService;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Application.Interfaces.LoggingService;
 
 namespace LoggingService.Repositories;
 

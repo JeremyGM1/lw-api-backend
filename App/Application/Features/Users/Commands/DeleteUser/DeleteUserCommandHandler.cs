@@ -1,7 +1,6 @@
-﻿using Application.Exceptions;
+﻿using MediatR;
+using Application.Exceptions;
 using Application.Interfaces.Features.Users;
-using Domain.Entities.Requisitions;
-using MediatR;
 
 namespace Application.Features.Users.Commands.DeleteUser;
 

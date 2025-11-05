@@ -34,6 +34,7 @@ public static class CustomValidators
             .NotEmpty()
             .InclusiveBetween(1, maxValue);
     }
+
     public static IRuleBuilderOptions<T, int> RequiredInt<T>(
         this IRuleBuilder<T, int> ruleBuilder,
         int maxValue = ValidationDefaultValues.IntMaxValue)

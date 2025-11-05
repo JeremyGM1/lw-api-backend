@@ -1,12 +1,10 @@
 ﻿using System.Security.Claims;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
-using Application.Exceptions;
-using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
-using Application.Interfaces.Features.Common;
-using Application.Common.Results;
 using Application.Common.Results.GenericErrors;
+using Application.Common.Results;
+using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
+using Domain.Entities.Requisitions;
 
 namespace Application.Common.Helpers;
 

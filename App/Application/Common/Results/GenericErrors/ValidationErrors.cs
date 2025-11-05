@@ -1,6 +1,4 @@
-﻿using Application.Common.Results;
-
-namespace Application.Common.Results.GenericErrors;
+﻿namespace Application.Common.Results.GenericErrors;
 
 public static class ValidationErrors
 {

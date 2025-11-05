@@ -11,5 +11,4 @@ public interface IRequisitionRepository : IGenericRepository<Requisition, int>
     Task<List<Requisition>> GetRequisitions();
 
     Task<bool> RequisitionExists(string id);
-
 }

@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Features.Requisitions.Lookup;
+﻿using Microsoft.EntityFrameworkCore;
+using Application.Interfaces.Features.Requisitions.Lookup;
 using Domain.Entities.Requisitions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories.Requisitions.Lookup;
 public class ReqStatusRepository(AppDbContext context) : IReqStatusRepository

@@ -1,9 +1,7 @@
-﻿using Application.Common.Results;
-using Application.Common.Results.GenericErrors;
-using Application.Exceptions;
-using FluentValidation;
-using FluentValidation.Results;
+﻿using FluentValidation;
 using MediatR;
+using Application.Common.Results;
+using Application.Common.Results.GenericErrors;
 
 namespace Application.Behaviors;
 

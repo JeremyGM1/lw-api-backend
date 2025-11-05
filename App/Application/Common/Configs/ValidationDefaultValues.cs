@@ -1,4 +1,5 @@
 ﻿namespace Application.Common.Configs;
+
 public static class ValidationDefaultValues
 {
     public const decimal CompensationBandMaxValue = 999999999;

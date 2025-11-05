@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Application.Common.Configs;
 using Application.Common.Results;
-using MediatR;
 
 namespace Application.Features.Requisitions.Commands.UpdateRequisition;
 

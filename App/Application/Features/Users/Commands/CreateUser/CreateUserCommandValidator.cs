@@ -1,5 +1,5 @@
-﻿using Application.Interfaces.Features.Users;
-using FluentValidation;
+﻿using FluentValidation;
+using Application.Interfaces.Features.Users;
 
 namespace Application.Features.Users.Commands.CreateUser;
 

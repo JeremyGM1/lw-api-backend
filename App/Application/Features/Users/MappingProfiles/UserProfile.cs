@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Application.Features.Users.Commands.CreateUser;
 using Application.Features.Users.Commands.UpdateUser;
-using Domain.Entities.Users;
 using Application.Features.Users.Dtos;
+using Domain.Entities.Users;
 
 namespace Application.Features.Users.MappingProfiles;
 
