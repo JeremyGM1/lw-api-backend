@@ -131,25 +131,6 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task CreateHandler_WhenForeignKeyIsInvalid_ShouldThrowForeignKeyNotFoundException()
-    {
-        var command = TestData.CreateRequisitionCommand();
-
-        _mockCommonHelpers
-            .Setup(h => h.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-            .Throws(new ForeignKeyNotFoundException("Invalid foreign key"));
-
-        var exception = await Should.ThrowAsync<ForeignKeyNotFoundException>(() => _handler.Handle(command, CancellationToken.None));
-
-        exception.ShouldBeOfType<ForeignKeyNotFoundException>();
-        exception.Message.ShouldBe("Invalid foreign key");
-
-        _mockReqRepository
-            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
-            Times.Never);
-    }
-
-    [Fact]
     public async Task CreateHandler_WhenUserIsNotAuthenticated_ShouldThrowsUnauthorizedAccessException()
     {
         var command = TestData.CreateRequisitionCommand();

@@ -12,7 +12,7 @@ public class CreateRequisitionCommandValidator : AbstractValidator<CreateRequisi
     public CreateRequisitionCommandValidator(IRequisitionRepository reqRepository)
     {
         RuleFor(r => r.ReqCode)
-            .NotNull().WithMessage("{PropertyName} is required")
+            .NotNull().WithMessage("{PropertyName} is required123")
             .NotEmpty()
             .MinimumLength(6)
             .MaximumLength(6);

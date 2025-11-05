@@ -16,24 +16,18 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
         var validatorList = _validators.ToList();
 
         if (validatorList.Count == 0)
-        {
             return await next(cancellationToken);
-        }
 
         var context = new ValidationContext<TRequest>(request);
 
         var result = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
         var failures = result.Where(r => !r.IsValid).SelectMany(r => r.Errors).ToList();
 
-        if (failures.Count == 0)
-            return await next(cancellationToken);
-
-        var errorDictionary = failures
-            .GroupBy(f => f.PropertyName)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(f => f.ErrorMessage).ToArray()
-            );
+        if (failures.Count != 0)
+        {
+            var errorMessage = string.Join(", ", failures.Select(f => f.ErrorMessage));
+            var error = ValidationErrors.
+        }
 
         var failureResult = (TResponse)(object)Result.Failure(ValidationErrors.ValidationFailed(errorDictionary));
         return failureResult;

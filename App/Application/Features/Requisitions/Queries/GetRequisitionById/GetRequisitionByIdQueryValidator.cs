@@ -15,12 +15,6 @@ public class GetRequisitionByIdQueryValidator : AbstractValidator<GetRequisition
             .MinimumLength(6)
             .MaximumLength(6);
 
-        RuleFor(r => r.ReqCode)
-            .MustAsync(EntityExist)
-            .WithMessage("Requisition with {PropertyName} does not exist");
-
         _reqRepository = reqRepository;
     }
-
-    private async Task<bool> EntityExist(string id, CancellationToken cancellationToken) => await _reqRepository.RequisitionExists(id);
 }

@@ -18,7 +18,7 @@ public class GetRequisitionsQueryHandler(IMapper mapper, IRequisitionRepository 
 
         var data = _mapper.Map<List<GetRequisitionDto>>(requisitions);
 
-        _logger.LogInformation("Requisitions were retrieced successfully");
+        _logger.LogInformation("Requisitions were retrieved successfully");
 
         return data;
     }

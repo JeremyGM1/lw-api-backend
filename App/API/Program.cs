@@ -31,11 +31,12 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddCorsPolicies();
 // **Swagger with JWT**
 builder.Services.AddSwaggerConfiguration();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-app.UseMiddleware<ValidationLoggingMiddleware>();
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseExceptionHandler();
 
 app.UseCors("all");
 
