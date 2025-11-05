@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.Features.Identity;
 using Domain.Entities.Users;
 using Identity.DbContext;
 using Microsoft.EntityFrameworkCore;

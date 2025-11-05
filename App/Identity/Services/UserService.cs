@@ -1,7 +1,6 @@
 ﻿using Application.Exceptions;
-using Application.Features.Identity.Models;
+using Application.Features.Identity.Models.UserService;
 using Application.Interfaces.Features.Identity;
-using Domain.Entities.Users;
 using FluentValidation;
 using Identity.Configurations;
 using Identity.Models;
@@ -14,9 +13,9 @@ namespace Identity.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public UserService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+    public UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;

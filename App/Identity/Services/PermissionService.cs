@@ -1,7 +1,6 @@
 ﻿using Application.Exceptions;
-using Application.Features.Identity.Models;
-using Application.Interfaces;
-using Application.Interfaces.Identity;
+using Application.Features.Identity.Models.PermissionService;
+using Application.Interfaces.Features.Identity;
 using Domain.Entities.Users;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +11,11 @@ namespace Identity.Services;
 public class PermissionService : IPermissionService
 {
     private readonly IPermissionRepository _permissionRepository;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public PermissionService(IPermissionRepository permissionRepository,
-                             RoleManager<IdentityRole> roleManager,
+                             RoleManager<ApplicationRole> roleManager,
                              UserManager<ApplicationUser> userManager)
     {
         _permissionRepository = permissionRepository;
