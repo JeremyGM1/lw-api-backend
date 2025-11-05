@@ -1,4 +1,4 @@
-﻿using Application.Features.Identity.Models;
+﻿using Application.Features.Identity.Models.UserService;
 
 namespace Application.Interfaces.Features.Identity;
 
