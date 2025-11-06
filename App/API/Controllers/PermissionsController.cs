@@ -5,8 +5,11 @@ using Application.Features.Identity.Permissions.Queries.GetAllPermissionsByRole;
 using Application.Features.Identity.Permissions.Queries.GetPermissionsByRole;
 using Application.Features.Identity.Permissions.Queries.GetPermissionsByUserQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PermissionsController : ControllerBase
@@ -42,7 +45,12 @@ public class PermissionsController : ControllerBase
     [HttpGet("roles")]
     public async Task<IActionResult> GetRolesWithPermissions()
     {
-        var result = await _mediator.Send(new GetAllPermissionsByRoleQuery());
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized("Invalid user context.");
+
+        var result = await _mediator.Send(new GetAllPermissionsByRoleQuery(userId));
         return Ok(result);
     }
 

@@ -16,7 +16,7 @@ namespace Application.Features.Identity.Permissions.Queries.GetAllPermissionsByR
 
         public async Task<IReadOnlyList<RolePermissionsDto>> Handle(GetAllPermissionsByRoleQuery request, CancellationToken cancellationToken)
         {
-            return await _permissionService.GetAllRolesWithPermissionsAsync();
+            return await _permissionService.GetAllRolesWithPermissionsAsync(request.userId);
         }
     }
 }

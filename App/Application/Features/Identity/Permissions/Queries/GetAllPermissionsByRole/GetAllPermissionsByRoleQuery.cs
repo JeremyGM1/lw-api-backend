@@ -3,5 +3,5 @@ using MediatR;
 
 namespace Application.Features.Identity.Permissions.Queries.GetAllPermissionsByRole
 {
-    public record GetAllPermissionsByRoleQuery : IRequest<IReadOnlyList<RolePermissionsDto>>;
+    public record GetAllPermissionsByRoleQuery(string userId) : IRequest<IReadOnlyList<RolePermissionsDto>>;
 }

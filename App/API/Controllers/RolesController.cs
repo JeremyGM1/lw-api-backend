@@ -1,10 +1,12 @@
 ﻿using Application.Features.Identity.Roles.Commands.UpdateRoleDescription;
 using Application.Features.Identity.Roles.Queries.GetRoleByName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class RolesController : ControllerBase

@@ -2,6 +2,7 @@
 using Application.Features.Identity.Models.PermissionService;
 using Application.Interfaces.Features.Identity;
 using Domain.Entities.Users;
+using Identity.Configurations;
 using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -54,20 +55,33 @@ public class PermissionService : IPermissionService
         await _permissionRepository.AssignPermissionsToUserAsync(userId, permissionIds, updatedBy);
     }
 
-    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllRolesWithPermissionsAsync()
+    public async Task<IReadOnlyList<RolePermissionsDto>> GetAllRolesWithPermissionsAsync(string userId)
     {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+            throw new UnauthorizedAccessException("User not found.");
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var requesterRole = roles.FirstOrDefault();
+
+        if (string.IsNullOrEmpty(requesterRole))
+            throw new UnauthorizedAccessException("User has no role assigned.");
+
         var data = await _permissionRepository.GetAllRolesWithPermissionsAsync();
 
-        var result = data.Select(r => new RolePermissionsDto
-        {
-            RoleName = r.RoleName,
-            RoleDescription = r.RoleDescription,
-            Permissions = r.Permissions.Select(p => new PermissionDto
-            {
-                Name = p.Name,
-                Description = p.Description
-            }).ToList()
-        }).ToList();
+        var result = data
+         .Where(r => RoleHierarchy.CanInteractWith(requesterRole, r.RoleName))
+         .Select(r => new RolePermissionsDto
+         {
+             RoleName = r.RoleName,
+             RoleDescription = r.RoleDescription,
+             Permissions = r.Permissions.Select(p => new PermissionDto
+             {
+                 Name = p.Name,
+                 Description = p.Description
+             }).ToList()
+         })
+         .ToList();
 
         return result;
     }

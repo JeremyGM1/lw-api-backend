@@ -6,7 +6,7 @@ namespace Application.Interfaces.Features.Identity;
 public interface IPermissionService
 {
     Task<IReadOnlyList<Permission>> GetAllPermissionsAsync();
-    Task<IReadOnlyList<RolePermissionsDto>> GetAllRolesWithPermissionsAsync();
+    Task<IReadOnlyList<RolePermissionsDto>> GetAllRolesWithPermissionsAsync(string userId);
     Task<IReadOnlyList<Permission>> GetPermissionsByRoleNameAsync(string roleName);
     Task<IReadOnlyList<Permission>> GetPermissionsByUserIdAsync(string userId);
     Task AssignPermissionsToRoleAsync(string roleName, IEnumerable<string> permissionNames, string updatedBy);
