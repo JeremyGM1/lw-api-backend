@@ -16,7 +16,7 @@ namespace Identity.Seed
             RoleManager<ApplicationRole> roleManager,
             UserManager<ApplicationUser> userManager)
         {
-            // Create base permissions only if the database is empty
+          
             var existingPermissions = await permissionRepository.GetAsync();
 
             if (!existingPermissions.Any())
@@ -36,7 +36,7 @@ namespace Identity.Seed
                 existingPermissions = allPermissions;
             }
 
-            // Assign default permissions to each predefined role
+           
             foreach (var (roleName, permissionNames) in SystemPermissions.RolePermissions)
             {
                 var role = await roleManager.FindByNameAsync(roleName);
@@ -55,7 +55,7 @@ namespace Identity.Seed
                 await permissionService.AssignPermissionsToRoleAsync(roleName, permissionNames, "system");
             }
 
-            // Assign all permissions to the Super Administrator account
+           
             var superAdminEmail = adminSettings.Value.Email;
             var superAdmin = await userManager.FindByEmailAsync(superAdminEmail);
 
@@ -71,11 +71,11 @@ namespace Identity.Seed
                     };
                     await roleManager.CreateAsync(superAdminRole);
                 }
-                // Ensure the Super Admin user has the Super Administrator role
+             
                 if (!await userManager.IsInRoleAsync(superAdmin, SystemRoles.SuperAdministrator))
                     await userManager.AddToRoleAsync(superAdmin, SystemRoles.SuperAdministrator);
 
-                // Assign every permission available to the Super Admin by name
+           
                 var allPermissionNames = SystemPermissions.AllPermissions.Select(p => p.Name).ToList();
                 await permissionService.AssignPermissionsToUserAsync(superAdmin.Id, allPermissionNames, "system");
             }

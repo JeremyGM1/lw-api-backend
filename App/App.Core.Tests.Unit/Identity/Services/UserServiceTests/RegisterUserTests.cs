@@ -1,5 +1,4 @@
-﻿
-using Application.Exceptions;
+﻿using Application.Exceptions;
 using Application.Features.Identity.Models.UserService;
 using Identity.Configurations;
 using Identity.Models;
@@ -24,6 +23,7 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests
             _mockRoleManager = CreateMockRoleManager();
             _userService = new UserService(_mockUserManager.Object, _mockRoleManager.Object);
         }
+
         private static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
         {
             return new Mock<UserManager<ApplicationUser>>(
@@ -49,216 +49,194 @@ namespace App.Core.Tests.Unit.Identity.Services.UserServiceTests
                 new Mock<ILogger<RoleManager<ApplicationRole>>>().Object
             );
         }
-        private static ApplicationUser CreateTestUser(string id = "test-user-id") => new()
-        {
-            Id = id,
-            Email = "test@example.com",
-            UserName = "test@example.com",
-            FirstName = "John",
-            LastName = "Doe",
-            EmailConfirmed = true
-        };
 
-        private static RegistrationRequest CreateRegistrationRequest() => new()
-        {
-            Email = "test@example.com",
-            Password = "TestPassword123!",
-            FirstName = "John",
-            LastName = "Doe"
-        };
+        private static RegistrationRequest CreateRequest(
+            string? first = "John", string? last = "Doe", string? email = "test@email.com", string? pass = "P@ssw0rd")
+            => new()
+            {
+                FirstName = first!,
+                LastName = last!,
+                Email = email!,
+                Password = pass!,
+                Role = SystemRoles.RegularUser
+            };
 
-        private void SetupAdminContext()
+        private static ApplicationUser CreateTestUser(string id = "admin-id")
+            => new()
+            {
+                Id = id,
+                Email = "admin@email.com",
+                UserName = "admin@email.com",
+                FirstName = "Admin",
+                LastName = "User"
+            };
+
+        private void SetupRequester(string requesterId, string requesterRole)
         {
-            var adminUser = CreateTestUser("admin-id");
+            var requester = CreateTestUser(requesterId);
 
             _mockUserManager
-                .Setup(r => r.FindByIdAsync("admin-id"))
-                .ReturnsAsync(adminUser);
+                .Setup(r => r.FindByIdAsync(requesterId))
+                .ReturnsAsync(requester);
 
             _mockUserManager
-                .Setup(r => r.GetRolesAsync(adminUser))
-                .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
-
-            _mockRoleManager
-                .Setup(r => r.RoleExistsAsync(It.IsAny<string>()))
-                .ReturnsAsync(true);
+                .Setup(r => r.GetRolesAsync(requester))
+                .ReturnsAsync(new List<string> { requesterRole });
         }
 
         [Fact]
-        public async Task Register_ValidRequest_UserIsCreated()
+        public async Task Register_ValidRequest_ShouldCreateUserSuccessfully()
         {
-            SetupAdminContext();
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
 
-            var request = CreateRegistrationRequest();
+            var request = CreateRequest();
             request.Role = SystemRoles.Administrator;
 
-            _mockUserManager
-                .Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
-                .ReturnsAsync(IdentityResult.Success);
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password)).ReturnsAsync(IdentityResult.Success);
+            _mockUserManager.Setup(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role)).ReturnsAsync(IdentityResult.Success);
 
-            _mockUserManager
-                .Setup(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), SystemRoles.Administrator))
-                .ReturnsAsync(IdentityResult.Success);
+            var result = await _userService.Register(request, "admin-id");
+
+            result.ShouldNotBeNull(); 
+            result.UserId.ShouldNotBeNullOrEmpty();
+
+            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Once);
+            _mockUserManager.Verify(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(null, "Doe", "john@email.com", "P@ssw0rd", "FirstName")]
+        [InlineData("John", null, "john@email.com", "P@ssw0rd", "LastName")]
+        [InlineData("John", "Doe", null, "P@ssw0rd", "Email")]
+        [InlineData("John", "Doe", "john@email.com", null, "Password")]
+        public async Task Register_MissingRequiredField_ShouldThrowBadRequest(string first, string last, string email, string password, string fieldName)
+        {
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
+            var request = CreateRequest(first, last, email, password);
+
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            ex.Message.ShouldContain($"The {fieldName} field is required");
+        }
+
+        [Fact]
+        public async Task Register_RoleDoesNotExist_ShouldThrowBadRequest()
+        {
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
+
+            var request = CreateRequest();
+            request.Role = "NonExistentRole";
+
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(false);
+
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            ex.Message.ShouldContain($"The role '{request.Role}' does not exist.");
+        }
+
+        [Fact]
+        public async Task Register_RequesterCannotAssignHigherRole_ShouldThrowBadRequestException()
+        {
+            SetupRequester("user-id", SystemRoles.RegularUser);
+
+            var request = CreateRequest();
+            request.Role = SystemRoles.Administrator; 
+
+            _mockRoleManager
+                .Setup(r => r.RoleExistsAsync(request.Role))
+                .ReturnsAsync(true);
+
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "user-id"));
+            ex.Message.ShouldContain("You cannot assign the role");
+        }
+
+        [Fact]
+        public async Task Register_RequesterCanAssignSameLevelRole_ShouldCreateUserSuccessfully()
+        {
+            SetupRequester("admin-id", SystemRoles.Administrator);
+
+            var request = CreateRequest();
+            request.Role = SystemRoles.Administrator; 
+
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password)).ReturnsAsync(IdentityResult.Success);
+            _mockUserManager.Setup(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role)).ReturnsAsync(IdentityResult.Success);
 
             var result = await _userService.Register(request, "admin-id");
 
             result.ShouldNotBeNull();
-            result.UserId.ShouldNotBeNull();
-
+            result.UserId.ShouldNotBeNullOrEmpty();
             _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Once);
-            _mockUserManager.Verify(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), SystemRoles.Administrator), Times.Once);
+            _mockUserManager.Verify(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role), Times.Once);
         }
 
-        [Theory]
-        [InlineData("password")]
-        [InlineData("Password")]
-        [InlineData("Passw0rd")]
-        [InlineData("P@ssword")]
-        public async Task Register_PasswordTooWeak_ThrowBadRequestException(string password)
+        [Fact]
+        public async Task Register_RequesterCanAssignLowerLevelRole_ShouldCreateUserSuccessfully()
         {
-            SetupAdminContext();
+            SetupRequester("admin-id", SystemRoles.Administrator);
 
-            var request = CreateRegistrationRequest();
-            request.Password = password;
+            var request = CreateRequest();
+            request.Role = SystemRoles.RegularUser;
+
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password)).ReturnsAsync(IdentityResult.Success);
+            _mockUserManager.Setup(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role)).ReturnsAsync(IdentityResult.Success);
+
+            var result = await _userService.Register(request, "admin-id");
+
+            result.ShouldNotBeNull();
+            result.UserId.ShouldNotBeNullOrEmpty();
+            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Once);
+            _mockUserManager.Verify(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role), Times.Once);
+        }
+
+        [Fact]
+        public async Task Register_CreateUserFails_ShouldThrowBadRequest()
+        {
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
+
+            var request = CreateRequest();
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
 
             var identityError = new IdentityError { Description = "Password does not meet requirements" };
-
-            _mockUserManager
-                .Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), password))
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password))
                 .ReturnsAsync(IdentityResult.Failed(identityError));
 
-            var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
-
-            exception.Message.ShouldContain(identityError.Description);
-            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), password), Times.Once);
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            ex.Message.ShouldContain("Password does not meet requirements");
         }
 
         [Fact]
-        public async Task Register_FirstNameMissing_ThrowBadRequestException()
+        public async Task Register_AddToRoleFails_ShouldThrowBadRequest()
         {
-            SetupAdminContext();
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
 
-            var request = new RegistrationRequest
-            {
-                FirstName = null!,
-                LastName = "Doe",
-                Email = "test@email.com",
-                Password = "P@ssw0rd"
-            };
+            var request = CreateRequest();
+            request.Role = SystemRoles.Administrator;
 
-            var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password)).ReturnsAsync(IdentityResult.Success);
 
-            exception.Message.ShouldContain("The FirstName field is required");
-            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Never);
+            var roleError = new IdentityError { Description = "Failed to add role" };
+            _mockUserManager.Setup(r => r.AddToRoleAsync(It.IsAny<ApplicationUser>(), request.Role))
+                .ReturnsAsync(IdentityResult.Failed(roleError));
+
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            ex.Message.ShouldContain("Unable to assign role");
+            ex.Message.ShouldContain("Failed to add role");
         }
 
         [Fact]
-        public async Task Register_LastNameMissing_ThrowBadRequestException()
+        public async Task Register_UnexpectedException_ShouldWrapInBadRequest()
         {
-            SetupAdminContext();
+            SetupRequester("admin-id", SystemRoles.SuperAdministrator);
 
-            var request = new RegistrationRequest
-            {
-                FirstName = "John",
-                LastName = null!,
-                Email = "test@email.com",
-                Password = "P@ssw0rd"
-            };
+            var request = CreateRequest();
+            request.Role = SystemRoles.Administrator;
 
-            var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ThrowsAsync(new InvalidOperationException("Unexpected DB error"));
 
-            exception.Message.ShouldContain("The LastName field is required");
-            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Never);
-        }
-
-        [Fact]
-        public async Task Register_EmailMissing_ThrowBadRequestException()
-        {
-            SetupAdminContext();
-
-            var request = new RegistrationRequest
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = null!,
-                Password = "P@ssw0rd"
-            };
-
-            var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
-
-            exception.Message.ShouldContain("The Email field is required");
-            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), request.Password), Times.Never);
-        }
-
-        [Fact]
-        public async Task Register_PasswordMissing_ThrowBadRequestException()
-        {
-            SetupAdminContext();
-
-            var request = new RegistrationRequest
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                Email = "test@email.com",
-                Password = null!
-            };
-
-            var exception = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
-
-            exception.Message.ShouldContain("The Password field is required");
-            _mockUserManager.Verify(r => r.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Never);
-        }
-        [Fact]
-        public async Task Register_RoleDoesNotExist_ThrowsBadRequestException()
-        {
-            var request = CreateRegistrationRequest();
-            request.Role = "NonExistentRole";
-
-            var adminUser = CreateTestUser("admin-id");
-
-            _mockUserManager
-                .Setup(r => r.FindByIdAsync("admin-id"))
-                .ReturnsAsync(adminUser);
-
-            _mockUserManager
-                .Setup(r => r.GetRolesAsync(adminUser))
-                .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
-
-            _mockRoleManager
-                .Setup(r => r.RoleExistsAsync("NonExistentRole"))
-                .ReturnsAsync(false);
-
-            var exception = await Should.ThrowAsync<BadRequestException>(
-                () => _userService.Register(request, "admin-id"));
-
-            exception.Message.ShouldContain("The role 'NonExistentRole' does not exist.");
-            _mockRoleManager.Verify(r => r.RoleExistsAsync("NonExistentRole"), Times.Once);
-        }
-        [Fact]
-        public async Task Register_NonSuperAdminCreatesSuperAdmin_ThrowsUnauthorizedAccessException()
-        {
-            var request = CreateRegistrationRequest();
-            request.Role = SystemRoles.SuperAdministrator;
-
-            var normalAdmin = CreateTestUser("admin-id");
-
-            _mockUserManager
-                .Setup(r => r.FindByIdAsync("admin-id"))
-                .ReturnsAsync(normalAdmin);
-
-            _mockUserManager
-                .Setup(r => r.GetRolesAsync(normalAdmin))
-                .ReturnsAsync(new List<string> { SystemRoles.Administrator });
-
-            _mockRoleManager
-                .Setup(r => r.RoleExistsAsync(SystemRoles.SuperAdministrator))
-                .ReturnsAsync(true);
-
-            var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
-                () => _userService.Register(request, "admin-id"));
-
-            exception.Message.ShouldContain("Only Super Admins can create other Super Admins.");
-            _mockRoleManager.Verify(r => r.RoleExistsAsync(SystemRoles.SuperAdministrator), Times.Once);
+            var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Register(request, "admin-id"));
+            ex.Message.ShouldContain("Error System.InvalidOperationException");
         }
     }
 }

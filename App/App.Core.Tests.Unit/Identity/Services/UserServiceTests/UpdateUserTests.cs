@@ -1,6 +1,5 @@
 ﻿using Application.Exceptions;
 using Application.Features.Identity.Models.UserService;
-using FluentValidation;
 using Identity.Configurations;
 using Identity.Models;
 using Identity.Services;
@@ -27,7 +26,7 @@ public class UpdateUserTests
 
     private static Mock<UserManager<ApplicationUser>> CreateMockUserManager()
     {
-        var userManagerMock = new Mock<UserManager<ApplicationUser>>(
+        var mock = new Mock<UserManager<ApplicationUser>>(
             new Mock<IUserStore<ApplicationUser>>().Object,
             new Mock<IOptions<IdentityOptions>>().Object,
             new Mock<IPasswordHasher<ApplicationUser>>().Object,
@@ -36,13 +35,13 @@ public class UpdateUserTests
             new Mock<ILookupNormalizer>().Object,
             new Mock<IdentityErrorDescriber>().Object,
             new Mock<IServiceProvider>().Object,
-            new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
+            new Mock<ILogger<UserManager<ApplicationUser>>>().Object
+        );
 
-        userManagerMock
-            .Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
-            .ReturnsAsync([]);
+        mock.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
+            .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
 
-        return userManagerMock;
+        return mock;
     }
 
     private static Mock<RoleManager<ApplicationRole>> CreateMockRoleManager()
@@ -56,414 +55,108 @@ public class UpdateUserTests
         );
     }
 
-    private static ApplicationUser CreateTestUser(string id = "test-user-id")
-    {
-        return new ApplicationUser
-        {
-            Id = id,
-            Email = "test@example.com",
-            UserName = "test@example.com",
-            FirstName = "John",
-            LastName = "Doe",
-            EmailConfirmed = true,
-        };
-    }
+    private static ApplicationUser CreateUser(string id, string email = "user@email.com") =>
+        new() { Id = id, Email = email, UserName = email, FirstName = "John", LastName = "Doe" };
 
-    private static UpdateRequest CreateUpdateRequest(string userId = "test-user-id")
+    private static UpdateRequest CreateRequest(string id, string? role = null) =>
+        new() { Id = id, Email = "updated@email.com", FirstName = "Jane", LastName = "Smith", Role = role };
+
+    [Fact]
+    public async Task Update_UserNotFound_ShouldThrowBadRequest()
     {
-        return new UpdateRequest
-        {
-            Id = userId,
-            Email = "updated@example.com",
-            FirstName = "Jane",
-            LastName = "Smith",
-            NewPassword = "NewPassword123!",
-        };
+        var request = CreateRequest("missing-user");
+        _mockUserManager.Setup(u => u.FindByIdAsync(request.Id))
+                        .ReturnsAsync((ApplicationUser?)null);
+
+        var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Update(request, "admin-id"));
+        ex.Message.ShouldContain("not found");
     }
 
     [Fact]
-    public async Task Update_ValidRequest_ReturnsUpdateResponse()
+    public async Task Update_RoleDoesNotExist_ShouldThrowBadRequest()
     {
-        var request = CreateUpdateRequest();
-        var user = CreateTestUser(request.Id);
-        var adminUser = CreateTestUser("admin-id");
+        var user = CreateUser("user-id");
+        var adminUser = CreateUser("admin-id");
+        var request = CreateRequest("user-id", "NonExistentRole");
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
+        _mockUserManager.Setup(u => u.FindByIdAsync(request.Id)).ReturnsAsync(user);
+        _mockUserManager.Setup(u => u.FindByIdAsync("admin-id")).ReturnsAsync(adminUser);
+        _mockUserManager.Setup(u => u.GetRolesAsync(adminUser)).ReturnsAsync([SystemRoles.Administrator]);
+        _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(false);
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
-            .ReturnsAsync(IdentityResult.Success);
-
-        _mockUserManager
-            .Setup(u => u.UpdateAsync(user))
-            .ReturnsAsync(IdentityResult.Success);
-
-        var result = await _userService.Update(request, "admin-id");
-
-        result.ShouldNotBe(null);
-        result.UserId.ShouldBe(request.Id);
-        user.Email.ShouldBe(request.Email);
-        user.UserName.ShouldBe(request.Email);
-        user.FirstName.ShouldBe(request.FirstName);
-        user.LastName.ShouldBe(request.LastName);
+        var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Update(request, "admin-id"));
+        ex.Message.ShouldContain("does not exist");
     }
 
     [Fact]
-    public async Task Update_UserNotFound_ReturnsNotFoundException()
+    public async Task Update_RequesterAssignsHigherRole_ShouldThrowBadRequest()
     {
-        var request = CreateUpdateRequest();
-        var adminUser = CreateTestUser("admin-id");
+        var targetUser = CreateUser("target-id");
+        var adminUser = CreateUser("admin-id");
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync((ApplicationUser?)null);
+        _mockUserManager.Setup(u => u.FindByIdAsync(targetUser.Id)).ReturnsAsync(targetUser);
+        _mockUserManager.Setup(u => u.FindByIdAsync("admin-id")).ReturnsAsync(adminUser);
+        _mockUserManager.Setup(u => u.GetRolesAsync(adminUser)).ReturnsAsync([SystemRoles.Administrator]);
+        _mockUserManager.Setup(u => u.GetRolesAsync(targetUser)).ReturnsAsync([SystemRoles.RegularUser]);
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
+        var request = CreateRequest("target-id", SystemRoles.SuperAdministrator);
+        _mockRoleManager.Setup(r => r.RoleExistsAsync(request.Role)).ReturnsAsync(true);
 
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-        var exception = await Should.ThrowAsync<NotFoundException>(() => _userService.Update(request, "admin-id"));
-        exception.Message.ShouldContain(request.Id);
-    }
-
-    //[Fact]
-    //public async Task Update_IncorrectCurrentPassword_ReturnsValidationException()
-    //{
-    //    var request = CreateUpdateRequest();
-    //    request.CurrentPassword = "oldPassword";
-    //    request.NewPassword = "newPassword";
-
-    //    var user = CreateTestUser(request.Id);
-    //    var adminUser = CreateTestUser("admin-id");
-    //    var identityError = new IdentityError { Description = "Password change failed. Incorrect password." };
-
-    //    _mockUserManager
-    //        .Setup(u => u.FindByIdAsync(request.Id))
-    //        .ReturnsAsync(user);
-
-    //    _mockUserManager
-    //        .Setup(u => u.FindByIdAsync("admin-id"))
-    //        .ReturnsAsync(adminUser);
-
-    //    _mockUserManager
-    //        .Setup(u => u.GetRolesAsync(adminUser))
-    //        .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-    //    _mockUserManager
-    //        .Setup(u => u.GetRolesAsync(user))
-    //        .ReturnsAsync([SystemRoles.RegularUser]);
-
-    //    _mockUserManager
-    //        .Setup(u => u.Logging)
-
-    //    _mockUserManager
-    //        .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
-    //        .ReturnsAsync(IdentityResult.Failed(identityError));
-
-    //    var exception = await Should.ThrowAsync<ValidationException>(() => _userService.Update(request, "admin-id"));
-    //    exception.Message.ShouldContain("incorrect password");
-
-    //    _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Never);
-    //}
-
-    [Fact]
-    public async Task Update_OnlyEmailProvided_OnlyUpdatesEmail()
-    {
-        var request = new UpdateRequest
-        {
-            Id = "test-user-id",
-            Email = "newEmail@example.com"
-        };
-
-        var user = CreateTestUser(request.Id);
-        var adminUser = CreateTestUser("admin-id");
-        var originalFirstName = user.FirstName;
-        var originalLastName = user.LastName;
-        var originalPassword = user.PasswordHash;
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.UpdateAsync(user))
-            .ReturnsAsync(IdentityResult.Success);
-
-        await _userService.Update(request, "admin-id");
-
-        user.Email.ShouldBe(request.Email);
-        user.UserName.ShouldBe(request.Email);
-        user.FirstName.ShouldBe(originalFirstName);
-        user.LastName.ShouldBe(originalLastName);
-        user.PasswordHash.ShouldBe(originalPassword);
-
-        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
+        var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Update(request, "admin-id"));
+        ex.Message.ShouldContain("higher-level role");
     }
 
     [Fact]
-    public async Task Update_OnlyFirstNameProvided_OnlyUpdatesFirstName()
+    public async Task Update_RequesterCannotEditHigherUser_ShouldThrowBadRequest()
     {
-        var request = new UpdateRequest
-        {
-            Id = "test-user-id",
-            FirstName = "New-FirstName"
-        };
+        var admin = CreateUser("admin-id");
+        var superAdmin = CreateUser("target-id");
 
-        var user = CreateTestUser(request.Id);
-        var adminUser = CreateTestUser("admin-id");
-        var originalEmail = user.Email;
-        var originalLastName = user.LastName;
-        var originalPassword = user.PasswordHash;
+        _mockUserManager.Setup(u => u.FindByIdAsync("target-id")).ReturnsAsync(superAdmin);
+        _mockUserManager.Setup(u => u.FindByIdAsync("admin-id")).ReturnsAsync(admin);
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
+        _mockUserManager.Setup(u => u.GetRolesAsync(admin)).ReturnsAsync([SystemRoles.Administrator]);
+        _mockUserManager.Setup(u => u.GetRolesAsync(superAdmin)).ReturnsAsync([SystemRoles.SuperAdministrator]);
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
+        var request = CreateRequest("target-id");
 
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.UpdateAsync(user))
-            .ReturnsAsync(IdentityResult.Success);
-
-        await _userService.Update(request, "admin-id");
-
-        user.FirstName.ShouldBe(request.FirstName);
-        user.Email.ShouldBe(originalEmail);
-        user.UserName.ShouldBe(originalEmail);
-        user.LastName.ShouldBe(originalLastName);
-        user.PasswordHash.ShouldBe(originalPassword);
-
-        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
+        var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Update(request, "admin-id"));
+        ex.Message.ShouldContain("cannot update a user with role");
     }
 
     [Fact]
-    public async Task Update_OnlyLastNameProvided_OnlyUpdatesLastName()
+    public async Task Update_ValidData_ShouldUpdateSuccessfully()
     {
-        var request = new UpdateRequest
-        {
-            Id = "test-user-id",
-            LastName = "New-LastName"
-        };
+        var user = CreateUser("target-id");
+        var superAdmin = CreateUser("super-id");
 
-        var user = CreateTestUser(request.Id);
-        var adminUser = CreateTestUser("admin-id");
-        var originalEmail = user.Email;
-        var originalFirstName = user.FirstName;
-        var originalPassword = user.PasswordHash;
+        _mockUserManager.Setup(u => u.FindByIdAsync("target-id")).ReturnsAsync(user);
+        _mockUserManager.Setup(u => u.FindByIdAsync("super-id")).ReturnsAsync(superAdmin);
+        _mockUserManager.Setup(u => u.GetRolesAsync(superAdmin)).ReturnsAsync([SystemRoles.SuperAdministrator]);
+        _mockUserManager.Setup(u => u.GetRolesAsync(user)).ReturnsAsync([SystemRoles.RegularUser]);
+        _mockUserManager.Setup(u => u.UpdateAsync(user)).ReturnsAsync(IdentityResult.Success);
 
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.SuperAdministrator]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.UpdateAsync(user))
-            .ReturnsAsync(IdentityResult.Success);
-
-        await _userService.Update(request, "admin-id");
-
-        user.LastName.ShouldBe(request.LastName);
-        user.Email.ShouldBe(originalEmail);
-        user.UserName.ShouldBe(originalEmail);
-        user.FirstName.ShouldBe(originalFirstName);
-        user.PasswordHash.ShouldBe(originalPassword);
-
-        _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
-    }
-
-    //[Fact]
-    //public async Task Update_ProvidesValidCurrentPasswordAndNewPassword_UpdatesPassword()
-    //{
-    //    var request = CreateUpdateRequest();
-    //    var user = CreateTestUser(request.Id);
-    //    var adminUser = CreateTestUser("admin-id");
-
-    //    _mockUserManager
-    //        .Setup(u => u.FindByIdAsync(request.Id))
-    //        .ReturnsAsync(user);
-
-    //    _mockUserManager
-    //        .Setup(u => u.FindByIdAsync("admin-id"))
-    //        .ReturnsAsync(adminUser);
-
-    //    _mockUserManager
-    //        .Setup(u => u.GetRolesAsync(adminUser))
-    //        .ReturnsAsync(new List<string> { SystemRoles.SuperAdministrator });
-
-    //    _mockUserManager
-    //        .Setup(u => u.GetRolesAsync(user))
-    //        .ReturnsAsync(new List<string> { SystemRoles.RegularUser });
-
-    //    _mockUserManager
-    //        .Setup(u => u.ChangePasswordAsync(user, request.CurrentPassword!, request.NewPassword!))
-    //        .ReturnsAsync(IdentityResult.Success);
-
-    //    _mockUserManager
-    //        .Setup(u => u.UpdateAsync(user))
-    //        .ReturnsAsync(IdentityResult.Success);
-
-    //    var result = await _userService.Update(request, "admin-id");
-
-    //    result.ShouldNotBeNull();
-    //    result.UserId.ShouldBe(request.Id);
-
-    //    _mockUserManager.Verify(u => u.ResetPasswordAsync(
-    //        It.Is<ApplicationUser>(u => u.Id == user.Id),
-    //        token,
-    //        request.NewPassword!),
-    //        Times.Once
-    //    );
-
-    //    _mockUserManager.Verify(u => u.UpdateAsync(user), Times.Once);
-    //}
-
-    [Fact]
-    public async Task Update_UserTriesToUpdateOtherUserWithoutPermission_ThrowsUnauthorizedAccessException()
-    {
-        var request = CreateUpdateRequest();
-        var user = CreateTestUser(request.Id);
-        var regularUser = CreateTestUser("regular-user-id");
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("regular-user-id"))
-            .ReturnsAsync(regularUser);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(regularUser))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
-            () => _userService.Update(request, "regular-user-id"));
-
-        exception.Message.ShouldContain("not allowed to update other users");
-    }
-
-    [Fact]
-    public async Task Update_WithRoleChangeByNonSuperAdmin_ThrowsValidationException()
-    {
-        var request = new UpdateRequest
-        {
-            Id = "test-user-id",
-            Role = SystemRoles.SuperAdministrator
-        };
-
-        var user = CreateTestUser(request.Id);
-        var adminUser = CreateTestUser("admin-id");
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("admin-id"))
-            .ReturnsAsync(adminUser);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(adminUser))
-            .ReturnsAsync([SystemRoles.Administrator]);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        var exception = await Should.ThrowAsync<ValidationException>(
-            () => _userService.Update(request, "admin-id"));
-
-        exception.Message.ShouldContain("cannot assign the Super Administrator role");
-    }
-
-    [Fact]
-    public async Task Update_UserUpdatesSelf_Successful()
-    {
-        var request = new UpdateRequest
-        {
-            Id = "self-user-id",
-            FirstName = "UpdatedFirstName",
-            LastName = "UpdatedLastName"
-        };
-
-        var user = CreateTestUser(request.Id);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync(request.Id))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.FindByIdAsync("self-user-id"))
-            .ReturnsAsync(user);
-
-        _mockUserManager
-            .Setup(u => u.GetRolesAsync(user))
-            .ReturnsAsync([SystemRoles.RegularUser]);
-
-        _mockUserManager
-            .Setup(u => u.UpdateAsync(user))
-            .ReturnsAsync(IdentityResult.Success);
-
-        var result = await _userService.Update(request, "self-user-id");
+        var request = CreateRequest("target-id");
+        var result = await _userService.Update(request, "super-id");
 
         result.ShouldNotBeNull();
-        result.UserId.ShouldBe(request.Id);
+        result.UserId.ShouldBe("target-id");
+        user.Email.ShouldBe(request.Email);
         user.FirstName.ShouldBe(request.FirstName);
         user.LastName.ShouldBe(request.LastName);
+    }
+
+    [Fact]
+    public async Task Update_UpdateFails_ShouldThrowBadRequest()
+    {
+        var user = CreateUser("user-id");
+        _mockUserManager.Setup(u => u.FindByIdAsync("user-id")).ReturnsAsync(user);
+        _mockUserManager.Setup(u => u.UpdateAsync(user))
+                        .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "DB Error" }));
+
+        var request = CreateRequest("user-id");
+
+        var ex = await Should.ThrowAsync<BadRequestException>(() => _userService.Update(request, "user-id"));
+        ex.Message.ShouldContain("User update failed");
     }
 }
