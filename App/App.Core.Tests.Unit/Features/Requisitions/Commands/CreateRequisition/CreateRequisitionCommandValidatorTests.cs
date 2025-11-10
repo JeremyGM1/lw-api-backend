@@ -1,10 +1,8 @@
-﻿using Application.Common.Configs;
+﻿using Moq;
+using Shouldly;
+using Application.Common.Configs;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces.Features.Requisitions;
-using Domain.Entities.Requisitions;
-using Moq;
-using Shouldly;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 

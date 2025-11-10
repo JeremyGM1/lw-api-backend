@@ -1,15 +1,15 @@
-﻿using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Application.Features.Requisitions.MappingProfiles;
-using Application.Interfaces.Features.Common;
-using Application.Interfaces.Features.Requisitions;
-using Application.Interfaces.LoggingService;
-using AutoMapper;
-using Domain.Entities.Requisitions;
+﻿using AutoMapper;
 using FluentAssertions;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
+using Application.Features.Requisitions.Commands.UpdateRequisition;
+using Application.Features.Requisitions.MappingProfiles;
+using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
+using Application.Interfaces.LoggingService;
+using Domain.Entities.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 

@@ -30,7 +30,7 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -164,7 +164,6 @@ public class UpdateRequisitionCommandValidatorTests
     {
         var command = TestData.UpdateRequisitionCommand();
         command.HiringManager = hiringManager;
-        var existingRequisition = TestData.CreateRequisition();
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
@@ -310,7 +309,7 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -323,7 +322,7 @@ public class UpdateRequisitionCommandValidatorTests
 
         var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);
 
-        var result = await validator.ValidateAsync(command);        
+        var result = await validator.ValidateAsync(command);
 
         result.IsValid.ShouldBeTrue();
         result.Errors.ShouldBeEmpty();

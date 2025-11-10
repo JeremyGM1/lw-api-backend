@@ -1,9 +1,9 @@
-﻿using Application;
-using LoggingService;
+﻿using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
+using Application;
+using LoggingService;
 using Persistence;
-using System.Threading.RateLimiting;
 
 namespace API.Extensions;
 

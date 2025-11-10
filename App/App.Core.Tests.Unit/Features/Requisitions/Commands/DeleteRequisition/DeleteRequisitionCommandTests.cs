@@ -1,15 +1,11 @@
-﻿using Application.Common.Results;
-using Application.Exceptions;
+﻿using FluentValidation.Results;
+using Moq;
+using Shouldly;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using FluentValidation;
-using FluentValidation.Results;
-using Microsoft.EntityFrameworkCore.Query;
-using Moq;
-using Shouldly;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 

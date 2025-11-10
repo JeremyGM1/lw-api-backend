@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using FluentValidation.Results;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
-using Application.Exceptions;
 using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
-using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Domain.Entities.Requisitions;
 

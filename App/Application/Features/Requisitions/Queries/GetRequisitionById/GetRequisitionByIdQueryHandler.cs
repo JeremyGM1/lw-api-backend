@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Application.Exceptions;
+using Application.Common.Results.RequisitionErrors;
+using Application.Common.Results;
 using Application.Features.Requisitions.Dtos;
 using Application.Interfaces.Features.Requisitions;
-using Application.Common.Results;
-using Application.Common.Results.RequisitionErrors;
 
 namespace Application.Features.Requisitions.Queries.GetRequisitionById;
 

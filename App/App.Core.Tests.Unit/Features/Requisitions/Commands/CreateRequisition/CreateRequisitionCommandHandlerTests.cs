@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
 using Moq;
 using Shouldly;
-using Application.Exceptions;
 using Application.Features.Requisitions.Commands.CreateRequisition;
+using Application.Interfaces.Features.Common;
+using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Interfaces.Features.Requisitions;
-using Application.Interfaces.Features.Common;
-using Application.Common.Results;
-using Application.Common.Results.RequisitionErrors;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
