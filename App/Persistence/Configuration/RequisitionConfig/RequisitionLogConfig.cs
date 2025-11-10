@@ -11,11 +11,11 @@ public class RequisitionLogConfig : IEntityTypeConfiguration<RequisitionLog>
         builder.HasIndex(e => e.EntityId);
         builder.HasIndex(e => e.TimeStamp);
 
-        builder.HasOne(e => e.Requisition)
-            .WithMany()
-            .HasForeignKey(e => e.EntityId)
-            .HasPrincipalKey(e => e.ReqCode)
-            .OnDelete(DeleteBehavior.SetNull)
-            .IsRequired(false);
+        //builder.HasOne(e => e.Requisition)
+        //    .WithMany()
+        //    .HasForeignKey(e => e.EntityId)
+        //    .HasPrincipalKey(e => e.ReqCode)
+        //    .OnDelete(DeleteBehavior.SetNull)
+        //    .IsRequired(false);
     }
 }

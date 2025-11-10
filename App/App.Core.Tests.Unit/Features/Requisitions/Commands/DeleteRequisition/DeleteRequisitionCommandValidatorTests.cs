@@ -31,24 +31,6 @@ public class DeleteRequisitionCommandValidatorTests
     }
 
     [Fact]
-    public async Task DeleteValidator_WhenIdDoesNotExist_ShouldReturnBadRequestException()
-    {
-        var command = new DeleteRequisitionCommand { ReqCode = "600901" };
-
-        _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode))
-            .ReturnsAsync(false);
-
-        var validator = new DeleteRequisitionCommandValidator(_mockReqRepository.Object);
-        var result = await validator.ValidateAsync(command);
-
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
-        result.Errors.First(e => e.PropertyName == "ReqCode")
-            .ErrorMessage.ShouldContain("does not exist");
-    }
-
-    [Fact]
     public async Task DeleteValidator_WhenIdIsNull_ShouldReturnFailure()
     {
         var command = new DeleteRequisitionCommand { ReqCode = null! };

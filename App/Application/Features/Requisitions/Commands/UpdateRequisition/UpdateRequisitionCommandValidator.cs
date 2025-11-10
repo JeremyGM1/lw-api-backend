@@ -31,6 +31,10 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
 
         RuleFor(r => r.Headcount).InclusiveBetween(0, 1000);
 
+        RuleFor(r => r.LocationTypeId)
+            .MustAsync(LocationTypeExist).WithMessage("{PropertyName} does not exist")
+            .RequiredForeignKey();
+
         RuleFor(r => r.LocationId)
             .MustAsync(LocationExist).WithMessage("{PropertyName} does not exist")
             .RequiredForeignKey();
@@ -71,6 +75,7 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
     private async Task<bool> HardwareExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionHardware>(id);
 
     private async Task<bool> LocationExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocation>(id);
+    private async Task<bool> LocationTypeExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocationType>(id);
 
     private async Task<bool> CurrencyExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionCurrency>(id);
 

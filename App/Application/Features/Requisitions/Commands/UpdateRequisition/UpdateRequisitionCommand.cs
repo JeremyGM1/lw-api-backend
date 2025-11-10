@@ -26,6 +26,10 @@ public record UpdateRequisitionCommand : IRequest<Result>
     [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int Headcount { get; set; }
 
+    [Required]
+    [Range(1, ValidationDefaultValues.IntMaxValue)]
+    public int LocationTypeId { get; set; }
+
     [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int LocationId { get; set; }
 

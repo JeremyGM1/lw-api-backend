@@ -17,8 +17,6 @@ public class GetRequisitionByIdQueryHandlerTests
 {
     private readonly IMapper _mapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
-    private readonly Mock<IValidator<GetRequisitionByIdQuery>> _mockValidator;
-    private readonly Mock<ICommonHelpers> _mockCommonHelpers;
     private readonly GetRequisitionByIdQueryHandler _handler;
 
     public GetRequisitionByIdQueryHandlerTests()
@@ -28,13 +26,9 @@ public class GetRequisitionByIdQueryHandlerTests
         _mapper = config.CreateMapper();
 
         _mockReqRepository = new Mock<IRequisitionRepository>();
-        _mockValidator = new Mock<IValidator<GetRequisitionByIdQuery>>();
-        _mockCommonHelpers = new Mock<ICommonHelpers>();
         _handler = new GetRequisitionByIdQueryHandler(
             _mapper,
-            _mockReqRepository.Object,
-            _mockValidator.Object,
-            _mockCommonHelpers.Object
+            _mockReqRepository.Object
         );
     }
 
@@ -61,10 +55,6 @@ public class GetRequisitionByIdQueryHandlerTests
         var query = new GetRequisitionByIdQuery(id);
         var validationResult = new ValidationResult();
 
-        _mockValidator
-            .Setup(v => v.ValidateAsync(query, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
-
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(id))
             .ReturnsAsync((Requisition)null!);
@@ -83,10 +73,6 @@ public class GetRequisitionByIdQueryHandlerTests
         [
             new ValidationFailure("Id", "Validation failed")
         ]);
-
-        _mockValidator
-            .Setup(v => v.ValidateAsync(query, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(validationResult);
 
         //_mockCommonHelpers
         //    .Setup(h => h.ThrowIfValidationFails(validationResult))

@@ -17,6 +17,7 @@ public class GenericLogService(AppDbContext context) : ILoggerService
             UserEmail = userEmail,
             IpAddress = ipAddress,
             UserAgent = userAgent,
+            TimeStamp = DateTime.UtcNow,
             ActionResult = "Success"
         };
 
@@ -34,6 +35,7 @@ public class GenericLogService(AppDbContext context) : ILoggerService
             UserEmail = userEmail,
             IpAddress = ipAddress,
             UserAgent = userAgent,
+            TimeStamp = DateTime.UtcNow,
             ActionResult = "Failure",
             ErrorMessage = errorMessage
         };

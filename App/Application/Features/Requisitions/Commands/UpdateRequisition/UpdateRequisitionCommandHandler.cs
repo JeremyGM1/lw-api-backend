@@ -25,8 +25,6 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             if (requisition == null)
                 return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode!));
 
-            await _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
-
             _mapper.Map(request, requisition);
 
             requisition.CreatedAt = requisition!.CreatedAt;

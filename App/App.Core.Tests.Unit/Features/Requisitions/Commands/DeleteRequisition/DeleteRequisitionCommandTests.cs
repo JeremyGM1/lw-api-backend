@@ -7,6 +7,7 @@ using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
 using FluentValidation;
 using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Shouldly;
 
@@ -48,7 +49,8 @@ public class DeleteRequisitionCommandTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        result.ShouldBe(Result.Success());
+        result.IsSuccess.ShouldBeTrue();
+
         _mockReqRepository
             .Verify(r => r.GetRequisitionById(command.ReqCode),
             Times.Once);
@@ -59,40 +61,7 @@ public class DeleteRequisitionCommandTests
     }
 
     [Fact]
-    public async Task DeleteHandler_WhenValidationFails_ShouldThrowBadRequestException()
-    {
-        var command = new DeleteRequisitionCommand { ReqCode = "600901" };
-
-        var validationResult = new ValidationResult(
-        [
-            new ValidationFailure("Id", "Invalid Id")
-        ]);
-
-        //_mockValidator
-        //    .Setup(v => v.ValidateAsync(command, It.IsAny<CancellationToken>()))
-        //    .ReturnsAsync(validationResult);
-
-        //_mockCommonHelpers
-        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
-        //    .Callback<ValidationResult>(vr =>
-        //    {
-        //        if (vr.Errors.Count != 0)
-        //            throw new BadRequestException("Invalid requisition", vr);
-        //    });
-
-        var exception = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(command, CancellationToken.None));
-
-        exception.ShouldBeOfType<BadRequestException>();
-        exception.Message.ShouldBe("Invalid requisition");
-
-        _mockReqRepository
-            .Verify(r => r.GetRequisitionById(It.IsAny<string>()), Times.Never);
-        _mockReqRepository
-            .Verify(r => r.DeleteAsync(It.IsAny<Requisition>()), Times.Never);
-    }
-
-    [Fact]
-    public async Task DeleteHandler_WhenIdDoesNotExist_ShouldThrowNotFoundException()
+    public async Task DeleteHandler_WhenIdDoesNotExist_ShouldReturnResultFailure()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600901" };
 
@@ -100,9 +69,9 @@ public class DeleteRequisitionCommandTests
             .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync((Requisition)null!);
 
-        var exception = await Should.ThrowAsync<NotFoundException>(() => _handler.Handle(command, CancellationToken.None));
+        var result = await _handler.Handle(command, CancellationToken.None);
 
-        exception.ShouldBeOfType<NotFoundException>();
-        exception.Message.ShouldContain("not found");
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.Code.ShouldBe("Requisitions.NotExisting");
     }
 }

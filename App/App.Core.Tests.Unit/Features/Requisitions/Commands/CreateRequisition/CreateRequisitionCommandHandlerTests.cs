@@ -11,6 +11,7 @@ using Domain.Entities.Requisitions;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.Features.Common;
 using Application.Common.Results;
+using Application.Common.Results.RequisitionErrors;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -37,18 +38,14 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task CreateHandler_WhenRequestIsValid_ShouldRegisterRequisition()
+    public async Task CreateHandler_WhenRequestIsValid_ShouldReturnResultSuccess()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
-        var validationResult = new ValidationResult();
 
-        _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
-
-        _mockCommonHelpers
-            .Setup(ch => ch.GetCurrentUserFromToken())
-            .Returns("TestUser@email.com");
+        _mockReqRepository
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .ReturnsAsync((Requisition)null!);
 
         _mockMapper
             .Setup(m => m.Map<Requisition>(command))
@@ -60,7 +57,7 @@ public class CreateRequisitionCommandHandlerTests
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
-        //result.ShouldBe(Result.Success());
+        result.IsSuccess.ShouldBeTrue();
         _mockReqRepository
             .Verify(r => r.CreateAsync(It.Is<Requisition>(req => req.ReqCode == "600900")),
             Times.Once
@@ -68,23 +65,33 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
+    public async Task CreateHandler_WhenReqCodeAlreadyExist_ShouldReturnResultError()
+    {
+        var command = TestData.CreateRequisitionCommand();
+        var existingRequisition = TestData.CreateRequisition();
+
+        _mockReqRepository
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .ReturnsAsync(existingRequisition);
+
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.Code.ShouldContain("Requisitions.Existing");
+    }
+
+    [Fact]
     public async Task CreateHandler_WhenAuditFieldsAreSetCorrectly_ShouldSucceed()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
-        var validationResult = new ValidationResult();
         Requisition capturedRequisition = null!;
 
         const string userEmail = "TestUser@email.com";
-        var ipAddress = It.IsAny<string>();
-        var userAgent = It.IsAny<string>();
-
-        _mockCommonHelpers
-            .Setup(ch => ch.ValidateForeignKey(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()));
 
         _mockCommonHelpers
             .Setup(ch => ch.GetLoggingContext())
-            .Returns((userEmail, ipAddress, userAgent));
+            .Returns((userEmail, It.IsAny<string>(), It.IsAny<string>()));
 
         _mockMapper
             .Setup(m => m.Map<Requisition>(command))
@@ -103,49 +110,103 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task CreateHandler_WhenValidationFails_ShouldThrowBadRequestException()
+    public async Task CreateHandler_WhenSuccessfulCreation_ShouldLogSuccess()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);
-        var validationResult = new ValidationResult(
-        [
-            new ValidationFailure("Invalid requisition", "Error message")
-        ]);
 
-        //_mockCommonHelpers
-        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
-        //    .Callback<ValidationResult>(vr =>
-        //    {
-        //        if (vr.Errors.Count != 0)
-        //            throw new BadRequestException("Invalid requisition", vr);
-        //    });
-
-        var exception = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(command, CancellationToken.None));
-
-        exception.ShouldBeOfType<BadRequestException>();
-        exception.Message.ShouldBe("Invalid requisition");
-
-        _mockReqRepository
-            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
-            Times.Never);
-    }
-
-    [Fact]
-    public async Task CreateHandler_WhenUserIsNotAuthenticated_ShouldThrowsUnauthorizedAccessException()
-    {
-        var command = TestData.CreateRequisitionCommand();
+        const string userEmail = "TestUser@email.com";
+        const string ipAddress = "198.163.1.10";
+        const string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
 
         _mockCommonHelpers
             .Setup(h => h.GetLoggingContext())
-            .Throws(new UnauthorizedAccessException("User not authenticated"));
-
-        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(() => _handler.Handle(command, CancellationToken.None));
-
-        exception.ShouldBeOfType<UnauthorizedAccessException>();
-        exception.Message.ShouldBe("User not authenticated");
+            .Returns((userEmail, ipAddress, userAgent));
 
         _mockReqRepository
-            .Verify(r => r.CreateAsync(It.IsAny<Requisition>()),
-            Times.Never);
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .ReturnsAsync((Requisition)null!);
+
+        _mockMapper
+            .Setup(m => m.Map<Requisition>(command))
+            .Returns(mockRequisition);
+
+        _mockReqRepository
+            .Setup(r => r.CreateAsync(mockRequisition))
+            .Returns(Task.CompletedTask);
+
+        _mockLogger
+            .Setup(l => l.LogSuccessAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .Returns(Task.CompletedTask);
+
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsSuccess.ShouldBeTrue();
+        _mockLogger.Verify(v => v.LogSuccessAsync(
+            command.ReqCode,
+            "Create",
+            userEmail,
+            ipAddress,
+            userAgent,
+            "Success")
+        ,Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateHandler_WhenFailure_ShouldLogFailure()
+    {
+        var command = TestData.CreateRequisitionCommand();
+        var mockCommand = TestData.CreateRequisition(command);
+        const string error = "Requisitions.Existing";
+
+        const string userEmail = "TestUser@email.com";
+        const string ipAddress = "198.163.1.10";
+        const string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
+
+        _mockCommonHelpers
+            .Setup(h => h.GetLoggingContext())
+            .Returns((userEmail, ipAddress, userAgent));
+
+        _mockReqRepository
+            .Setup(r => r.GetRequisitionById(command.ReqCode))
+            .ReturnsAsync((Requisition)null!);
+
+        _mockMapper
+            .Setup(m => m.Map<Requisition>(command))
+            .Returns(mockCommand);
+
+        _mockReqRepository
+            .Setup(r => r.CreateAsync(mockCommand))
+            .ThrowsAsync(new Exception(error));
+
+        _mockLogger
+            .Setup(l => l.LogFailureAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>()))
+            .Returns(Task.CompletedTask);
+
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        result.IsSuccess.ShouldBeFalse();
+        _mockLogger.Verify(v => v.LogFailureAsync(
+        command.ReqCode,
+            "Create",
+            userEmail,
+            ipAddress,
+            userAgent,
+            "Failure",
+            error)
+        , Times.Once);
     }
 }

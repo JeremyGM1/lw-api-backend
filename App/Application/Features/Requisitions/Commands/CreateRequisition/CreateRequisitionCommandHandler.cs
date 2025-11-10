@@ -22,10 +22,8 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
 
         try
         {
-            if (await _reqRepository.RequisitionExists(request.ReqCode))
+            if (await _reqRepository.GetRequisitionById(request.ReqCode) != null)
                 return Result.Failure(RequisitionErrors.ExistingRequisition(request.ReqCode));
-
-            await _commonHelpers.ValidateForeignKey(request.StatusId, request.WorkTypeId, request.HardwareId, request.LocationId, request.CompensationBandCurrencyId, request.CompensationBandIntervalId);
 
             var reqToCreate = _mapper.Map<Requisition>(request);
 

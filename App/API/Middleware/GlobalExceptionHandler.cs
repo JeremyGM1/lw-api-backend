@@ -15,7 +15,12 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-            var errors = fluentException.Errors.Select(e => e.ErrorMessage).ToList();
+            var errors = fluentException.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToList()
+                );
 
             var response = new
             {
@@ -23,7 +28,8 @@ public class GlobalExceptionHandler : IExceptionHandler
                 error = new
                 {
                     code = "VALIDATION_ERROR",
-                    message = string.Join(", ", errors)
+                    description = "One or more validation errors occurred.",
+                    metadata = errors
                 }
             };
 
@@ -39,7 +45,8 @@ public class GlobalExceptionHandler : IExceptionHandler
                 error = new
                 {
                     code = "INTERNAL_ERROR",
-                    message = "An unexpected error occurred"
+                    description = "One or more validation errors occurred.",
+                    metadata = (object)null!
                 }
             };
 
