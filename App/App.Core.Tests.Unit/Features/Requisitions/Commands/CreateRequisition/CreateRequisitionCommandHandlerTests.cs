@@ -65,7 +65,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task CreateHandler_WhenReqCodeAlreadyExist_ShouldReturnResultError()
+    public async Task CreateHandler_WhenReqCodeAlreadyExist_ShouldReturnResultFailure()
     {
         var command = TestData.CreateRequisitionCommand();
         var existingRequisition = TestData.CreateRequisition();
@@ -81,7 +81,7 @@ public class CreateRequisitionCommandHandlerTests
     }
 
     [Fact]
-    public async Task CreateHandler_WhenAuditFieldsAreSetCorrectly_ShouldSucceed()
+    public async Task CreateHandler_WhenAuditFieldsAreSetCorrectly_ShouldSuccess()
     {
         var command = TestData.CreateRequisitionCommand();
         var mockRequisition = TestData.CreateRequisition(command);

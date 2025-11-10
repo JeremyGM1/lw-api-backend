@@ -45,42 +45,22 @@ public class GetRequisitionByIdQueryHandlerTests
         var result = await _handler.Handle(query, CancellationToken.None);
 
         result.ShouldNotBeNull();
-        result.ReqCode.ShouldBe("600900");
+        result.Data!.ReqCode.ShouldBe("600900");
     }
 
     [Fact]
     public async Task GetRequisitionHandler_WhenIdDoesntExist_ShouldThrowNotFoundException()
     {
-        const string id = "600901";
-        var query = new GetRequisitionByIdQuery(id);
-        var validationResult = new ValidationResult();
+        const string ReqCode = "600901";
+        var query = new GetRequisitionByIdQuery(ReqCode);
 
         _mockReqRepository
-            .Setup(r => r.GetRequisitionById(id))
+            .Setup(r => r.GetRequisitionById(ReqCode))
             .ReturnsAsync((Requisition)null!);
 
-        var exception = await Should.ThrowAsync<NotFoundException>(() => _handler.Handle(query, CancellationToken.None));
+        var result = await _handler.Handle(query, CancellationToken.None);
 
-        exception.ShouldBeOfType<NotFoundException>();
-        exception.Message.ShouldContain("was not found");
-    }
-
-    [Fact]
-    public async Task GetRequisitionHandler_WhenInvalidId_ShouldThrowBadRequestException()
-    {
-        var query = new GetRequisitionByIdQuery("");
-        var validationResult = new ValidationResult(
-        [
-            new ValidationFailure("Id", "Validation failed")
-        ]);
-
-        //_mockCommonHelpers
-        //    .Setup(h => h.ThrowIfValidationFails(validationResult))
-        //    .Throws(new BadRequestException("Validation Failed"));
-
-        var result = await Should.ThrowAsync<BadRequestException>(() => _handler.Handle(query, CancellationToken.None));
-
-        result.ShouldBeOfType<BadRequestException>();
-        result.Message.ShouldContain("Validation failed");
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.Code.ShouldContain("Requisitions.NotExisting");
     }
 }

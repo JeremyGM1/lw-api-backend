@@ -38,7 +38,12 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<GetRequisitionDto>> GetById(string Id)
     {
-        return await _mediator.Send(new GetRequisitionByIdQuery(Id));
+        var result = await _mediator.Send(new GetRequisitionByIdQuery(Id));
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
     }
 
     [HttpPost]

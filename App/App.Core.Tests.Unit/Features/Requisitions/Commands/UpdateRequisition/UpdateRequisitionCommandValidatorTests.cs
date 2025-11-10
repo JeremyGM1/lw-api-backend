@@ -30,10 +30,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync(existingRequisition);
 
@@ -41,6 +37,7 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -50,33 +47,6 @@ public class UpdateRequisitionCommandValidatorTests
 
         result.IsValid.ShouldBeTrue();
         result.Errors.ShouldBeEmpty();
-    }
-
-    [Fact]
-    public async Task UpdateValidator_WhenIdDoesNotExist_ShouldReturnFailure()
-    {
-        var command = TestData.UpdateRequisitionCommand();
-        command.ReqCode = "600901";
-
-        _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.ReqCode))
-            .ReturnsAsync((Requisition)null!);
-
-        SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
-        SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
-        SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
-        SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
-        SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
-        SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
-
-        var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);
-
-        var result = await validator.ValidateAsync(command);
-
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
-        result.Errors.First(e => e.PropertyName == "ReqCode")
-            .ErrorMessage.ShouldContain("does not exist");
     }
 
     [Theory]
@@ -90,10 +60,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
@@ -101,6 +67,7 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -115,10 +82,11 @@ public class UpdateRequisitionCommandValidatorTests
     public async Task UpdateValidator_ForeignKeysAreNotValid_ShouldReturnFailure()
     {
         var command = TestData.UpdateRequisitionCommand();
+        var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
+            .Setup(r => r.GetRequisitionById(command.ReqCode!))
+            .ReturnsAsync(existingRequisition);
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, false);
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, false);
@@ -170,10 +138,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.ReqCode!))
-           .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
@@ -181,6 +145,7 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -201,18 +166,11 @@ public class UpdateRequisitionCommandValidatorTests
         command.HiringManager = hiringManager;
         var existingRequisition = TestData.CreateRequisition();
 
-        _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.ReqCode!))
-            .ReturnsAsync(existingRequisition);
-
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -234,10 +192,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
@@ -245,6 +199,7 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -302,10 +257,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
             .ReturnsAsync(existingRequisition);
 
@@ -313,6 +264,7 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
@@ -332,10 +284,6 @@ public class UpdateRequisitionCommandValidatorTests
         var command = TestData.UpdateRequisitionCommand();
         command.Description = new string('x', 201);
         var existingRequisition = TestData.CreateRequisition();
-
-        _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.ReqCode!))
-           .ReturnsAsync(true);
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -362,10 +310,6 @@ public class UpdateRequisitionCommandValidatorTests
         var existingRequisition = TestData.CreateRequisition();
 
         _mockReqRepository
-            .Setup(r => r.RequisitionExists(command.ReqCode!))
-            .ReturnsAsync(true);
-
-        _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode))
             .ReturnsAsync(existingRequisition);
 
@@ -373,17 +317,17 @@ public class UpdateRequisitionCommandValidatorTests
         SetupForeignKeyExist<RequisitionWorkType>(command.WorkTypeId, true);
         SetupForeignKeyExist<RequisitionHardware>(command.HardwareId, true);
         SetupForeignKeyExist<RequisitionLocation>(command.LocationId, true);
+        SetupForeignKeyExist<RequisitionLocationType>(command.LocationTypeId, true);
         SetupForeignKeyExist<RequisitionCurrency>(command.CompensationBandCurrencyId, true);
         SetupForeignKeyExist<RequisitionInterval>(command.CompensationBandIntervalId, true);
 
         var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);
 
-        var result = await validator.ValidateAsync(command);
-
-        result.IsValid.ShouldBeTrue();
+        var result = await validator.ValidateAsync(command);        
 
         result.IsValid.ShouldBeTrue();
         result.Errors.ShouldBeEmpty();
+
     }
 
     [Fact]
@@ -392,10 +336,6 @@ public class UpdateRequisitionCommandValidatorTests
         var command = TestData.UpdateRequisitionCommand();
         command.BackfillName = new string('x', 101);
         var existingRequisition = TestData.CreateRequisition();
-
-        _mockReqRepository
-           .Setup(r => r.RequisitionExists(command.ReqCode!))
-           .ReturnsAsync(true);
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))

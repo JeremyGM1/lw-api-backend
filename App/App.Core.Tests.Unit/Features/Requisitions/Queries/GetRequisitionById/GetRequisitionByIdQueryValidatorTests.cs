@@ -3,6 +3,7 @@ using Shouldly;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Interfaces.Features.Requisitions;
+using Domain.Entities.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 
@@ -13,26 +14,6 @@ public class GetRequisitionByIdQueryValidatorTests
     public GetRequisitionByIdQueryValidatorTests()
     {
         _mockReqRepository = new Mock<IRequisitionRepository>();
-    }
-
-    [Fact]
-    public async Task GetRequisitionByIdValidator_WhenIdDoesntExist_ShouldThrowBadRequestException()
-    {
-        const string reqCode = "600901";
-        var query = new GetRequisitionByIdQuery(reqCode);
-
-        var validator = new GetRequisitionByIdQueryValidator(_mockReqRepository.Object);
-
-        _mockReqRepository
-            .Setup(r => r.RequisitionExists(reqCode))
-            .ReturnsAsync(false);
-
-        var result = await validator.ValidateAsync(query);
-
-        result.IsValid.ShouldBeFalse();
-        result.Errors.ShouldContain(e => e.PropertyName == "ReqCode");
-        result.Errors.First(e => e.PropertyName == "ReqCode")
-            .ErrorMessage.ShouldContain("does not exist");
     }
 
     [Theory]

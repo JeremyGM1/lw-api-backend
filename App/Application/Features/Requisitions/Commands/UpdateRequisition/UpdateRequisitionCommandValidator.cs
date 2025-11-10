@@ -63,7 +63,8 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
             .MaximumLength(200);
 
         RuleFor(r => r.BackfillName)
-            .MaximumLength(100);
+            .MaximumLength(100)
+            .When(b => !string.IsNullOrEmpty(b.BackfillName), ApplyConditionTo.CurrentValidator);
 
         _reqRepository = reqRepository;
     }
@@ -75,6 +76,7 @@ public class UpdateRequisitionCommandValidator : AbstractValidator<UpdateRequisi
     private async Task<bool> HardwareExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionHardware>(id);
 
     private async Task<bool> LocationExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocation>(id);
+
     private async Task<bool> LocationTypeExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionLocationType>(id);
 
     private async Task<bool> CurrencyExist(int id, CancellationToken cancellationToken) => await _reqRepository.ForeignKeyExist<RequisitionCurrency>(id);

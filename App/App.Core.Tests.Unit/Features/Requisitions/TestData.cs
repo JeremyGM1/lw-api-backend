@@ -66,6 +66,7 @@ public static class TestData
         HardwareId = 2,
         Headcount = 10,
         LocationId = 1,
+        LocationTypeId = 1,
         Department = "Engineering",
         HiringManager = "Adrian",
         Owner = "Camilo",
