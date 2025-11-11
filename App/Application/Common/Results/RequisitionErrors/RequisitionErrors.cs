@@ -2,9 +2,9 @@
 
 public static class RequisitionErrors
 {
-    public static Error ExistingRequisition(string id) => new(
+    public static Error ExistingRequisition(string reqCode) => new(
         "Requisitions.Existing",
-        $"A requisition with this code '{id}' already exists");
+        $"A requisition with this code '{reqCode}' already exists");
 
     public static Error NotExistingRequisition(string id) => new(
         "Requisitions.NotExisting",

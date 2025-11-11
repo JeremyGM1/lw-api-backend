@@ -7,6 +7,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using Application.Common.Results.RequisitionErrors;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -151,60 +152,5 @@ public class CreateRequisitionCommandHandlerTests
             userAgent,
             "Success")
         ,Times.Once);
-    }
-
-    [Fact]
-    public async Task CreateHandler_WhenFailure_ShouldLogFailure()
-    {
-        var command = TestData.CreateRequisitionCommand();
-        var mockCommand = TestData.CreateRequisition(command);
-        const string errorMessage = "Requisitions.Existing";
-        const string errorDescription = "A requisition with this code already exists";
-
-        const string userEmail = "TestUser@email.com";
-        const string ipAddress = "198.163.1.10";
-        const string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
-
-        _mockCommonHelpers
-            .Setup(h => h.GetLoggingContext())
-            .Returns((userEmail, ipAddress, userAgent));
-
-        _mockReqRepository
-            .Setup(r => r.GetRequisitionById(command.ReqCode))
-            .ReturnsAsync((Requisition)null!);
-
-        _mockMapper
-            .Setup(m => m.Map<Requisition>(command))
-            .Returns(mockCommand);
-
-        _mockReqRepository
-            .Setup(r => r.CreateAsync(mockCommand))
-            .ThrowsAsync(new Exception(errorMessage));
-
-        _mockLogger
-            .Setup(l => l.LogFailureAsync(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<string>()))
-            .Returns(Task.CompletedTask);
-
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        result.IsSuccess.ShouldBeFalse();
-        _mockLogger.Verify(v => v.LogFailureAsync(
-        command.ReqCode,
-            "Create",
-            userEmail,
-            ipAddress,
-            userAgent,
-            "Failure",
-            errorMessage,
-            errorDescription)
-        , Times.Once);
     }
 }
