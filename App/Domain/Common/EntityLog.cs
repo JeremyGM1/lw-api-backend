@@ -11,4 +11,5 @@ public class EntityLog
     public DateTime TimeStamp { get; set; }
     public string ActionResult { get; set; } = null!;
     public string? ErrorMessage { get; set; }
+    public string? ErrorDescription { get; set; }
 }

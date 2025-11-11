@@ -13,4 +13,8 @@ public static class RequisitionErrors
     public static Error RequisitionException(string message) => new(
         "Requisitions.Exception",
         $"An error occurred while processing the requisition: {message}");
+
+    public static Error RequisitionLogEmpty(string id) => new(
+        "RequisitionLog.Empty",
+        $"Requisition with id '{id}' doesn't have logs");
 }

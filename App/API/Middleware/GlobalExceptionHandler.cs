@@ -5,8 +5,6 @@ namespace API.Middleware;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
-    private readonly ILoggerService _logger;
-
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         httpContext.Response.ContentType = "application/json";

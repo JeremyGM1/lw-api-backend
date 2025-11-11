@@ -7,11 +7,11 @@ using Application.Interfaces.LoggingService;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, IRequisitionLogService logger) : IRequestHandler<DeleteRequisitionCommand, Result>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<DeleteRequisitionCommand, Result>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly IRequisitionLogService _logger = logger;
+    private readonly ILoggerService _logger = logger;
 
     public async Task<Result> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -21,7 +21,11 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         {
             var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
             if (requisition == null)
-                return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode));
+            {
+                var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode);
+                await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
+                return Result.Failure(reqError);
+            }
 
             await _logger.LogSuccessAsync(requisition.ReqCode, "Delete", userEmail, ipAddress, userAgent, "Success");
 
@@ -31,8 +35,9 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         }
         catch (Exception ex)
         {
-            await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message);
-            return Result.Failure(RequisitionErrors.RequisitionException(ex.Message));
+            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
+            await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
+            return Result.Failure(RequisitionErrors.RequisitionException(errorDescription));
         }
     }
 }

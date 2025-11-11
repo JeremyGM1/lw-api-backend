@@ -15,7 +15,7 @@ public class CreateRequisitionCommandHandlerTests
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<IRequisitionLogService> _mockLogger;
+    private readonly Mock<ILoggerService> _mockLogger;
     private readonly CreateRequisitionCommandHandler _handler;
 
     public CreateRequisitionCommandHandlerTests()
@@ -23,7 +23,7 @@ public class CreateRequisitionCommandHandlerTests
         _mockMapper = new Mock<IMapper>();
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLogger = new Mock<IRequisitionLogService>();
+        _mockLogger = new Mock<ILoggerService>();
         _handler = new CreateRequisitionCommandHandler(
             _mockMapper.Object,
             _mockReqRepository.Object,
@@ -158,7 +158,8 @@ public class CreateRequisitionCommandHandlerTests
     {
         var command = TestData.CreateRequisitionCommand();
         var mockCommand = TestData.CreateRequisition(command);
-        const string error = "Requisitions.Existing";
+        const string errorMessage = "Requisitions.Existing";
+        const string errorDescription = "A requisition with this code already exists";
 
         const string userEmail = "TestUser@email.com";
         const string ipAddress = "198.163.1.10";
@@ -178,10 +179,11 @@ public class CreateRequisitionCommandHandlerTests
 
         _mockReqRepository
             .Setup(r => r.CreateAsync(mockCommand))
-            .ThrowsAsync(new Exception(error));
+            .ThrowsAsync(new Exception(errorMessage));
 
         _mockLogger
             .Setup(l => l.LogFailureAsync(
+                It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>(),
@@ -201,7 +203,8 @@ public class CreateRequisitionCommandHandlerTests
             ipAddress,
             userAgent,
             "Failure",
-            error)
+            errorMessage,
+            errorDescription)
         , Times.Once);
     }
 }

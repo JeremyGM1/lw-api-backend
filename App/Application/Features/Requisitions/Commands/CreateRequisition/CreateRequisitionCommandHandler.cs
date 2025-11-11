@@ -23,7 +23,11 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         try
         {
             if (await _reqRepository.GetRequisitionById(request.ReqCode) != null)
-                return Result.Failure(RequisitionErrors.ExistingRequisition(request.ReqCode));
+            {
+                var reqError = RequisitionErrors.ExistingRequisition(request.ReqCode);
+                await _logger.LogFailureAsync("N/A", "Create", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
+                return Result.Failure(reqError);
+            }
 
             var reqToCreate = _mapper.Map<Requisition>(request);
 
@@ -38,8 +42,9 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         }
         catch (Exception ex)
         {
-            await _logger.LogFailureAsync(request.ReqCode, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message);
-            return Result.Failure(RequisitionErrors.RequisitionException(ex.Message));
+            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
+            await _logger.LogFailureAsync(request.ReqCode, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
+            return Result.Failure(RequisitionErrors.RequisitionException(errorDescription));
         }
     }
 }

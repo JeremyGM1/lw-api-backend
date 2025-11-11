@@ -10,7 +10,6 @@ public static class LogginServiceRegistration
     {
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
         services.AddScoped<ILoggerService, GenericLogService>();
-        services.AddScoped<IRequisitionLogService, RequisitionLogService>();
         return services;
     }
 }

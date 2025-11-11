@@ -15,6 +15,7 @@ using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
+using Application.Features.Requisitions.Queries.GetReguisitionLogs;
 
 namespace API.Controllers;
 
@@ -105,6 +106,17 @@ public class RequisitionController(IMediator mediator) : ControllerBase
             return NotFound(errorResponse);
 
         return BadRequest(errorResponse);
+    }
+
+    [HttpGet("ReqCode")]
+    public async Task<ActionResult<GetRequisitionLogsDto>> GetReqLogsById(string ReqCode)
+    {
+        var result = await _mediator.Send(new GetRequisitionLogsByIdQuery(ReqCode));
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
     }
 
     [HttpGet("statuses")]

@@ -25,6 +25,7 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .FirstOrDefaultAsync(r => r.ReqCode == reqCode);
     }
 
+
     public async Task<List<Requisition>> GetRequisitions()
     {
         return await _context.Requisitions
@@ -37,10 +38,17 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.CompensationBandInterval)
             .ToListAsync();
     }
+    public async Task<List<RequisitionLog>> GetRequisitionLogsById(string reqCode)
+    {
+        return await _context.RequisitionLogs
+            .Where(r => r.EntityId == reqCode)
+            .ToListAsync();
+    }
 
     public async Task<bool> RequisitionExists(string reqCode)
     {
         return await _context.Requisitions
             .AnyAsync(r => r.ReqCode == reqCode);
     }
+
 }

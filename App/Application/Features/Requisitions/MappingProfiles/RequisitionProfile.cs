@@ -34,5 +34,7 @@ public class RequisitionProfile : Profile
         CreateMap<RequisitionLocation, GetReqLocationDto>();
         CreateMap<RequisitionCurrency, GetReqCurrencyDto>();
         CreateMap<RequisitionInterval, GetReqIntervalDto>();
+
+        CreateMap<RequisitionLog, GetRequisitionLogsDto>();
     }
 }

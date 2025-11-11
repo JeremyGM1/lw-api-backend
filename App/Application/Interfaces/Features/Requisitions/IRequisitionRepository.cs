@@ -11,4 +11,6 @@ public interface IRequisitionRepository : IGenericRepository<Requisition, int>
     Task<List<Requisition>> GetRequisitions();
 
     Task<bool> RequisitionExists(string id);
+
+    Task<List<RequisitionLog>> GetRequisitionLogsById(string reqCode);
 }

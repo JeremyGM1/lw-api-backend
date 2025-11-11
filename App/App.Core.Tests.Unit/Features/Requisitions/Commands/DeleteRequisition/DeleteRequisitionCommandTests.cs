@@ -13,14 +13,14 @@ public class DeleteRequisitionCommandTests
 {
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<IRequisitionLogService> _mockLogger;
+    private readonly Mock<ILoggerService> _mockLogger;
     private readonly DeleteRequisitionCommandHandler _handler;
 
     public DeleteRequisitionCommandTests()
     {
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLogger = new Mock<IRequisitionLogService>();
+        _mockLogger = new Mock<ILoggerService>();
         _handler = new DeleteRequisitionCommandHandler(
             _mockReqRepository.Object,
             _mockCommonHelpers.Object,

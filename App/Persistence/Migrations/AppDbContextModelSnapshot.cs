@@ -614,6 +614,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ErrorDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ErrorMessage")
                         .HasColumnType("nvarchar(max)");
 

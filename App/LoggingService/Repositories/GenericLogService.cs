@@ -25,7 +25,7 @@ public class GenericLogService(AppDbContext context) : ILoggerService
         await _context.SaveChangesAsync();
     }
 
-    public async Task LogFailureAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage)
+    public async Task LogFailureAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage, string errorDescription)
     {
         var log = new RequisitionLog
         {
@@ -37,7 +37,8 @@ public class GenericLogService(AppDbContext context) : ILoggerService
             UserAgent = userAgent,
             TimeStamp = DateTime.UtcNow,
             ActionResult = "Failure",
-            ErrorMessage = errorMessage
+            ErrorMessage = errorMessage,
+            ErrorDescription = errorDescription
         };
 
         _context.RequisitionLogs.Add(log);
