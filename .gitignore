@@ -412,6 +412,7 @@ nunit-*.xml
 # Configuration files
 appsettings.json
 appsettings.*.json
+<<<<<<< HEAD
 .vs/
 App/.vs/
 App/.vs/*
@@ -422,3 +423,7 @@ obj/
 
 # Entity Framework migrations
 **/Migrations/
+=======
+/App/.vs
+/.vs
+>>>>>>> origin/dev

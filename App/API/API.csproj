@@ -34,4 +34,8 @@
 	<ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="App.Core.Tests.Acceptance" />
+	</ItemGroup>
+
 </Project>
