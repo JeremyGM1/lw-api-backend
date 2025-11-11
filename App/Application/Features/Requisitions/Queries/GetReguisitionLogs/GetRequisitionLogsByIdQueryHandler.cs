@@ -1,11 +1,12 @@
-﻿using Application.Common.Results;
+﻿using AutoMapper;
+using MediatR;
 using Application.Common.Results.RequisitionErrors;
+using Application.Common.Results;
 using Application.Features.Requisitions.Dtos;
 using Application.Interfaces.Features.Requisitions;
-using AutoMapper;
-using MediatR;
 
 namespace Application.Features.Requisitions.Queries.GetReguisitionLogs;
+
 public class GetRequisitionLogsByIdQueryHandler(IMapper mapper, IRequisitionRepository reqRepository) : IRequestHandler<GetRequisitionLogsByIdQuery, Result<List<GetRequisitionLogsDto>>>
 {
     private readonly IMapper _mapper = mapper;

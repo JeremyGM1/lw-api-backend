@@ -24,7 +24,7 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
             var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
             if (requisition == null)
             {
-                var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode);
+                var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode!);
                 await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
                 return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode!));
             }
