@@ -5,7 +5,7 @@ using AutoMapper;
 using MediatR;
 
 namespace Application.Features.JobDescriptions.Queries.GetJDsByReqCodeQuery;
-public class GetJDsByReqCodeQueryHandler(IMapper mapper, IJobDescriptionRepository jdRepository) : IRequestHandler<GetJDsByReqCodeQuery, Result<GetJobDescriptionResponseDto>>
+/*public class GetJDsByReqCodeQueryHandler(IMapper mapper, IJobDescriptionRepository jdRepository) : IRequestHandler<GetJDsByReqCodeQuery, Result<GetJobDescriptionResponseDto>>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IJobDescriptionRepository _jdRepository= jdRepository;
@@ -13,4 +13,4 @@ public class GetJDsByReqCodeQueryHandler(IMapper mapper, IJobDescriptionReposito
     {
         var JobDescription = await _jdRepository.GetJobDescriptionById(request.ReqCode);
     }
-}
+}*/
