@@ -6,4 +6,8 @@ public static class CommonErrors
         "Common.ForeignKey",
         "Invalid foreign key",
         errors);
+
+    public static Error UnexpectedException(string message) => new(
+        "Common.Exception",
+        $"An error occurred while processing the request: {message}");
 }

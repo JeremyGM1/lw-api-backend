@@ -23,10 +23,10 @@ public partial class AppDbContext : DbContext
     public required DbSet<JobDescription> JobDescriptions { get; set; }
     public required DbSet<Skill> Skills { get; set; }
     public required DbSet<Candidate> Candidates { get; set; }
-    public required DbSet<RequisitionJob> RequisitionJobs { get; set; }
     public required DbSet<JobCandidate> JobCandidates { get; set; }
     public required DbSet<JobSkill> JobSkills { get; set; }
     public required DbSet<RequisitionLog> RequisitionLogs { get; set; }
+    public required DbSet<JobDescriptionLog> JobDescriptionLogs{ get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

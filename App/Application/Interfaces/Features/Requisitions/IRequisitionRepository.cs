@@ -4,8 +4,6 @@ namespace Application.Interfaces.Features.Requisitions;
 
 public interface IRequisitionRepository : IGenericRepository<Requisition, int>
 {
-    Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class;
-
     Task<Requisition?> GetRequisitionById(string id);
 
     Task<List<Requisition>> GetRequisitions();
@@ -13,4 +11,6 @@ public interface IRequisitionRepository : IGenericRepository<Requisition, int>
     Task<bool> RequisitionExists(string id);
 
     Task<List<RequisitionLog>> GetRequisitionLogsById(string reqCode);
+
+    Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class;
 }

@@ -6,15 +6,16 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using Application.Common.Results.GenericErrors;
 
 namespace Application.Features.Requisitions.Commands.CreateRequisition;
 
-public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<CreateRequisitionCommand, Result>
+public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, IGenericLogService<RequisitionLog> logger) : IRequestHandler<CreateRequisitionCommand, Result>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILoggerService _logger = logger;
+    private readonly IGenericLogService<RequisitionLog> _logger = logger;
 
     public async Task<Result> Handle(CreateRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -44,7 +45,7 @@ public class CreateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
         {
             var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
             await _logger.LogFailureAsync(request.ReqCode, "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
-            return Result.Failure(RequisitionErrors.RequisitionException(errorDescription));
+            return Result.Failure(CommonErrors.UnexpectedException(errorDescription));
         }
     }
 }

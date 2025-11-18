@@ -7,6 +7,8 @@ using Persistence.Repositories.Requisitions.Lookup;
 using Persistence.Repositories.Requisitions;
 using Persistence.Repositories.Users;
 using Persistence.Repositories;
+using Application.Interfaces.Features.JobDescriptions;
+using Persistence.Repositories.JobDescriptions;
 
 namespace Persistence;
 
@@ -24,6 +26,8 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IReqCurrencyRepository, ReqCurrencyRepository>();
         services.AddScoped<IReqIntervalRepository, ReqIntervalRepository>();
         services.AddScoped<IReqLocationTypeRepository, ReqLocationTypeRepository>();
+
+        services.AddScoped<IJobDescriptionRepository, JobDescriptionRepository>();
         return services;
     }
 }

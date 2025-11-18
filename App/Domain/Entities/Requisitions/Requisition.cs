@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Entities.JobDescriptions;
 
 namespace Domain.Entities.Requisitions;
 
@@ -27,7 +28,18 @@ public class Requisition : BaseEntity<int>
     public required RequisitionInterval CompensationBandInterval { get; set; }
     public string? Description { get; set; }
     public string? BackfillName { get; set; }
-    public required RequisitionHardware Hardware { get; set; } //Dell,Mac
+    public required RequisitionHardware Hardware { get; set; }
     public DateTime? ApprovalDate { get; set; }
-    public ICollection<RequisitionJob>? LinkedPostingList { get; set; } = [];
+    public ICollection<JobDescription> JobDescriptions { get; set; } = [];
+
+    public void ChangeStatus(RequisitionStatus newStatus)
+    {
+        Status = newStatus;
+    }
+
+    public void AddJobDescription(JobDescription jobDescription)
+    {
+        jobDescription.RequisitionCode = ReqCode;
+        JobDescriptions.Add(jobDescription);
+    }
 }

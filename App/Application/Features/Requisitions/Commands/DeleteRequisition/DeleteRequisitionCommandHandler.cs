@@ -1,17 +1,19 @@
-﻿using MediatR;
-using Application.Common.Results;
+﻿using Application.Common.Results;
+using Application.Common.Results.GenericErrors;
 using Application.Common.Results.RequisitionErrors;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
+using Domain.Entities.Requisitions;
+using MediatR;
 
 namespace Application.Features.Requisitions.Commands.DeleteRequisition;
 
-public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, ILoggerService logger) : IRequestHandler<DeleteRequisitionCommand, Result>
+public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, IGenericLogService<RequisitionLog> logger) : IRequestHandler<DeleteRequisitionCommand, Result>
 {
     private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
-    private readonly ILoggerService _logger = logger;
+    private readonly IGenericLogService<RequisitionLog> _logger = logger;
 
     public async Task<Result> Handle(DeleteRequisitionCommand request, CancellationToken cancellationToken)
     {
@@ -37,7 +39,7 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
         {
             var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
             await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
-            return Result.Failure(RequisitionErrors.RequisitionException(errorDescription));
+            return Result.Failure(CommonErrors.UnexpectedException(errorDescription));
         }
     }
 }

@@ -18,7 +18,7 @@ public class UpdateRequisitionCommandHandlerTests
     private readonly IMapper _mapper;
     private readonly Mock<IRequisitionRepository> _mockReqRepository;
     private readonly Mock<ICommonHelpers> _mockCommonHelpers;
-    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IGenericLogService<RequisitionLog>> _mockLogger;
     private readonly UpdateRequisitionCommandHandler _handler;
 
     public UpdateRequisitionCommandHandlerTests()
@@ -29,7 +29,7 @@ public class UpdateRequisitionCommandHandlerTests
 
         _mockReqRepository = new Mock<IRequisitionRepository>();
         _mockCommonHelpers = new Mock<ICommonHelpers>();
-        _mockLogger = new Mock<ILoggerService>();
+        _mockLogger = new Mock<IGenericLogService<RequisitionLog>>();
         _handler = new UpdateRequisitionCommandHandler(
             _mapper,
             _mockReqRepository.Object,

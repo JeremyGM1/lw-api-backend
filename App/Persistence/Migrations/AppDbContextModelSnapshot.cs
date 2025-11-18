@@ -95,16 +95,14 @@ namespace Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PostingUrl")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
+                    b.Property<string>("RequisitionCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -125,83 +123,65 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("StatusId");
+                    b.HasIndex("RequisitionCode");
 
                     b.HasIndex("Title");
-
-                    b.HasIndex("StatusId", "CreatedAt");
 
                     b.ToTable("JobDescriptions");
                 });
 
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionLocation", b =>
+            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Location")
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ActionResult")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrorDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("JobDescriptionLocation");
+                    b.HasIndex("EntityId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Location = "On-Site"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Location = "Hybrid"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Location = "Remote"
-                        });
-                });
+                    b.HasIndex("TimeStamp");
 
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("JobDescriptionStatus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Status = "Open"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Status = "Closed"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Status = "On-Hold"
-                        });
+                    b.ToTable("JobDescriptionLogs");
                 });
 
             modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
@@ -325,7 +305,7 @@ namespace Persistence.Migrations
 
                     b.Property<string>("ReqCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -488,21 +468,6 @@ namespace Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
-                {
-                    b.Property<int>("ReqId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JobDescriptionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReqId", "JobDescriptionId");
-
-                    b.HasIndex("JobDescriptionId");
-
-                    b.ToTable("RequisitionJobs");
-                });
-
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLocation", b =>
                 {
                     b.Property<int>("Id")
@@ -593,11 +558,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionLog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Action")
                         .IsRequired()
@@ -608,6 +573,7 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EntityId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EntityType")
@@ -848,21 +814,14 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescription", b =>
                 {
-                    b.HasOne("Domain.Entities.JobDescriptions.JobDescriptionLocation", "Location")
+                    b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
                         .WithMany("JobDescriptions")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("RequisitionCode")
+                        .HasPrincipalKey("ReqCode")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.JobDescriptions.JobDescriptionStatus", "Status")
-                        .WithMany("JobDescriptions")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-
-                    b.Navigation("Status");
+                    b.Navigation("Requisition");
                 });
 
             modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
@@ -943,25 +902,6 @@ namespace Persistence.Migrations
                     b.Navigation("WorkType");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionJob", b =>
-                {
-                    b.HasOne("Domain.Entities.JobDescriptions.JobDescription", "JobDescription")
-                        .WithMany("LinkedPostingList")
-                        .HasForeignKey("JobDescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
-                        .WithMany("LinkedPostingList")
-                        .HasForeignKey("ReqId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("JobDescription");
-
-                    b.Navigation("Requisition");
-                });
-
             modelBuilder.Entity("Domain.Entities.Users.UserRole", b =>
                 {
                     b.HasOne("Domain.Entities.Users.Role", "Role")
@@ -991,18 +931,6 @@ namespace Persistence.Migrations
                     b.Navigation("JobSkills");
 
                     b.Navigation("LinkedCandidatesList");
-
-                    b.Navigation("LinkedPostingList");
-                });
-
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionLocation", b =>
-                {
-                    b.Navigation("JobDescriptions");
-                });
-
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescriptionStatus", b =>
-                {
-                    b.Navigation("JobDescriptions");
                 });
 
             modelBuilder.Entity("Domain.Entities.JobDescriptions.Skill", b =>
@@ -1012,7 +940,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
                 {
-                    b.Navigation("LinkedPostingList");
+                    b.Navigation("JobDescriptions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.RequisitionCurrency", b =>

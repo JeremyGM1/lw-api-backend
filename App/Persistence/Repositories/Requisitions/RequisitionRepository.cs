@@ -6,12 +6,6 @@ namespace Persistence.Repositories.Requisitions;
 
 public class RequisitionRepository(AppDbContext context) : GenericRepository<Requisition, int>(context), IRequisitionRepository
 {
-    public async Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class
-    {
-        var entity = await _context.Set<TEntity>().FindAsync(id);
-        return entity != null;
-    }
-
     public async Task<Requisition?> GetRequisitionById(string reqCode)
     {
         return await _context.Requisitions
@@ -25,7 +19,6 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .FirstOrDefaultAsync(r => r.ReqCode == reqCode);
     }
 
-
     public async Task<List<Requisition>> GetRequisitions()
     {
         return await _context.Requisitions
@@ -38,6 +31,7 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.CompensationBandInterval)
             .ToListAsync();
     }
+
     public async Task<List<RequisitionLog>> GetRequisitionLogsById(string reqCode)
     {
         return await _context.RequisitionLogs
@@ -51,4 +45,9 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .AnyAsync(r => r.ReqCode == reqCode);
     }
 
+    public async Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class
+    {
+        var entity = await _context.Set<TEntity>().FindAsync(id);
+        return entity != null;
+    }
 }

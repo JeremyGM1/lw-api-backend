@@ -1,18 +1,18 @@
 ﻿using Application.Interfaces.LoggingService;
-using Domain.Entities.Requisitions;
+using Domain.Common;
 using Persistence;
 
 namespace LoggingService.Repositories;
-public class GenericLogService(AppDbContext context) : ILoggerService
+public class GenericLogService<TLog>(AppDbContext context) : IGenericLogService<TLog> where TLog : BaseEntityLog, new()
 {
     private readonly AppDbContext _context = context;
 
-    public async Task LogSuccessAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult)
+    public async Task LogSuccessAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult)
     {
-        var log = new RequisitionLog
+        var log = new TLog
         {
-            EntityType = nameof(Requisition),
-            EntityId = reqCode,
+            EntityType = typeof(TLog).Name.Replace("Log",""),
+            EntityId = entityId,
             Action = action,
             UserEmail = userEmail,
             IpAddress = ipAddress,
@@ -21,16 +21,16 @@ public class GenericLogService(AppDbContext context) : ILoggerService
             ActionResult = "Success"
         };
 
-        _context.RequisitionLogs.Add(log);
+        _context.Set<TLog>().Add(log);
         await _context.SaveChangesAsync();
     }
 
-    public async Task LogFailureAsync(string reqCode, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage, string errorDescription)
+    public async Task LogFailureAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage, string errorDescription)
     {
-        var log = new RequisitionLog
+        var log = new TLog
         {
-            EntityType = nameof(Requisition),
-            EntityId = reqCode,
+            EntityType = typeof(TLog).Name.Replace("Log", ""),
+            EntityId = entityId,
             Action = action,
             UserEmail = userEmail,
             IpAddress = ipAddress,
@@ -41,7 +41,7 @@ public class GenericLogService(AppDbContext context) : ILoggerService
             ErrorDescription = errorDescription
         };
 
-        _context.RequisitionLogs.Add(log);
+        _context.Set<TLog>().Add(log);
         await _context.SaveChangesAsync();
     }
 }

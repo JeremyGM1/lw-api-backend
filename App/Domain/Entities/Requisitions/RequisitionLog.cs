@@ -2,7 +2,4 @@
 
 namespace Domain.Entities.Requisitions;
 
-public class RequisitionLog : EntityLog
-{
-    //public virtual Requisition Requisition { get; set; } = null!;
-}
+public class RequisitionLog : BaseEntityLog;
