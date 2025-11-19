@@ -1,6 +1,7 @@
 ﻿using API.Models.Errors;
 using Application.Features.JobDescriptions.Commands.CreateJobDescription;
-using Application.Features.JobDescriptions.Dtos;
+using Application.Features.JobDescriptions.Commands.DeleteJobDescription;
+using Application.Features.JobDescriptions.Dtos.Request;
 using Application.Features.JobDescriptions.Dtos.Response;
 using Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
 using Domain.Entities.Users;
@@ -54,6 +55,23 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
 
         if (result.Error.Code.EndsWith("Existing"))
             return Conflict(errorResponse);
+
+        return BadRequest(errorResponse);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<DeleteJobDescriptionResponseDto>> Delete(int id)
+    {
+        var command = new DeleteJDCommand { Id = id };
+        var result = await _mediator.Send(command);
+
+        if (!result.IsSuccess)
+            return NoContent();
+
+        var errorResponse = ApiResponse<DeleteJobDescriptionDto>.FromResult(result);
+
+        if (result.Error.Code.EndsWith("NotExisting"))
+            return NotFound(errorResponse);
 
         return BadRequest(errorResponse);
     }

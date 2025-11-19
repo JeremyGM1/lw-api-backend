@@ -20,6 +20,7 @@ public class GetRequisitionLogsByIdQueryHandler(IMapper mapper, IRequisitionRepo
             return Result<List<GetRequisitionLogsDto>>.Failure(RequisitionErrors.RequisitionLogEmpty(request.ReqCode));
 
         var result = _mapper.Map<List<GetRequisitionLogsDto>>(logs);
+
         return Result<List<GetRequisitionLogsDto>>.Success(result);
     }
 }

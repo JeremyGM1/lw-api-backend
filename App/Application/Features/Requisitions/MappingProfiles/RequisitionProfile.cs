@@ -35,6 +35,7 @@ public class RequisitionProfile : Profile
         CreateMap<RequisitionCurrency, GetReqCurrencyDto>();
         CreateMap<RequisitionInterval, GetReqIntervalDto>();
 
-        CreateMap<RequisitionLog, GetRequisitionLogsDto>();
+        CreateMap<RequisitionLog, GetRequisitionLogsDto>()
+            .ForMember(dest => dest.TimeStamp, opt => opt.MapFrom(src => src.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")));
     }
 }
