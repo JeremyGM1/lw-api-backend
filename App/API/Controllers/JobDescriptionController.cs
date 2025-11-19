@@ -2,6 +2,7 @@
 using Application.Features.JobDescriptions.Commands.CreateJobDescription;
 using Application.Features.JobDescriptions.Dtos;
 using Application.Features.JobDescriptions.Dtos.Response;
+using Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
 using Domain.Entities.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,19 @@ namespace API.Controllers;
 public class JobDescriptionController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
+
+    [HttpGet("{ReqCode}")]
+    public async Task<ActionResult<GetJobDescriptionResponseDto>> GetByReqCode(string ReqCode)
+    {
+        var result = await _mediator.Send(new GetJDsByRequisitionQuery(ReqCode));
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Ok(result.Data);
+    }
 
     [HttpPost("{requisitionCode}/jobDescriptions")]
     [ProducesResponseType(StatusCodes.Status201Created)]
