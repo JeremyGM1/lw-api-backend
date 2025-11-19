@@ -3,27 +3,43 @@ using Application.Features.JobDescriptions.Commands.CreateJobDescription;
 using Application.Features.JobDescriptions.Commands.DeleteJobDescription;
 using Application.Features.JobDescriptions.Dtos.Request;
 using Application.Features.JobDescriptions.Dtos.Response;
+using Application.Features.JobDescriptions.Queries.GetAllJDsQuery;
 using Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
 using Domain.Entities.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class JobDescriptionController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
 
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<GetJobDescriptionResponseDto>> GetAllJobDescriptions()
+    {
+        var result = await _mediator.Send(new GetAllJDsQuery());
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
+    }
+
     [HttpGet("{ReqCode}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GetJobDescriptionResponseDto>> GetByReqCode(string ReqCode)
     {
         var result = await _mediator.Send(new GetJDsByRequisitionQuery(ReqCode));
 
         if (!result.IsSuccess)
-        {
             return BadRequest(result.Error);
-        }
 
         return Ok(result.Data);
     }
@@ -60,12 +76,15 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<DeleteJobDescriptionResponseDto>> Delete(int id)
     {
         var command = new DeleteJDCommand { Id = id };
         var result = await _mediator.Send(command);
 
-        if (!result.IsSuccess)
+        if (result.IsSuccess)
             return NoContent();
 
         var errorResponse = ApiResponse<DeleteJobDescriptionDto>.FromResult(result);

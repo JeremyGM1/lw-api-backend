@@ -6,7 +6,7 @@ public interface IJobDescriptionRepository : IGenericRepository<JobDescription, 
 {
     Task<JobDescription?> GetJobDescriptionById(int id);
 
-    Task<IEnumerable<JobDescription?>> GetJobDescriptionsByRequisition(string reqCode);
+    Task<List<JobDescription>> GetJobDescriptionsByRequisition(string reqCode);
 
     Task<List<JobDescription>> GetJobDescriptions();
 

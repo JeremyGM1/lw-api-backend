@@ -13,7 +13,7 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
-    public async Task<IEnumerable<JobDescription?>> GetJobDescriptionsByRequisition(string reqCode)
+    public async Task<List<JobDescription>> GetJobDescriptionsByRequisition(string reqCode)
     {
         return await _context.JobDescriptions
             .Include(jd => jd.Requisition)

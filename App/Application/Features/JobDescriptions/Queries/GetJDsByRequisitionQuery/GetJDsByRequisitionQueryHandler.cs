@@ -8,16 +8,16 @@ using MediatR;
 
 namespace Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
 
-public class GetJDsByRequisitionQueryHandler(IMapper mapper, IJobDescriptionRepository jdRepository) : IRequestHandler<GetJDsByRequisitionQuery, Result<IEnumerable<GetJobDescriptionResponseDto>>>
+public class GetJDsByRequisitionQueryHandler(IMapper mapper, IJobDescriptionRepository jdRepository) : IRequestHandler<GetJDsByRequisitionQuery, Result<List<GetJobDescriptionResponseDto>>>
 {
     private readonly IMapper _mapper = mapper;
     private readonly IJobDescriptionRepository _jdRepository = jdRepository;
 
-    public async Task<Result<IEnumerable<GetJobDescriptionResponseDto>>> Handle(GetJDsByRequisitionQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<GetJobDescriptionResponseDto>>> Handle(GetJDsByRequisitionQuery request, CancellationToken cancellationToken)
     {
         var jobDescription = await _jdRepository.GetJobDescriptionsByRequisition(request.ReqCode);
 
-        var result = _mapper.Map<IEnumerable<GetJobDescriptionResponseDto>>(jobDescription);
-        return Result<IEnumerable<GetJobDescriptionResponseDto>>.Success(result);
+        var result = _mapper.Map<List<GetJobDescriptionResponseDto>>(jobDescription);
+        return Result<List<GetJobDescriptionResponseDto>>.Success(result);
     }
 }
