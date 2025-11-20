@@ -40,6 +40,7 @@ public class Requisition : BaseEntity<int>
     public void AddJobDescription(JobDescription jobDescription)
     {
         jobDescription.RequisitionCode = ReqCode;
+        jobDescription.Requisition = this;
         JobDescriptions.Add(jobDescription);
     }
 }

@@ -37,15 +37,19 @@ public class CreateJDCommandHandler(IMapper mapper, IJobDescriptionRepository jd
 
             mappedJD.CreatedAt = DateTime.UtcNow;
             mappedJD.CreatedBy = userEmail;
+
+            mappedJD.RequisitionCode = requisition.ReqCode;
             requisition.AddJobDescription(mappedJD);
 
             await _jdRepository.CreateAsync(mappedJD);
 
             var savedJD = await _jdRepository.GetJobDescriptionById(mappedJD.Id);
 
-            var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(savedJD);
+            var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(savedJD);            
 
             await _logger.LogSuccessAsync(savedJD!.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
+
+            Console.WriteLine($"jobdesc count: {requisition.JobDescriptions.Count}");
 
             return Result<CreateJobDescriptionResponseDto>.Success(responseDto);
         }

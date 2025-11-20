@@ -16,6 +16,7 @@ public class RequisitionRepository(AppDbContext context) : GenericRepository<Req
             .Include(r => r.LocationType)
             .Include(r => r.CompensationBandCurrency)
             .Include(r => r.CompensationBandInterval)
+            .Include(r => r.JobDescriptions)
             .FirstOrDefaultAsync(r => r.ReqCode == reqCode);
     }
 
