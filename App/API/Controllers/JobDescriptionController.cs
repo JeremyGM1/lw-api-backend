@@ -1,6 +1,7 @@
 ﻿using API.Models.Errors;
 using Application.Features.JobDescriptions.Commands.CreateJobDescription;
 using Application.Features.JobDescriptions.Commands.DeleteJobDescription;
+using Application.Features.JobDescriptions.Commands.UpdateJDCommand;
 using Application.Features.JobDescriptions.Dtos.Request;
 using Application.Features.JobDescriptions.Dtos.Response;
 using Application.Features.JobDescriptions.Queries.GetAllJDsQuery;
@@ -71,6 +72,31 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
 
         if (result.Error.Code.EndsWith("Existing"))
             return Conflict(errorResponse);
+
+        return BadRequest(errorResponse);
+    }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ApiResponse<UpdateJobDescriptionResponseDto>>> Update(int id, UpdateJobDescriptionDto dto)
+    {
+        var command = new UpdateJDCommand
+        {
+            Id = id,
+            Title = dto.Title,
+            PostingUrl = dto.PostingUrl,
+            KeyResponsabilities = dto.KeyResponsabilities,
+            InternalNotes = dto.InternalNotes
+        };
+
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+            return Ok(result.Data);
+
+        var errorResponse = ApiResponse<UpdateJobDescriptionResponseDto>.FromResult(result);
 
         return BadRequest(errorResponse);
     }
