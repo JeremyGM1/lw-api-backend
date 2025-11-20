@@ -18,19 +18,19 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
 
-        var jd = await _jdRepository.GetByIdAsync(request.Id);
+        var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
 
-        if (jd == null)
-            return Result<UpdateJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescription(request.Id));
+        if(jobDescription == null)
+            return Result<UpdateJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
 
-        _mapper.Map(request, jd);
+        _mapper.Map(request, jobDescription);
 
-        jd.UpdatedAt = DateTime.UtcNow;
-        jd.UpdatedBy = userEmail;
+        jobDescription.UpdatedAt = DateTime.UtcNow;
+        jobDescription.UpdatedBy = userEmail;
 
-        await _jdRepository.UpdateAsync(jd);
+        await _jdRepository.UpdateAsync(jobDescription);
 
-        var UpdatedJobDescription = await _jdRepository.GetByIdAsync(jd.Id);
+        var UpdatedJobDescription = await _jdRepository.GetByIdAsync(jobDescription.Id);
 
         var response = _mapper.Map<UpdateJobDescriptionResponseDto>(UpdatedJobDescription);
         return Result<UpdateJobDescriptionResponseDto>.Success(response);

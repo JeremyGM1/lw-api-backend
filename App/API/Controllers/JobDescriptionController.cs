@@ -5,6 +5,7 @@ using Application.Features.JobDescriptions.Commands.UpdateJDCommand;
 using Application.Features.JobDescriptions.Dtos.Request;
 using Application.Features.JobDescriptions.Dtos.Response;
 using Application.Features.JobDescriptions.Queries.GetAllJDsQuery;
+using Application.Features.JobDescriptions.Queries.GetJDById;
 using Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
 using Domain.Entities.Users;
 using MediatR;
@@ -31,13 +32,27 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("{ReqCode}")]
+    [HttpGet("requisition/{reqCode}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<GetJobDescriptionResponseDto>> GetByReqCode(string ReqCode)
+    public async Task<ActionResult<GetJobDescriptionResponseDto>> GetJDByReqCode(string reqCode)
     {
-        var result = await _mediator.Send(new GetJDsByRequisitionQuery(ReqCode));
+        var result = await _mediator.Send(new GetJDsByRequisitionQuery(reqCode));
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<GetJobDescriptionResponseDto>> GetJDById(int id)
+    {
+        var result = await _mediator.Send(new GetJDByIdQuery(id));
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);

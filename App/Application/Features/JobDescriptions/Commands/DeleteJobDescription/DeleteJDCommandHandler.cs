@@ -12,7 +12,7 @@ public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository) : IR
         var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
 
         if (jobDescription == null)
-            return Result.Failure(JobDescriptionErros.NotExistingJobDescription(request.Id));
+            return Result.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
 
         await _jdRepository.DeleteAsync(jobDescription);
 

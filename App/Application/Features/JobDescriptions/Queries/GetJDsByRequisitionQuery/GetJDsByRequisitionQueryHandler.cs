@@ -17,6 +17,9 @@ public class GetJDsByRequisitionQueryHandler(IMapper mapper, IJobDescriptionRepo
     {
         var jobDescription = await _jdRepository.GetJobDescriptionsByRequisition(request.ReqCode);
 
+        if (jobDescription == null || jobDescription.Count == 0)
+            return Result<List<GetJobDescriptionResponseDto>>.Failure(JobDescriptionErros.NotExistingJobDescriptionByRequisitionCode(request.ReqCode));
+
         var result = _mapper.Map<List<GetJobDescriptionResponseDto>>(jobDescription);
         return Result<List<GetJobDescriptionResponseDto>>.Success(result);
     }

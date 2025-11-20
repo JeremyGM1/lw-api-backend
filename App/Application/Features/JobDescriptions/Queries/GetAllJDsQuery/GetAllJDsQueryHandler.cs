@@ -11,9 +11,9 @@ public class GetAllJDsQueryHandler(IMapper mapper, IJobDescriptionRepository jdR
     private readonly IJobDescriptionRepository _jdRepository = jdRepository;
     public async Task<Result<List<GetJobDescriptionResponseDto>>> Handle(GetAllJDsQuery request, CancellationToken cancellationToken)
     {
-        var jds = await _jdRepository.GetJobDescriptions();
+        var jobDescriptions = await _jdRepository.GetJobDescriptions();
 
-        var data = _mapper.Map<List<GetJobDescriptionResponseDto>>(jds);
+        var data = _mapper.Map<List<GetJobDescriptionResponseDto>>(jobDescriptions);
 
         return Result<List<GetJobDescriptionResponseDto>>.Success(data);
     }
