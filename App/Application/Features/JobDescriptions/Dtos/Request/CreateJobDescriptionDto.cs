@@ -2,7 +2,6 @@
 
 public class CreateJobDescriptionDto
 {
-    public required int Id { get; set; }
     public required string Title { get; set; }
     public required string PostingUrl { get; set; }
     public required string KeyResponsabilities { get; set; }

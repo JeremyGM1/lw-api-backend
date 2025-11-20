@@ -1,6 +1,6 @@
-﻿using Application.Common.Results;
+﻿using MediatR;
+using Application.Common.Results;
 using Application.Features.JobDescriptions.Dtos.Response;
-using MediatR;
 
 namespace Application.Features.JobDescriptions.Commands.CreateJobDescription;
 

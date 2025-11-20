@@ -11,8 +11,9 @@ public class JobDescriptionProfile : Profile
     {
         CreateMap<CreateJDCommand, JobDescription>();
         CreateMap<JobDescription, CreateJobDescriptionResponseDto>()
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Requisition.Status))
-            .ForMember(dest => dest.LocationType, opt => opt.MapFrom(src => src.Requisition.LocationType));
+            .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.RequisitionCode))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Requisition.Status.Status))
+            .ForMember(dest => dest.LocationType, opt => opt.MapFrom(src => src.Requisition.LocationType.LocationType));
         CreateMap<JobDescription, GetJobDescriptionResponseDto>()
             .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.RequisitionCode))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Requisition.Status.Status))

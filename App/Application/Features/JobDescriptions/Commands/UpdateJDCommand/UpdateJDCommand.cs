@@ -1,9 +1,9 @@
-﻿using Application.Common.Results;
-using Application.Features.JobDescriptions.Dtos.Request;
+﻿using MediatR;
+using Application.Common.Results;
 using Application.Features.JobDescriptions.Dtos.Response;
-using MediatR;
 
 namespace Application.Features.JobDescriptions.Commands.UpdateJDCommand;
+
 public class UpdateJDCommand : IRequest<Result<UpdateJobDescriptionResponseDto>>
 {
     public int Id { get; set; }

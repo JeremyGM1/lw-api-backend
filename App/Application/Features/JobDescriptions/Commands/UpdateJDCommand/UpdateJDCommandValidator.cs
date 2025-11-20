@@ -1,8 +1,9 @@
-﻿using Application.Common.Validators;
+﻿using FluentValidation;
+using Application.Common.Validators;
 using Application.Interfaces.Features.JobDescriptions;
-using FluentValidation;
 
 namespace Application.Features.JobDescriptions.Commands.UpdateJDCommand;
+
 public class UpdateJDCommandValidator : AbstractValidator<UpdateJDCommand>
 {
     private readonly IJobDescriptionRepository _jdRepository;

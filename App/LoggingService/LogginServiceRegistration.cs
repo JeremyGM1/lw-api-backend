@@ -11,6 +11,7 @@ public static class LogginServiceRegistration
     {
         services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
         services.AddScoped(typeof(IGenericLogService<>), typeof(GenericLogService<>));
+        services.AddScoped(typeof(IJobDescriptionLoggingService), typeof(JobDescriptionLoggingService));
         return services;
     }
 }

@@ -10,6 +10,9 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
     {
         return await _context.JobDescriptions
             .Include(jd => jd.Requisition)
+            .ThenInclude(r => r.Status)
+            .Include(jd => jd.Requisition)
+            .ThenInclude(r => r.LocationType)
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 

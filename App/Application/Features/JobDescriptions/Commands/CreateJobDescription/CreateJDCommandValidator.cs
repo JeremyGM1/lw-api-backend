@@ -1,5 +1,5 @@
-﻿using Application.Common.Validators;
-using FluentValidation;
+﻿using FluentValidation;
+using Application.Common.Validators;
 using Application.Interfaces.Features.JobDescriptions;
 
 namespace Application.Features.JobDescriptions.Commands.CreateJobDescription;
