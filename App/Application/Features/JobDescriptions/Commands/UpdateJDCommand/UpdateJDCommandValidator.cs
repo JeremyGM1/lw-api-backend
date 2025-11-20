@@ -10,16 +10,16 @@ public class UpdateJDCommandValidator : AbstractValidator<UpdateJDCommand>
     public UpdateJDCommandValidator(IJobDescriptionRepository jdRepository)
     {
         RuleFor(r => r.Title)
-            .NotRequiredString();
+            .NotRequiredString(100);
 
         RuleFor(r => r.PostingUrl)
-            .NotRequiredString();
+            .NotRequiredString(500);
 
         RuleFor(r => r.KeyResponsabilities)
-            .NotRequiredString();
+            .NotRequiredString(500);
 
         RuleFor(r => r.InternalNotes)
-            .NotRequiredString();
+            .NotRequiredString(500);
 
         _jdRepository = jdRepository;
     }

@@ -109,7 +109,7 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
         var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
-            return Ok(result.Data);
+            return NoContent();
 
         var errorResponse = ApiResponse<UpdateJobDescriptionResponseDto>.FromResult(result);
 
