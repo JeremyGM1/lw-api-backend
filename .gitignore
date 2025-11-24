@@ -422,4 +422,4 @@ obj/
 
 # Entity Framework migrations
 **/Migrations/
-/App/API/appsettings.Development.json
+

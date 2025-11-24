@@ -1,0 +1,29 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: app_sqlserver
+    environment:
+      SA_PASSWORD: "P@ssword1"
+      ACCEPT_EULA: "Y"
+      MSSQL_MEMORY_LIMIT_MB: 2048
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    mem_limit: 3g
+
+  api:
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    container_name: app_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__sqlServerDbPath: "Server=sqlserver;Database=db_App_Intership;User Id=devuser;Password=P@ssword1;MultipleActiveResultSets=true"
+
+volumes:
+  sqlserver_data:
