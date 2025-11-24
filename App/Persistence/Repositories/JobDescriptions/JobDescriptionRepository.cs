@@ -13,7 +13,8 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
             .ThenInclude(r => r.Status)
             .Include(jd => jd.Requisition)
             .ThenInclude(r => r.LocationType)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .Where(r => r.Id == id)
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<JobDescription>> GetJobDescriptionsByRequisition(string reqCode)
@@ -30,6 +31,10 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
     public async Task<List<JobDescription>> GetJobDescriptions()
     {
         return await _context.JobDescriptions
+            .Include(jd => jd.Requisition)
+            .ThenInclude(r => r.Status)
+            .Include(jd => jd.Requisition)
+            .ThenInclude(r => r.LocationType)
             .ToListAsync();
     }
 

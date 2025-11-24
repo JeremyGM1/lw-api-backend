@@ -13,7 +13,7 @@ public class GetJDByIdQueryHandler(IMapper mapper, IJobDescriptionRepository jdR
     private readonly IJobDescriptionRepository _jdRepository = jdRepository;
     public async Task<Result<GetJobDescriptionResponseDto>> Handle(GetJDByIdQuery request, CancellationToken cancellationToken)
     {
-        var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
+        var jobDescription = await _jdRepository.GetJobDescriptionById(request.Id);
 
         if (jobDescription == null)
             return Result<GetJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
