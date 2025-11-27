@@ -11,7 +11,7 @@ public class JobDescriptionConfig : IEntityTypeConfiguration<JobDescription>
         builder.HasKey(jd => jd.Id);
 
         builder.Property(jd => jd.Title).HasMaxLength(100).IsRequired();
-        builder.Property(jd => jd.PostingUrl).HasMaxLength(100).IsRequired();
+        builder.Property(jd => jd.PostingUrl).HasMaxLength(500).IsRequired();
         builder.Property(jd => jd.KeyResponsabilities).HasMaxLength(500).IsRequired();
         builder.Property(jd => jd.InternalNotes).HasMaxLength(500);
 

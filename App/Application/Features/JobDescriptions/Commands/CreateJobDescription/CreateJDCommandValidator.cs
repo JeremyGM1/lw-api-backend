@@ -17,13 +17,13 @@ public class CreateJDCommandValidator : AbstractValidator<CreateJDCommand>
             .MaximumLength(100);
 
         RuleFor(r => r.PostingUrl)
-            .RequiredString();
+            .RequiredString(500);
 
         RuleFor(r => r.KeyResponsabilities)
-            .RequiredString();
+            .RequiredString(500);
 
         RuleFor(r => r.InternalNotes)
-            .RequiredString();
+            .RequiredString(500);
 
         _jdRepository = jdRepository;
     }

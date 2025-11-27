@@ -97,8 +97,8 @@ namespace Persistence.Migrations
 
                     b.Property<string>("PostingUrl")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("RequisitionCode")
                         .IsRequired()
