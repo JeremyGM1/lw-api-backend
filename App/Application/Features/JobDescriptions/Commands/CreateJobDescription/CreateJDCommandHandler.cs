@@ -49,8 +49,6 @@ public class CreateJDCommandHandler(IMapper mapper, IJobDescriptionRepository jd
 
             await _logger.LogSuccessAsync(savedJD!.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
 
-            Console.WriteLine($"jobdesc count: {requisition.JobDescriptions.Count}");
-
             return Result<CreateJobDescriptionResponseDto>.Success(responseDto);
         }
         catch (Exception ex)

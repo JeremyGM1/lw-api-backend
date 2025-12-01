@@ -32,15 +32,18 @@ public class Requisition : BaseEntity<int>
     public DateTime? ApprovalDate { get; set; }
     public ICollection<JobDescription> JobDescriptions { get; set; } = [];
 
-    public void ChangeStatus(RequisitionStatus newStatus)
-    {
-        Status = newStatus;
-    }
-
     public void AddJobDescription(JobDescription jobDescription)
     {
         jobDescription.RequisitionCode = ReqCode;
         jobDescription.Requisition = this;
         JobDescriptions.Add(jobDescription);
+    }
+
+
+    public void RemoveJobDescription(JobDescription jobDescription)
+    {
+        jobDescription.RequisitionCode = ReqCode;
+        jobDescription.Requisition = this;
+        JobDescriptions.Remove(jobDescription);
     }
 }

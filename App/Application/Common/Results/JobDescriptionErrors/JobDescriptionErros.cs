@@ -11,5 +11,5 @@ public class JobDescriptionErros
 
     public static Error NotExistingJobDescriptionByRequisitionCode(string reqCode) => new(
         "JobDescriptions.Existing",
-        $"A Job Description with this requisition code '{reqCode}' does not exists");
+        $"The requisition with code '{reqCode}' doesn't have job descriptions");
 }

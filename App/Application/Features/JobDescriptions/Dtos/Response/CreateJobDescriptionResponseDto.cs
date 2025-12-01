@@ -1,13 +1,21 @@
-﻿namespace Application.Features.JobDescriptions.Dtos.Response;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Application.Features.JobDescriptions.Dtos.Response;
 
 public class CreateJobDescriptionResponseDto
 {
     public int Id { get; set; }
+    [StringLength(6)]
     public required string ReqCode { get; set; }
+    [StringLength(100, MinimumLength = 1)]
     public required string Title { get; set; }
+    [StringLength(500, MinimumLength = 1)]
     public required string PostingUrl { get; set; }
+    [StringLength(500, MinimumLength = 1)]
     public required string KeyResponsabilities { get; set; }
+    [StringLength(500, MinimumLength = 1)]
     public required string InternalNotes { get; set; }
+    [StringLength(500, MinimumLength = 1)]
     public string Status { get; set; } = null!;
     public string LocationType { get; set; } = null!;
     public string? CreatedBy { get; set; }

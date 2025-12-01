@@ -4,6 +4,7 @@ using Application.Common.Results.RequisitionErrors;
 using Application.Common.Results;
 using Application.Features.Requisitions.Dtos;
 using Application.Interfaces.Features.Requisitions;
+using Application.Common.Results.GenericErrors;
 
 namespace Application.Features.Requisitions.Queries.GetReguisitionLogs;
 
@@ -17,7 +18,7 @@ public class GetRequisitionLogsByIdQueryHandler(IMapper mapper, IRequisitionRepo
         var logs = await _reqRepository.GetRequisitionLogsById(request.ReqCode);
 
         if (logs == null || logs.Count == 0)
-            return Result<List<GetRequisitionLogsDto>>.Failure(RequisitionErrors.RequisitionLogEmpty(request.ReqCode));
+            return Result<List<GetRequisitionLogsDto>>.Failure(CommonErrors.EmptyLogList(request.ReqCode));
 
         var result = _mapper.Map<List<GetRequisitionLogsDto>>(logs);
 

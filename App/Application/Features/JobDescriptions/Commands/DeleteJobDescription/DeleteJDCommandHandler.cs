@@ -6,12 +6,14 @@ using Application.Common.Results;
 using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.JobDescriptions;
 using Application.Interfaces.LoggingService;
+using Application.Interfaces.Features.Requisitions;
 
 namespace Application.Features.JobDescriptions.Commands.DeleteJobDescription;
 
-public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository, ICommonHelpers commonHelpers, IJobDescriptionLoggingService logger) : IRequestHandler<DeleteJDCommand, Result>
+public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository, IRequisitionRepository reqRepository, ICommonHelpers commonHelpers, IJobDescriptionLoggingService logger) : IRequestHandler<DeleteJDCommand, Result>
 {
     private readonly IJobDescriptionRepository _jdRepository = jdrepository;
+    private readonly IRequisitionRepository _reqRepository = reqRepository;
     private readonly ICommonHelpers _commonHelpers = commonHelpers;
     private readonly IJobDescriptionLoggingService _logger = logger;
 
@@ -28,6 +30,10 @@ public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository, ICom
                 await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
                 return Result.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
             }
+
+            //var requisition = await _reqRepository.GetRequisitionById(jobDescription.RequisitionCode);
+
+            //requisition.RemoveJobDescription(jobDescription);
 
             await _jdRepository.DeleteAsync(jobDescription);
 

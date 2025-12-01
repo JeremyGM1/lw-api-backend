@@ -1,6 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using API.Models.Errors;
+﻿using API.Models.Errors;
 using Application.Features.JobDescriptions.Commands.CreateJobDescription;
 using Application.Features.JobDescriptions.Commands.DeleteJobDescription;
 using Application.Features.JobDescriptions.Commands.UpdateJDCommand;
@@ -8,7 +6,12 @@ using Application.Features.JobDescriptions.Dtos.Request;
 using Application.Features.JobDescriptions.Dtos.Response;
 using Application.Features.JobDescriptions.Queries.GetAllJDsQuery;
 using Application.Features.JobDescriptions.Queries.GetJDById;
+using Application.Features.JobDescriptions.Queries.GetJDLogs;
 using Application.Features.JobDescriptions.Queries.GetJDsByRequisitionQuery;
+using Application.Features.Requisitions.Dtos;
+using Application.Features.Requisitions.Queries.GetReguisitionLogs;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -133,5 +136,16 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
             return NotFound(errorResponse);
 
         return BadRequest(errorResponse);
+    }
+
+    [HttpGet("{id}/logs")]
+    public async Task<ActionResult<GetJobDescriptionLogsResponseDto>> GetJobDescriptionLogsById(int id)
+    {
+        var result = await _mediator.Send(new GetJDLogsByIdQuery(id));
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
     }
 }

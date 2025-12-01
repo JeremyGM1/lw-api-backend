@@ -43,4 +43,11 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
         var entity = await _context.Set<TEntity>().FindAsync(id);
         return entity != null;
     }
+
+    public async Task<List<JobDescriptionLog>> GetJDLogsById(int id)
+    {
+        return await _context.JobDescriptionLogs
+            .Where(r => r.EntityId == id.ToString())
+            .ToListAsync();
+    }
 }

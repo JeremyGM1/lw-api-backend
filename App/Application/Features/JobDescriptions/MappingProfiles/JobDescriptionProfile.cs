@@ -20,5 +20,6 @@ public class JobDescriptionProfile : Profile
             .ForMember(dest => dest.LocationType, opt => opt.MapFrom(src => src.Requisition.LocationType.LocationType));
         CreateMap<UpdateJDCommand, JobDescription>();
         CreateMap<JobDescription, UpdateJobDescriptionResponseDto>();
+        CreateMap<JobDescriptionLog, GetJobDescriptionLogsResponseDto>();
     }
 }

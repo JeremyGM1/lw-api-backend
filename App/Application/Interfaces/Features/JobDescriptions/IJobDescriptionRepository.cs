@@ -11,4 +11,6 @@ public interface IJobDescriptionRepository : IGenericRepository<JobDescription, 
     Task<List<JobDescription>> GetJobDescriptions();
 
     Task<bool> ForeignKeyExist<TEntity>(object id) where TEntity : class;
+
+    Task<List<JobDescriptionLog>> GetJDLogsById(int id);
 }
