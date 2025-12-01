@@ -24,9 +24,6 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
             var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
 
             if (jobDescription == null)
-                return Result<UpdateJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
-
-            if (jobDescription == null)
             {
                 var reqError = JobDescriptionErros.NotExistingJobDescriptionById(request.Id);
                 await _logger.LogFailureAsync("N/A", "Update", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
