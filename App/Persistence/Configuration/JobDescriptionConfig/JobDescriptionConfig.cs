@@ -18,7 +18,8 @@ public class JobDescriptionConfig : IEntityTypeConfiguration<JobDescription>
         builder.HasOne(jd => jd.Requisition)
             .WithMany(r => r.JobDescriptions)
             .HasForeignKey(jd => jd.RequisitionCode)
-            .HasPrincipalKey(r => r.ReqCode);
+            .HasPrincipalKey(r => r.ReqCode)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(jd => jd.Title);
         builder.HasIndex(jd => jd.CreatedAt);
