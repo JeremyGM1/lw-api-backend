@@ -5,6 +5,7 @@ using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Features.Requisitions.Dtos;
 using Domain.Entities.Requisitions;
+using Application.Features.Requisitions.Dtos.Response;
 
 namespace Application.Features.Requisitions.MappingProfiles;
 
@@ -37,5 +38,7 @@ public class RequisitionProfile : Profile
 
         CreateMap<RequisitionLog, GetRequisitionLogsDto>()
             .ForMember(dest => dest.TimeStamp, opt => opt.MapFrom(src => src.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss")));
+
+        CreateMap<Requisition, GetRequisitionsDropdownResponseDto>();
     }
 }

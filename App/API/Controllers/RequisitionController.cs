@@ -16,6 +16,8 @@ using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Features.Requisitions.Queries.GetStatuses;
 using Application.Features.Requisitions.Queries.GetWorkTypes;
 using Application.Features.Requisitions.Queries.GetReguisitionLogs;
+using Application.Features.Requisitions.Dtos.Response;
+using Application.Features.Requisitions.Queries.GetRequisitionsDropdown;
 
 namespace API.Controllers;
 
@@ -112,6 +114,17 @@ public class RequisitionController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<GetRequisitionLogsDto>> GetReqLogsById(string ReqCode)
     {
         var result = await _mediator.Send(new GetRequisitionLogsByIdQuery(ReqCode));
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Error);
+
+        return Ok(result.Data);
+    }
+
+    [HttpGet("requisition/dropdown")]
+    public async Task<ActionResult<List<GetRequisitionsDropdownResponseDto>>> GetRequisitions()
+    {
+        var result = await _mediator.Send(new GetRequisitionsDropdownQuery());
 
         if (!result.IsSuccess)
             return BadRequest(result.Error);
