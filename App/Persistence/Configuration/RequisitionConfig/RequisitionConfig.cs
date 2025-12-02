@@ -48,7 +48,7 @@ public class RequisitionConfig : IEntityTypeConfiguration<Requisition>
         builder.Property(r => r.ReqCode).IsRequired();
         builder.Property(r => r.Name).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Headcount).IsRequired();
-        builder.Property(r => r.Department).HasMaxLength(100).IsRequired();
+        builder.Property(r => r.Department).HasMaxLength(100);
         builder.Property(r => r.HiringManager).HasMaxLength(100).IsRequired();
         builder.Property(r => r.Owner).HasMaxLength(100).IsRequired();
         builder.Property(r => r.CompensationBandMin).HasPrecision(20, 4).IsRequired();

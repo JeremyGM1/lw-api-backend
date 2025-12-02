@@ -3,7 +3,7 @@ public abstract class BaseEntityLog
 {
     public long Id { get; set; }
     public required string EntityType { get; set; }
-    public required string EntityId { get; set; }
+    public string? EntityId { get; set; }
     public required string Action { get; set; }
     public required string UserEmail { get; set; }
     public required string IpAddress { get; set; }

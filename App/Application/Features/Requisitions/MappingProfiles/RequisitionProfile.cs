@@ -1,11 +1,13 @@
-﻿using AutoMapper;
+﻿using Application.Features.JobDescriptions.Commands.UpdateJDCommand;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.DeleteRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
-using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Features.Requisitions.Dtos;
-using Domain.Entities.Requisitions;
+using Application.Features.Requisitions.Dtos.Lookup;
 using Application.Features.Requisitions.Dtos.Response;
+using AutoMapper;
+using Domain.Entities.JobDescriptions;
+using Domain.Entities.Requisitions;
 
 namespace Application.Features.Requisitions.MappingProfiles;
 
@@ -23,7 +25,8 @@ public class RequisitionProfile : Profile
             .ForMember(dest => dest.CompensationBandCurrency, opt => opt.MapFrom(src => src.CompensationBandCurrency.Currency))
             .ForMember(dest => dest.CompensationBandInterval, opt => opt.MapFrom(src => src.CompensationBandInterval.Interval));
         CreateMap<CreateRequisitionCommand, Requisition>();
-        CreateMap<UpdateRequisitionCommand, Requisition>();
+        CreateMap<UpdateRequisitionCommand, Requisition>()
+            .ForAllMembers(opt => opt.Condition(srcMember => srcMember != null));
         CreateMap<UpdateRequisitionDto, UpdateRequisitionCommand>();
         CreateMap<DeleteRequisitionCommand, Requisition>();
 

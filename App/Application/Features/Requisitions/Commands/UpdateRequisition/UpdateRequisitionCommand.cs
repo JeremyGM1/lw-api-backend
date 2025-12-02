@@ -11,7 +11,7 @@ public record UpdateRequisitionCommand : IRequest<Result>
     [StringLength(6)]
     public string? ReqCode { get; set; }
 
-    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.NonRequiredStringMinLength)]
     public string? Name { get; set; }
 
     [Range(1, ValidationDefaultValues.IntMaxValue)]
@@ -33,13 +33,13 @@ public record UpdateRequisitionCommand : IRequest<Result>
     [Range(1, ValidationDefaultValues.IntMaxValue)]
     public int LocationId { get; set; }
 
-    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.NonRequiredStringMinLength)]
     public string? Department { get; set; }
 
-    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.NonRequiredStringMinLength)]
     public string? HiringManager { get; set; }
 
-    [StringLength(100, MinimumLength = ValidationDefaultValues.StringMinLength)]
+    [StringLength(100, MinimumLength = ValidationDefaultValues.NonRequiredStringMinLength)]
     public string? Owner { get; set; }
 
     [Range(0, (double)ValidationDefaultValues.CompensationBandMaxValue)]
