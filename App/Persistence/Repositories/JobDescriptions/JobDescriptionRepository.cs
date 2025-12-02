@@ -24,7 +24,7 @@ public class JobDescriptionRepository(AppDbContext context) : GenericRepository<
             .ThenInclude(r => r.Status)
             .Include(jd => jd.Requisition)
             .ThenInclude(jd => jd.LocationType)
-            .Where(jd => jd.RequisitionCode == reqCode)
+            .Where(jd => jd.ReqCode == reqCode)
             .ToListAsync();
     }
 

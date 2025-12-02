@@ -100,7 +100,7 @@ namespace Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("RequisitionCode")
+                    b.Property<string>("ReqCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -123,7 +123,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.HasIndex("RequisitionCode");
+                    b.HasIndex("ReqCode");
 
                     b.HasIndex("Title");
 
@@ -164,7 +164,7 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RequisitionId")
+                    b.Property<string>("ReqCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -824,7 +824,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Requisitions.Requisition", "Requisition")
                         .WithMany("JobDescriptions")
-                        .HasForeignKey("RequisitionCode")
+                        .HasForeignKey("ReqCode")
                         .HasPrincipalKey("ReqCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -5,7 +5,7 @@ namespace Application.Features.JobDescriptions.Dtos.Request;
 public class UpdateJobDescriptionDto
 {
     [StringLength(100)]
-    public string? RequisitionCode { get; set; }
+    public string? ReqCode { get; set; }
     [StringLength(100)]
     public string? Title { get; set; }
     [StringLength(500)]

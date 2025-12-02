@@ -37,7 +37,7 @@ public class CreateJDCommandHandler(IMapper mapper, IJobDescriptionRepository jd
 
             mappedJD.CreatedAt = DateTime.UtcNow;
             mappedJD.CreatedBy = userEmail;
-            mappedJD.RequisitionCode = requisition.ReqCode;
+            mappedJD.ReqCode = requisition.ReqCode;
             mappedJD.Requisition = requisition;
             
             requisition.AddJobDescription(mappedJD);

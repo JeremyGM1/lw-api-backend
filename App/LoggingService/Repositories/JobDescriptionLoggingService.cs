@@ -7,7 +7,7 @@ namespace LoggingService.Repositories;
 public class JobDescriptionLoggingService(AppDbContext context) : IJobDescriptionLoggingService
 {
     private readonly AppDbContext _context = context;
-    public async Task LogFailureAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage, string errorDescription, string requisitionId, string title)
+    public async Task LogFailureAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string errorMessage, string errorDescription, string reqCode, string title)
     {
         var log = new JobDescriptionLog
         {
@@ -21,7 +21,7 @@ public class JobDescriptionLoggingService(AppDbContext context) : IJobDescriptio
             ActionResult = "Failure",
             ErrorMessage = errorMessage,
             ErrorDescription = errorDescription,
-            RequisitionId = requisitionId,
+            ReqCode = reqCode,
             Title = title
         };
 
@@ -29,7 +29,7 @@ public class JobDescriptionLoggingService(AppDbContext context) : IJobDescriptio
         await _context.SaveChangesAsync();
     }
 
-    public async Task LogSuccessAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string requisitionId, string title)
+    public async Task LogSuccessAsync(string entityId, string action, string userEmail, string ipAddress, string userAgent, string actionResult, string reqCode, string title)
     {
         var log = new JobDescriptionLog
         {
@@ -41,7 +41,7 @@ public class JobDescriptionLoggingService(AppDbContext context) : IJobDescriptio
             UserAgent = userAgent,
             TimeStamp = DateTime.UtcNow,
             ActionResult = "Success",
-            RequisitionId = requisitionId,
+            ReqCode = reqCode,
             Title = title
         };
 

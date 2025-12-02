@@ -34,7 +34,7 @@ public class Requisition : BaseEntity<int>
 
     public void AddJobDescription(JobDescription jobDescription)
     {
-        jobDescription.RequisitionCode = ReqCode;
+        jobDescription.ReqCode = ReqCode;
         jobDescription.Requisition = this;
         JobDescriptions.Add(jobDescription);
     }
@@ -42,7 +42,7 @@ public class Requisition : BaseEntity<int>
 
     public void RemoveJobDescription(JobDescription jobDescription)
     {
-        jobDescription.RequisitionCode = ReqCode;
+        jobDescription.ReqCode = ReqCode;
         jobDescription.Requisition = this;
         JobDescriptions.Remove(jobDescription);
     }

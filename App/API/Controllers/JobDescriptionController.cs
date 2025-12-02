@@ -102,6 +102,7 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
         var command = new UpdateJDCommand
         {
             Id = id,
+            ReqCode = dto.ReqCode,
             Title = dto.Title,
             PostingUrl = dto.PostingUrl,
             KeyResponsabilities = dto.KeyResponsabilities,

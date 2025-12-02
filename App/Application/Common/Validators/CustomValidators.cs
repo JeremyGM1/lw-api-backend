@@ -21,7 +21,6 @@ public static class CustomValidators
         int maxLength = 100)
     {
         return ruleBuilder
-            .MinimumLength(1)
             .MaximumLength(maxLength);
     }
 

@@ -21,7 +21,7 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
 
         try
         {
-            var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
+            var jobDescription = await _jdRepository.GetJobDescriptionById(request.Id);
 
             if (jobDescription == null)
             {
@@ -37,12 +37,9 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
 
             await _jdRepository.UpdateAsync(jobDescription);
 
-            var UpdatedJobDescription = await _jdRepository.GetByIdAsync(jobDescription.Id);
+            var response = _mapper.Map<UpdateJobDescriptionResponseDto>(jobDescription);
 
-            var response = _mapper.Map<UpdateJobDescriptionResponseDto>(UpdatedJobDescription);
-
-            await _logger.LogSuccessAsync(request.Id.ToString(), "Update", userEmail, ipAddress, userAgent, "Success", jobDescription.RequisitionCode, jobDescription.Title);
-
+            await _logger.LogSuccessAsync(request.Id.ToString(), "Update", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
             return Result<UpdateJobDescriptionResponseDto>.Success(response);
         }
         catch(Exception ex)
@@ -51,6 +48,5 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
             await _logger.LogFailureAsync("N/A", "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription, "N/A", "N/A");
             return Result<UpdateJobDescriptionResponseDto>.Failure(CommonErrors.UnexpectedException(errorDescription));
         }
-        
     }
 }

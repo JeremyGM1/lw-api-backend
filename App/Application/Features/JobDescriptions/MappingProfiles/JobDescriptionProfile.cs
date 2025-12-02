@@ -11,14 +11,15 @@ public class JobDescriptionProfile : Profile
     {
         CreateMap<CreateJDCommand, JobDescription>();
         CreateMap<JobDescription, CreateJobDescriptionResponseDto>()
-            .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.RequisitionCode))
+            .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.ReqCode))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Requisition.Status.Status))
             .ForMember(dest => dest.LocationType, opt => opt.MapFrom(src => src.Requisition.LocationType.LocationType));
         CreateMap<JobDescription, GetJobDescriptionResponseDto>()
-            .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.RequisitionCode))
+            .ForMember(dest => dest.ReqCode, opt => opt.MapFrom(src => src.ReqCode))
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Requisition.Status.Status))
             .ForMember(dest => dest.LocationType, opt => opt.MapFrom(src => src.Requisition.LocationType.LocationType));
-        CreateMap<UpdateJDCommand, JobDescription>();
+        CreateMap<UpdateJDCommand, JobDescription>()
+            .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
         CreateMap<JobDescription, UpdateJobDescriptionResponseDto>();
         CreateMap<JobDescriptionLog, GetJobDescriptionLogsResponseDto>();
     }

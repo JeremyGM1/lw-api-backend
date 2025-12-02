@@ -37,7 +37,7 @@ public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository, IReq
 
             await _jdRepository.DeleteAsync(jobDescription);
 
-            await _logger.LogSuccessAsync(request.Id.ToString(), "Delete", userEmail, ipAddress, userAgent, "Success", jobDescription.RequisitionCode, jobDescription.Title);
+            await _logger.LogSuccessAsync(request.Id.ToString(), "Delete", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
 
             return Result.Success();
         }
