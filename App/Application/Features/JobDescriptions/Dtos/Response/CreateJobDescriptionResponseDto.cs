@@ -22,5 +22,5 @@ public class CreateJobDescriptionResponseDto
     public string Status { get; set; } = null!;
     public string LocationType { get; set; } = null!;
     public string? CreatedBy { get; set; }
-    public string? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

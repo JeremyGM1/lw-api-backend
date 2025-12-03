@@ -3,6 +3,7 @@ using Shouldly;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Interfaces.Features.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 
@@ -38,7 +39,7 @@ public class GetRequisitionByIdQueryValidatorTests
     [InlineData("6004044", "must be 6 characters or fewer")]
     public async Task GetRequisitionByIdValidator_WhenIdLengthIsDifferentThan6_ShouldReturnFailure(string reqCode, string expectedError)
     {
-        var query = TestData.CreateRequisitionCommand();
+        var query = RequisitionTestData.CreateRequisitionCommand();
         query.ReqCode = reqCode;
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);

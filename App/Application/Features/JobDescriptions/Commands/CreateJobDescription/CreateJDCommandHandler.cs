@@ -32,27 +32,20 @@ public class CreateJDCommandHandler(IMapper mapper, IJobDescriptionRepository jd
             return Result<CreateJobDescriptionResponseDto>.Failure(reqError);
         }
 
-        //foreach (var skill in request.Skills)
-        //{
-            
-        //}
-
         var mappedJD = _mapper.Map<JobDescription>(request);
 
         mappedJD.CreatedAt = DateTime.UtcNow;
         mappedJD.CreatedBy = userEmail;
         mappedJD.ReqCode = requisition.ReqCode;
         mappedJD.Requisition = requisition;
-            
+
         requisition.AddJobDescription(mappedJD);
 
         await _jdRepository.CreateAsync(mappedJD);
 
-        var savedJD = await _jdRepository.GetJobDescriptionById(mappedJD.Id);
+        var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(mappedJD);
 
-        var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(savedJD);
-
-        await _logger.LogSuccessAsync(savedJD!.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
+        await _logger.LogSuccessAsync(mappedJD.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
 
         return Result<CreateJobDescriptionResponseDto>.Success(responseDto);
     }

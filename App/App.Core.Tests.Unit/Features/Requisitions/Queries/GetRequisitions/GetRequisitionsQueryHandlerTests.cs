@@ -6,6 +6,7 @@ using Application.Features.Requisitions.Queries.GetRequisitions;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitions;
 
@@ -35,8 +36,8 @@ public class GetRequisitionsQueryHandlerTests
 
         var requisitionList = new List<Requisition>
         {
-           TestData.CreateRequisition(),
-           TestData.CreateRequisition()
+           RequisitionTestData.CreateRequisition(),
+           RequisitionTestData.CreateRequisition()
         };
 
         var expectedDtos = new List<GetRequisitionDto>

@@ -3,9 +3,9 @@ using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Domain.Entities.Requisitions;
 
-namespace App.Core.Tests.Unit.Features.Requisitions;
+namespace App.Core.Tests.Unit.TestData.Requisitions;
 
-public static class TestData
+public static class RequisitionTestData
 {
     public static Requisition CreateRequisition(CreateRequisitionCommand command = null!)
     {

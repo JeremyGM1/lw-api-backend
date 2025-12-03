@@ -6,6 +6,7 @@ using Application.Features.Requisitions.MappingProfiles;
 using Application.Features.Requisitions.Queries.GetRequisitionById;
 using Application.Interfaces.Features.Requisitions;
 using Domain.Entities.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Queries.GetRequisitionById;
 
@@ -32,7 +33,7 @@ public class GetRequisitionByIdQueryHandlerTests
     public async Task GetRequisitionHandler_WhenIdExists_ShouldReturnRequisition()
     {
         var query = new GetRequisitionByIdQuery("600900");
-        var requisition = TestData.CreateRequisition();
+        var requisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(query.ReqCode))

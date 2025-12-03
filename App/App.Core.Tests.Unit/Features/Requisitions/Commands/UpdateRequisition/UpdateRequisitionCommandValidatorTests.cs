@@ -4,6 +4,7 @@ using Application.Common.Configs;
 using Application.Features.Requisitions.Commands.UpdateRequisition;
 using Application.Interfaces.Features.Requisitions;
 using Domain.Entities.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -26,8 +27,8 @@ public class UpdateRequisitionCommandValidatorTests
     [Fact]
     public async Task UpdateValidator_WhenValidationSuccess_ShouldReturnSuccess()
     {
-        var command = TestData.UpdateRequisitionCommand();
-        var existingRequisition = TestData.CreateRequisition();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -55,9 +56,9 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalName_ShouldReturnSuccess(string? name)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Name = name;
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -81,8 +82,8 @@ public class UpdateRequisitionCommandValidatorTests
     [Fact]
     public async Task UpdateValidator_ForeignKeysAreNotValid_ShouldReturnFailure()
     {
-        var command = TestData.UpdateRequisitionCommand();
-        var existingRequisition = TestData.CreateRequisition();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -114,7 +115,7 @@ public class UpdateRequisitionCommandValidatorTests
     [Fact]
     public async Task UpdateValidator_WhenHeadcountIsNegative_ShouldReturnFailure()
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Headcount = -1;
 
         var validator = new UpdateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -133,9 +134,9 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalDepartment_ShouldReturnSuccess(string? location)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Department = location;
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -162,7 +163,7 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalHiringManager_ShouldReturnSuccess(string? hiringManager)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.HiringManager = hiringManager;
 
         SetupForeignKeyExist<RequisitionStatus>(command.StatusId, true);
@@ -186,9 +187,9 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalOwner_ShouldReturnSuccess(string? owner)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Owner = owner;
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -214,7 +215,7 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData("CompensationBandMax")]
     public async Task UpdateValidator_WhenCompensationBandsAreNegative_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, -1m);
 
@@ -231,7 +232,7 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData("CompensationBandMax")]
     public async Task UpdateValidator_WhenCompensationBandsAreAboveNumberLimit_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
 
         const decimal MaxValueOverflow = ValidationDefaultValues.CompensationBandMaxValue + 1;
@@ -251,9 +252,9 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalDescription_ShouldReturnSuccess(string? description)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Description = description;
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -280,9 +281,9 @@ public class UpdateRequisitionCommandValidatorTests
     [Fact]
     public async Task UpdateValidator_WhenDescriptionHasMoreThan200Characters_ShouldReturnFailure()
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.Description = new string('x', 201);
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -304,9 +305,9 @@ public class UpdateRequisitionCommandValidatorTests
     [InlineData(null)]
     public async Task UpdateValidator_OptionalBackfillName_ShouldReturnSuccess(string? backfillName)
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.BackfillName = backfillName;
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))
@@ -332,9 +333,9 @@ public class UpdateRequisitionCommandValidatorTests
     [Fact]
     public async Task UpdateValidator_WhenBackfillNameHasMoreThan100Characters_ShouldReturnFailure()
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.BackfillName = new string('x', 101);
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode!))

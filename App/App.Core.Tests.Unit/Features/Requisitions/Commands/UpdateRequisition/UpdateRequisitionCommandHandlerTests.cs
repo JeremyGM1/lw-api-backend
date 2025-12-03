@@ -10,6 +10,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.UpdateRequisition;
 
@@ -41,8 +42,8 @@ public class UpdateRequisitionCommandHandlerTests
     [Fact]
     public async Task UpdateHandler_WhenRequestIsValid_ShouldUpdateRequisition()
     {
-        var command = TestData.UpdateRequisitionCommand();
-        var existingRequisition = TestData.CreateRequisition();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
         var validationResult = new ValidationResult();
 
         const string userEmail = "TestUser@email.com";
@@ -77,7 +78,7 @@ public class UpdateRequisitionCommandHandlerTests
     [Fact]
     public async Task UpdateHandler_WhenIdDoesNotExist_ShouldReturnResultFailure()
     {
-        var command = TestData.UpdateRequisitionCommand();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
         command.ReqCode = "600901";
 
         _mockReqRepository
@@ -97,8 +98,8 @@ public class UpdateRequisitionCommandHandlerTests
     [Fact]
     public async Task UpdateHandler_WhenUploadSuccessfully_ShouldPreserveAuditFields()
     {
-        var command = TestData.UpdateRequisitionCommand();
-        var existingRequisition = TestData.CreateRequisition();
+        var command = RequisitionTestData.UpdateRequisitionCommand();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
         existingRequisition.CreatedAt = DateTime.UtcNow.AddDays(-7);
         existingRequisition.CreatedBy = "original.creator@email.com";
         const string UserEmail = "test@email.com";

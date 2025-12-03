@@ -6,6 +6,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.DeleteRequisition;
 
@@ -32,7 +33,7 @@ public class DeleteRequisitionCommandTests
     public async Task DeleteHandler_WhenRequestIsValid_ShouldDeleteRequisition()
     {
         var command = new DeleteRequisitionCommand { ReqCode = "600900" };
-        var existingRequisition = TestData.CreateRequisition();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
         var validationResult = new ValidationResult();
 
         _mockReqRepository

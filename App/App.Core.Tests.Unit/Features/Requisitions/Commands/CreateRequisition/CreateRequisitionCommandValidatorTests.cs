@@ -3,6 +3,7 @@ using Shouldly;
 using Application.Common.Configs;
 using Application.Features.Requisitions.Commands.CreateRequisition;
 using Application.Interfaces.Features.Requisitions;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -29,7 +30,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidator_WhenReqCodeHas6Chars_ShouldPass()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.ReqCode = "600900";
         SetupAllForeignKeys();
 
@@ -44,7 +45,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData(" ")]
     public async Task CreateValidator_WhenReqCodeIsEmptyOrNull_ShouldFail(string? data)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.ReqCode = data!;
         SetupAllForeignKeys();
 
@@ -57,7 +58,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidation_WhenReqCodeHasMoreThan6Chars_ShouldFail()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.ReqCode = "6009011";
         SetupAllForeignKeys();
 
@@ -70,7 +71,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidation_WhenReqCodeHasLessThan6Chars_ShouldFail()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.ReqCode = "60090";
         SetupAllForeignKeys();
 
@@ -91,7 +92,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("Owner")]
     public async Task CreateValidator_WhenRequiredStringsAreNull_ShouldFail(string propertyName)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, null);
 
@@ -110,7 +111,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("Owner")]
     public async Task CreateValidator_WhenRequiredPropertiesAreEmpty_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, "");
 
@@ -136,7 +137,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("CompensationBandIntervalId")]
     public async Task CreateValidator_WhenForeignKeysAreNull_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, null);
 
@@ -160,7 +161,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("CompensationBandIntervalId")]
     public async Task CreateValidator_WhenForeignKeysAreHigherThanMaxValue_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, ValidationDefaultValues.IntMaxValue);
 
@@ -179,7 +180,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidator_WhenHeadcountIsLowerThan0_ShouldReturnFailure()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.Headcount = -1;
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -197,7 +198,7 @@ public class CreateRequisitionCommandValidatorTests
     [InlineData("CompensationBandMax")]
     public async Task CreateValidator_WhenCurrencyBandsIsLowerThan0_ShouldReturnFailure(string propertyName)
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         var property = command.GetType().GetProperty(propertyName);
         property?.SetValue(command, -100m);
 
@@ -212,7 +213,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidator_WhenDescriptionHasMoreThan200Characters_ShouldReturnFailure()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.Description = new string('x', 201);
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);
@@ -226,7 +227,7 @@ public class CreateRequisitionCommandValidatorTests
     [Fact]
     public async Task CreateValidator_WhenBackfillNameHasMoreThan100Characters_ShouldReturnFailure()
     {
-        var command = TestData.CreateRequisitionCommand();
+        var command = RequisitionTestData.CreateRequisitionCommand();
         command.BackfillName = new string('x', 101);
 
         var validator = new CreateRequisitionCommandValidator(_mockReqRepository.Object);

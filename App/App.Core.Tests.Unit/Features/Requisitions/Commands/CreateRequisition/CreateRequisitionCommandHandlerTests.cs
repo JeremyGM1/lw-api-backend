@@ -7,7 +7,7 @@ using Application.Interfaces.Features.Common;
 using Application.Interfaces.Features.Requisitions;
 using Application.Interfaces.LoggingService;
 using Domain.Entities.Requisitions;
-using Application.Common.Results.RequisitionErrors;
+using App.Core.Tests.Unit.TestData.Requisitions;
 
 namespace App.Core.Tests.Unit.Features.Requisitions.Commands.CreateRequisition;
 
@@ -36,8 +36,8 @@ public class CreateRequisitionCommandHandlerTests
     [Fact]
     public async Task CreateHandler_WhenRequestIsValid_ShouldReturnResultSuccess()
     {
-        var command = TestData.CreateRequisitionCommand();
-        var mockRequisition = TestData.CreateRequisition(command);
+        var command = RequisitionTestData.CreateRequisitionCommand();
+        var mockRequisition = RequisitionTestData.CreateRequisition(command);
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode))
@@ -63,8 +63,8 @@ public class CreateRequisitionCommandHandlerTests
     [Fact]
     public async Task CreateHandler_WhenReqCodeAlreadyExist_ShouldReturnResultFailure()
     {
-        var command = TestData.CreateRequisitionCommand();
-        var existingRequisition = TestData.CreateRequisition();
+        var command = RequisitionTestData.CreateRequisitionCommand();
+        var existingRequisition = RequisitionTestData.CreateRequisition();
 
         _mockReqRepository
             .Setup(r => r.GetRequisitionById(command.ReqCode))
@@ -79,8 +79,8 @@ public class CreateRequisitionCommandHandlerTests
     [Fact]
     public async Task CreateHandler_WhenAuditFieldsAreSetCorrectly_ShouldSuccess()
     {
-        var command = TestData.CreateRequisitionCommand();
-        var mockRequisition = TestData.CreateRequisition(command);
+        var command = RequisitionTestData.CreateRequisitionCommand();
+        var mockRequisition = RequisitionTestData.CreateRequisition(command);
         Requisition capturedRequisition = null!;
 
         const string userEmail = "TestUser@email.com";
@@ -108,8 +108,8 @@ public class CreateRequisitionCommandHandlerTests
     [Fact]
     public async Task CreateHandler_WhenSuccessfulCreation_ShouldLogSuccess()
     {
-        var command = TestData.CreateRequisitionCommand();
-        var mockRequisition = TestData.CreateRequisition(command);
+        var command = RequisitionTestData.CreateRequisitionCommand();
+        var mockRequisition = RequisitionTestData.CreateRequisition(command);
 
         const string userEmail = "TestUser@email.com";
         const string ipAddress = "198.163.1.10";
