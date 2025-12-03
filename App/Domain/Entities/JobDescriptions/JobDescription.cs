@@ -13,7 +13,8 @@ public class JobDescription : BaseEntity<int>
     public required string? InternalNotes { get; set; }
     public required DateTime? ApprovalDate { get; set; }
     public required Requisition Requisition { get; set; }
-
-    public required ICollection<JobSkill> JobSkills { get; set; } = [];
+    public required List<string> RequiredSkills { get; set; }
+    public required List<string> DesiredSkills { get; set; }
+    public required List<string> BonusSkills { get; set; }
     public required ICollection<JobCandidate> LinkedCandidatesList { get; set; } = [];
 }

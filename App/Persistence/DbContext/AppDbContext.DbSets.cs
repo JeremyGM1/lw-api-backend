@@ -21,10 +21,8 @@ public partial class AppDbContext : DbContext
     public required DbSet<RequisitionCurrency> RequisitionCurrency { get; set; }
     public required DbSet<RequisitionInterval> RequisitionInterval { get; set; }
     public required DbSet<JobDescription> JobDescriptions { get; set; }
-    public required DbSet<Skill> Skills { get; set; }
     public required DbSet<Candidate> Candidates { get; set; }
     public required DbSet<JobCandidate> JobCandidates { get; set; }
-    public required DbSet<JobSkill> JobSkills { get; set; }
     public required DbSet<RequisitionLog> RequisitionLogs { get; set; }
     public required DbSet<JobDescriptionLog> JobDescriptionLogs{ get; set; }
 

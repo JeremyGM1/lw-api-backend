@@ -16,4 +16,7 @@ public class CreateJobDescriptionDto
     [Required]
     [StringLength(500, MinimumLength = 1)]
     public required string InternalNotes { get; set; }
+    public required List<string> RequiredSkills { get; set; }
+    public required List<string> DesiredSkills { get; set; }
+    public required List<string> BonusSkills { get; set; }
 }

@@ -79,12 +79,20 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("ApprovalDate")
                         .HasColumnType("datetime2");
 
+                    b.PrimitiveCollection<string>("BonusSkills")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.PrimitiveCollection<string>("DesiredSkills")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InternalNotes")
                         .HasMaxLength(500)
@@ -103,6 +111,10 @@ namespace Persistence.Migrations
                     b.Property<string>("ReqCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.PrimitiveCollection<string>("RequiredSkills")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -189,54 +201,6 @@ namespace Persistence.Migrations
                     b.HasIndex("TimeStamp");
 
                     b.ToTable("JobDescriptionLogs");
-                });
-
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
-                {
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SkillId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("JobSkillType")
-                        .HasColumnType("int");
-
-                    b.HasKey("JobId", "SkillId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("JobSkills");
-                });
-
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.Skill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
@@ -830,25 +794,6 @@ namespace Persistence.Migrations
                     b.Navigation("Requisition");
                 });
 
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.JobSkill", b =>
-                {
-                    b.HasOne("Domain.Entities.JobDescriptions.JobDescription", "JobDescription")
-                        .WithMany("JobSkills")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.JobDescriptions.Skill", "Skill")
-                        .WithMany("JobSkills")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("JobDescription");
-
-                    b.Navigation("Skill");
-                });
-
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>
                 {
                     b.HasOne("Domain.Entities.Requisitions.RequisitionCurrency", "CompensationBandCurrency")
@@ -934,14 +879,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.JobDescriptions.JobDescription", b =>
                 {
-                    b.Navigation("JobSkills");
-
                     b.Navigation("LinkedCandidatesList");
-                });
-
-            modelBuilder.Entity("Domain.Entities.JobDescriptions.Skill", b =>
-                {
-                    b.Navigation("JobSkills");
                 });
 
             modelBuilder.Entity("Domain.Entities.Requisitions.Requisition", b =>

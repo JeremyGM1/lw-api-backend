@@ -18,35 +18,25 @@ public class UpdateJDCommandHandler(IMapper mapper,IJobDescriptionRepository jdR
     public async Task<Result<UpdateJobDescriptionResponseDto>> Handle(UpdateJDCommand request, CancellationToken cancellationToken)
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
+        var jobDescription = await _jdRepository.GetJobDescriptionById(request.Id);
 
-        try
+        if (jobDescription == null)
         {
-            var jobDescription = await _jdRepository.GetJobDescriptionById(request.Id);
-
-            if (jobDescription == null)
-            {
-                var reqError = JobDescriptionErros.NotExistingJobDescriptionById(request.Id);
-                await _logger.LogFailureAsync("N/A", "Update", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
-                return Result<UpdateJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
-            }
-
-            _mapper.Map(request, jobDescription);
-
-            jobDescription.UpdatedAt = DateTime.UtcNow;
-            jobDescription.UpdatedBy = userEmail;
-
-            await _jdRepository.UpdateAsync(jobDescription);
-
-            var response = _mapper.Map<UpdateJobDescriptionResponseDto>(jobDescription);
-
-            await _logger.LogSuccessAsync(request.Id.ToString(), "Update", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
-            return Result<UpdateJobDescriptionResponseDto>.Success(response);
+            var reqError = JobDescriptionErros.NotExistingJobDescriptionById(request.Id);
+            await _logger.LogFailureAsync("N/A", "Update", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
+            return Result<UpdateJobDescriptionResponseDto>.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
         }
-        catch(Exception ex)
-        {
-            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-            await _logger.LogFailureAsync("N/A", "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription, "N/A", "N/A");
-            return Result<UpdateJobDescriptionResponseDto>.Failure(CommonErrors.UnexpectedException(errorDescription));
-        }
+
+        _mapper.Map(request, jobDescription);
+
+        jobDescription.UpdatedAt = DateTime.UtcNow;
+        jobDescription.UpdatedBy = userEmail;
+
+        await _jdRepository.UpdateAsync(jobDescription);
+
+        var response = _mapper.Map<UpdateJobDescriptionResponseDto>(jobDescription);
+
+        await _logger.LogSuccessAsync(request.Id.ToString(), "Update", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
+        return Result<UpdateJobDescriptionResponseDto>.Success(response);
     }
 }

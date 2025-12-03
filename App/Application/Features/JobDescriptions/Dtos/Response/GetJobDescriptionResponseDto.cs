@@ -20,4 +20,7 @@ public class GetJobDescriptionResponseDto
     public required string InternalNotes{ get; init; }
     [DataType(DataType.Date)]
     public DateTime? ApprovalDate { get; init; }
+    public List<string> RequiredSkills { get; set; } = null!;
+    public List<string> DesiredSkills { get; set; } = null!;
+    public List<string> BonusSkills { get; set; } = null!;
 }

@@ -20,32 +20,23 @@ public class DeleteJDCommandHandler(IJobDescriptionRepository jdrepository, IReq
     public async Task<Result> Handle(DeleteJDCommand request, CancellationToken cancellationToken)
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
-        try
+        var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
+
+        if (jobDescription == null)
         {
-            var jobDescription = await _jdRepository.GetByIdAsync(request.Id);
-
-            if (jobDescription == null)
-            {
-                var reqError = JobDescriptionErros.NotExistingJobDescriptionById(request.Id);
-                await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
-                return Result.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
-            }
-
-            //var requisition = await _reqRepository.GetRequisitionById(jobDescription.RequisitionCode);
-
-            //requisition.RemoveJobDescription(jobDescription);
-
-            await _jdRepository.DeleteAsync(jobDescription);
-
-            await _logger.LogSuccessAsync(request.Id.ToString(), "Delete", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
-
-            return Result.Success();
+            var reqError = JobDescriptionErros.NotExistingJobDescriptionById(request.Id);
+            await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, "N/A", "N/A");
+            return Result.Failure(JobDescriptionErros.NotExistingJobDescriptionById(request.Id));
         }
-        catch (Exception ex)
-        {
-            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-            await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription, "N/A", "N/A");
-            return Result.Failure(CommonErrors.UnexpectedException(errorDescription));
-        }
+
+        //var requisition = await _reqRepository.GetRequisitionById(jobDescription.RequisitionCode);
+
+        //requisition.RemoveJobDescription(jobDescription);
+
+        await _jdRepository.DeleteAsync(jobDescription);
+
+        await _logger.LogSuccessAsync(request.Id.ToString(), "Delete", userEmail, ipAddress, userAgent, "Success", jobDescription.ReqCode, jobDescription.Title);
+
+        return Result.Success();
     }
 }

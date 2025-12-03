@@ -21,34 +21,25 @@ public class UpdateRequisitionCommandHandler(IMapper mapper, IRequisitionReposit
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
 
-        try
+        var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
+        if (requisition == null)
         {
-            var requisition = await _reqRepository.GetRequisitionById(request.ReqCode!);
-            if (requisition == null)
-            {
-                var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode!);
-                await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
-                return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode!));
-            }
-
-            _mapper.Map(request, requisition);
-
-            requisition.CreatedAt = requisition!.CreatedAt;
-            requisition.CreatedBy = requisition!.CreatedBy;
-            requisition.UpdatedAt = DateTime.UtcNow;
-            requisition.UpdatedBy = userEmail;
-
-            await _reqRepository.UpdateAsync(requisition);
-
-            await _logger.LogSuccessAsync(requisition.ReqCode, "Update", userEmail, ipAddress, userAgent, "Success");
-
-            return Result.Success();
+            var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode!);
+            await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
+            return Result.Failure(RequisitionErrors.NotExistingRequisition(request.ReqCode!));
         }
-        catch (Exception ex)
-        {
-            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-            await _logger.LogFailureAsync(null!, "Update", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
-            return Result.Failure(CommonErrors.UnexpectedException(ex.Message));
-        }
+
+        _mapper.Map(request, requisition);
+
+        requisition.CreatedAt = requisition!.CreatedAt;
+        requisition.CreatedBy = requisition!.CreatedBy;
+        requisition.UpdatedAt = DateTime.UtcNow;
+        requisition.UpdatedBy = userEmail;
+
+        await _reqRepository.UpdateAsync(requisition);
+
+        await _logger.LogSuccessAsync(requisition.ReqCode, "Update", userEmail, ipAddress, userAgent, "Success");
+
+        return Result.Success();
     }
 }

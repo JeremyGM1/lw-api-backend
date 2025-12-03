@@ -23,40 +23,37 @@ public class CreateJDCommandHandler(IMapper mapper, IJobDescriptionRepository jd
     public async Task<Result<CreateJobDescriptionResponseDto>> Handle(CreateJDCommand request, CancellationToken cancellationToken)
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
-        try
+
+        var requisition = await _reqRepository.GetRequisitionById(request.RequisitionCode);
+        if (requisition == null)
         {
-            var requisition = await _reqRepository.GetRequisitionById(request.RequisitionCode);
-            if (requisition == null)
-            {
-                var reqError = RequisitionErrors.NotExistingRequisition(request.RequisitionCode);
-                await _logger.LogFailureAsync("N/A", "Create", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, request.RequisitionCode, request.Title);
-                return Result<CreateJobDescriptionResponseDto>.Failure(reqError);
-            }
+            var reqError = RequisitionErrors.NotExistingRequisition(request.RequisitionCode);
+            await _logger.LogFailureAsync("N/A", "Create", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description, request.RequisitionCode, request.Title);
+            return Result<CreateJobDescriptionResponseDto>.Failure(reqError);
+        }
 
-            var mappedJD = _mapper.Map<JobDescription>(request);
-
-            mappedJD.CreatedAt = DateTime.UtcNow;
-            mappedJD.CreatedBy = userEmail;
-            mappedJD.ReqCode = requisition.ReqCode;
-            mappedJD.Requisition = requisition;
+        //foreach (var skill in request.Skills)
+        //{
             
-            requisition.AddJobDescription(mappedJD);
+        //}
 
-            await _jdRepository.CreateAsync(mappedJD);
+        var mappedJD = _mapper.Map<JobDescription>(request);
 
-            var savedJD = await _jdRepository.GetJobDescriptionById(mappedJD.Id);
+        mappedJD.CreatedAt = DateTime.UtcNow;
+        mappedJD.CreatedBy = userEmail;
+        mappedJD.ReqCode = requisition.ReqCode;
+        mappedJD.Requisition = requisition;
+            
+        requisition.AddJobDescription(mappedJD);
 
-            var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(savedJD);
+        await _jdRepository.CreateAsync(mappedJD);
 
-            await _logger.LogSuccessAsync(savedJD!.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
+        var savedJD = await _jdRepository.GetJobDescriptionById(mappedJD.Id);
 
-            return Result<CreateJobDescriptionResponseDto>.Success(responseDto);
-        }
-        catch (Exception ex)
-        {
-            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-            await _logger.LogFailureAsync("N/A", "Create", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription, request.RequisitionCode, request.Title);
-            return Result<CreateJobDescriptionResponseDto>.Failure(CommonErrors.UnexpectedException(errorDescription));
-        }
+        var responseDto = _mapper.Map<CreateJobDescriptionResponseDto>(savedJD);
+
+        await _logger.LogSuccessAsync(savedJD!.Id.ToString(), "Create", userEmail, ipAddress, userAgent, "Success", request.RequisitionCode, request.Title);
+
+        return Result<CreateJobDescriptionResponseDto>.Success(responseDto);
     }
 }

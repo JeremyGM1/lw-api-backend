@@ -19,27 +19,18 @@ public class DeleteRequisitionCommandHandler(IRequisitionRepository reqRepositor
     {
         var (userEmail, ipAddress, userAgent) = _commonHelpers.GetLoggingContext();
 
-        try
+        var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
+        if (requisition == null)
         {
-            var requisition = await _reqRepository.GetRequisitionById(request.ReqCode);
-            if (requisition == null)
-            {
-                var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode);
-                await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
-                return Result.Failure(reqError);
-            }
-
-            await _logger.LogSuccessAsync(requisition.ReqCode, "Delete", userEmail, ipAddress, userAgent, "Success");
-
-            await _reqRepository.DeleteAsync(requisition!);
-
-            return Result.Success();
+            var reqError = RequisitionErrors.NotExistingRequisition(request.ReqCode);
+            await _logger.LogFailureAsync("N/A", "Delete", userEmail, ipAddress, userAgent, "Failure", reqError.Code, reqError.Description);
+            return Result.Failure(reqError);
         }
-        catch (Exception ex)
-        {
-            var errorDescription = $"{ex.Message}" + (ex.InnerException != null ? $" | Inner: {ex.InnerException.Message}" : "");
-            await _logger.LogFailureAsync(null!, "Delete", userEmail, ipAddress, userAgent, "Failure", ex.Message, errorDescription);
-            return Result.Failure(CommonErrors.UnexpectedException(errorDescription));
-        }
+
+        await _logger.LogSuccessAsync(requisition.ReqCode, "Delete", userEmail, ipAddress, userAgent, "Success");
+
+        await _reqRepository.DeleteAsync(requisition!);
+
+        return Result.Success();
     }
 }

@@ -74,7 +74,10 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
             Title = dto.Title,
             PostingUrl = dto.PostingUrl,
             KeyResponsabilities = dto.KeyResponsabilities,
-            InternalNotes = dto.InternalNotes
+            InternalNotes = dto.InternalNotes,
+            RequiredSkills = dto.RequiredSkills,
+            DesiredSkills = dto.DesiredSkills,
+            BonusSkills = dto.BonusSkills
         };
 
         var result = await _mediator.Send(command);
@@ -106,7 +109,10 @@ public class JobDescriptionController(IMediator mediator) : ControllerBase
             Title = dto.Title,
             PostingUrl = dto.PostingUrl,
             KeyResponsabilities = dto.KeyResponsabilities,
-            InternalNotes = dto.InternalNotes
+            InternalNotes = dto.InternalNotes,
+            RequiredSkills = dto.RequiredSkills,
+            DesiredSkills = dto.DesiredSkills,
+            BonusSkills = dto.BonusSkills
         };
 
         var result = await _mediator.Send(command);

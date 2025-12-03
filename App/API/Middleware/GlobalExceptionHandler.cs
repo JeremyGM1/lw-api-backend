@@ -37,6 +37,13 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
+            var metadata = new
+            {
+                message = exception.Message,
+                innerException = exception.InnerException?.Message,
+                stackTrace = exception.StackTrace
+            };
+
             var response = new
             {
                 isSuccess = false,
@@ -44,7 +51,7 @@ public class GlobalExceptionHandler : IExceptionHandler
                 {
                     code = "INTERNAL_ERROR",
                     description = "One or more validation errors occurred.",
-                    metadata = (object)null!
+                    metadata
                 }
             };
 

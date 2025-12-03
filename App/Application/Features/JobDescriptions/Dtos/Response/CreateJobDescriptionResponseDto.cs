@@ -16,6 +16,9 @@ public class CreateJobDescriptionResponseDto
     [StringLength(500, MinimumLength = 1)]
     public required string InternalNotes { get; set; }
     [StringLength(500, MinimumLength = 1)]
+    public List<string> RequiredSkills { get; set; } = null!;
+    public List<string> DesiredSkills { get; set; } = null!;
+    public List<string> BonusSkills { get; set; } = null!;
     public string Status { get; set; } = null!;
     public string LocationType { get; set; } = null!;
     public string? CreatedBy { get; set; }

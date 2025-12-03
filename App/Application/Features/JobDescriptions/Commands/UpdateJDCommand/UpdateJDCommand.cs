@@ -13,4 +13,7 @@ public class UpdateJDCommand : IRequest<Result<UpdateJobDescriptionResponseDto>>
     public string? PostingUrl { get; set; }
     public string? KeyResponsabilities { get; set; }
     public string? InternalNotes { get; set; }
+    public required List<string> RequiredSkills { get; set; }
+    public required List<string> DesiredSkills { get; set; }
+    public required List<string> BonusSkills { get; set; }
 }
